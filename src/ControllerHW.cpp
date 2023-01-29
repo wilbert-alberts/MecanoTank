@@ -45,11 +45,12 @@ void ControllerHW::initHWTimer(double period)
         ControllerHW::timerConfig->auto_reload = TIMER_AUTORELOAD_EN;
         /*
                 clock is 80 Mhz = 80.000Khz = 80.000.000 hz
-                Let clock tick at 10 Khz, divider of 8000.
-                Means that 1 second 10.000 ticks
-                10 clock tick is 1 ms
+                Let clock tick at 1 Mhz, divider of 80.
+                Means that 1 second 1.000.0000 ticks
+                1000 clock tick is 1 ms
+                1 clock tick is 1 us
         */
-        ControllerHW::timerConfig->divider = 8000;
+        ControllerHW::timerConfig->divider = 80;
 
         timer_init(TIMER_GROUP_0, TIMER_0, ControllerHW::timerConfig);
         timer_set_counter_value(TIMER_GROUP_0, TIMER_0, 0x00000000ULL);
