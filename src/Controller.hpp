@@ -8,20 +8,19 @@
 class Controller
 {
 public:
+    Controller(double period);
     Controller(double period, std::vector<Block *>* sequence);
     virtual ~Controller();
 
-    void start();
-    void stop();
+    virtual void start() = 0;
+    virtual void stop() = 0;
 
-private:
-    void tick();
-    static void tmrTickStatic(TimerHandle_t params);
-
-    bool running = false;
+protected:
+    void hasStarted();
+    void hasStopped();
+    void executeSequence();
+    bool running;
     double period;
-    TimerHandle_t tmrHandle;
-    TickType_t remainingTime;
     std::vector<Block *>* sequence;
 };
 

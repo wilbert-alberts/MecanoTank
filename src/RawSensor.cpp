@@ -4,7 +4,7 @@
  *  Created on: 26 Jan 2023
  *      Author: walberts
  */
-
+#include <Arduino.h>
 #include "RawSensor.hpp"
 
 RawSensor::RawSensor(double p) : Block(p), s1x(0), s1y(0), s2x(0), s2y(0){};
@@ -27,4 +27,5 @@ double *RawSensor::getOutputS2Y()
 }
 void RawSensor::calculate()
 {
+	Serial.println("RawSensor::calculate()");
 }

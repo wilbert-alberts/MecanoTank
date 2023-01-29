@@ -5,6 +5,7 @@
  *      Author: walberts
  */
 
+#include <Arduino.h>
 #include "MeasurementSystem.hpp"
 
 MeasurementSystem::MeasurementSystem(double period) : Block(period), x1(&safeValue), y1(&safeValue), x2(&safeValue), y2(
@@ -18,6 +19,7 @@ MeasurementSystem::~MeasurementSystem()
 }
 void MeasurementSystem::calculate()
 {
+	Serial.println("MeasurementSystem::calculate()");
 	rz = atan((-(*x2) + (*x1)) / armY);
 	x = ((*x1) + (*x2)) / 2.0;
 	y = ((*y1) + (*y2)) / 2.0;

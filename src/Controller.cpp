@@ -4,42 +4,31 @@
 
 #include "Controller.hpp"
 
-Controller::Controller(double p, std::vector<Block *> *s): period(p), sequence(s) {
+Controller::Controller(double p, std::vector<Block *> *s) : running(false), period(p), sequence(s)
+{
+    Serial.print("Period: ");
+    Serial.println(period);
+}
 
+Controller::Controller(double p) : running(false), period(p), sequence(new std::vector<Block *>())
+{
+    Serial.println("Creating controller with empty sequence.");
 }
 
 Controller::~Controller() {}
 
-void Controller::tmrTickStatic(TimerHandle_t params)
+void Controller::executeSequence()
 {
-    Controller *obj = static_cast<Controller *>(params);
-    obj->tick();
+    std::for_each(sequence->begin(), sequence->end(), [](Block *block)
+                  { block->calculate(); });
 }
 
-void Controller::tick()
-{
-    // std::for_each(sequence->begin(), sequence->end(), [](Block *block)
-    //               { block->calculate(); });
-
-    remainingTime = xTimerGetExpiryTime(tmrHandle) - xTaskGetTickCount();
-    Serial.print("Remaining Time: ");
-    Serial.println(remainingTime);
-}
-
-void Controller::start()
+void Controller::hasStarted()
 {
     running = true;
-    int periodInMs = (int)(period*1000.0);
-    tmrHandle = xTimerCreate("TmrController",
-                             pdMS_TO_TICKS(periodInMs),
-                             true,
-                             this,
-                             Controller::tmrTickStatic);
-    xTimerStart(tmrHandle, pdMS_TO_TICKS(3*periodInMs));
 }
 
-void Controller::stop()
+void Controller::hasStopped()
 {
-    xTimerStop(tmrHandle, pdMS_TO_TICKS(1000));
     running = false;
 }

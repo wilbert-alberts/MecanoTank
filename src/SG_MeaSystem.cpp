@@ -7,7 +7,7 @@
 
 #include "SG_MeaSystem.hpp"
 
-SG_MeaSystem::SG_MeaSystem(double p) : period(p)
+SG_MeaSystem::SG_MeaSystem(double p) : period(p), rawSensor(nullptr), measurementSystem(nullptr)
 {
 }
 
