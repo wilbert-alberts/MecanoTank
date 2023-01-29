@@ -1,8 +1,8 @@
 #ifndef __CONTROLLERHW_HPP__
 #define __CONTROLLERHW_HPP__
 
-#include <freertos/semphr.h>
 #include <vector>
+#include <freertos/semphr.h>
 #include <driver/timer.h>
 
 #include "Controller.hpp"

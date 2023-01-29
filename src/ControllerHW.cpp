@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "ControllerHW.hpp"
+#include "Debugpin.hpp"
 
 timer_config_t *ControllerHW::timerConfig = nullptr;
 SemaphoreHandle_t ControllerHW::semaphore;
@@ -97,7 +98,7 @@ void ControllerHW::tickTask(void *me)
     {
         if (xSemaphoreTake(ControllerHW::semaphore, timeout) == pdTRUE)
         {
-            digitalWrite(25, v);
+            digitalWrite(DEBUGPIN, v);
             v = 1 - v;
             obj->executeSequence();
             timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &computationTime);

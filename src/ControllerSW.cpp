@@ -3,6 +3,7 @@
 #include <freertos/timers.h>
 
 #include "ControllerSW.hpp"
+#include "Debugpin.hpp"
 
 ControllerSW::ControllerSW(double p, std::vector<Block *> *s) : Controller(p,s){}
 
@@ -22,7 +23,7 @@ void ControllerSW::tmrTickStatic(TimerHandle_t timerHandle)
 void ControllerSW::tick()
 {
     static int v = 0;
-    digitalWrite(25, v);
+    digitalWrite(DEBUGPIN, v);
     v = 1 - v;
 
     executeSequence();

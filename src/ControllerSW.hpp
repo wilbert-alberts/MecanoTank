@@ -1,8 +1,8 @@
 #ifndef __CONTROLLERSW_HPP__
 #define __CONTROLLERSW_HPP__
 
-#include <freertos/timers.h>
 #include <vector>
+#include <freertos/timers.h>
 
 #include "Controller.hpp"
 #include "Block.hpp"

@@ -13,7 +13,6 @@
 #include "Block.hpp"
 #include "RawSensor.hpp"
 #include "MeasurementSystem.hpp"
-#include "PID.hpp"
 
 class SG_MeaSystem
 {
