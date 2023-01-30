@@ -1,12 +1,12 @@
 // #include "FreeRTOS.h"
 
 #include <Arduino.h>
-#include "ControllerHW.hpp"
+#include "SequencerHW.hpp"
 #include "Debugpin.hpp"
 
-timer_config_t *ControllerHW::timerConfig = nullptr;
-SemaphoreHandle_t ControllerHW::semaphore;
-TaskHandle_t ControllerHW::tickTaskHandle;
+timer_config_t *SequencerHW::timerConfig = nullptr;
+SemaphoreHandle_t SequencerHW::semaphore;
+TaskHandle_t SequencerHW::tickTaskHandle;
 
 void IRAM_ATTR timer_group0_isr(void *para)
 {
@@ -20,29 +20,34 @@ void IRAM_ATTR timer_group0_isr(void *para)
     }
 }
 
-ControllerHW::ControllerHW(double period) : Controller(period)
+SequencerHW::SequencerHW(ServoGroup* sg) : Sequencer(sg)
+{
+    initTask(this);
+    initHWTimer(sg->getPeriod());
+}
+SequencerHW::SequencerHW(double period) : Sequencer(period)
 {
     initTask(this);
     initHWTimer(period);
 }
 
-ControllerHW::ControllerHW(double period, std::vector<Block *> *sequence) : Controller(period, sequence)
+SequencerHW::SequencerHW(double period, std::vector<Block *> *sequence) : Sequencer(period, sequence)
 {
     initTask(this);
     initHWTimer(period);
 }
 
-ControllerHW::~ControllerHW() {}
+SequencerHW::~SequencerHW() {}
 
-void ControllerHW::initHWTimer(double period)
+void SequencerHW::initHWTimer(double period)
 {
-    if (ControllerHW::timerConfig == nullptr)
+    if (SequencerHW::timerConfig == nullptr)
     {
-        ControllerHW::timerConfig = new timer_config_t;
-        ControllerHW::timerConfig->alarm_en = TIMER_ALARM_EN;
-        ControllerHW::timerConfig->counter_en = TIMER_PAUSE;
-        ControllerHW::timerConfig->counter_dir = TIMER_COUNT_UP;
-        ControllerHW::timerConfig->auto_reload = TIMER_AUTORELOAD_EN;
+        SequencerHW::timerConfig = new timer_config_t;
+        SequencerHW::timerConfig->alarm_en = TIMER_ALARM_EN;
+        SequencerHW::timerConfig->counter_en = TIMER_PAUSE;
+        SequencerHW::timerConfig->counter_dir = TIMER_COUNT_UP;
+        SequencerHW::timerConfig->auto_reload = TIMER_AUTORELOAD_EN;
         /*
                 clock is 80 Mhz = 80.000Khz = 80.000.000 hz
                 Let clock tick at 1 Mhz, divider of 80.
@@ -50,19 +55,19 @@ void ControllerHW::initHWTimer(double period)
                 1000 clock tick is 1 ms
                 1 clock tick is 1 us
         */
-        ControllerHW::timerConfig->divider = 80;
+        SequencerHW::timerConfig->divider = 80;
 
-        timer_init(TIMER_GROUP_0, TIMER_0, ControllerHW::timerConfig);
+        timer_init(TIMER_GROUP_0, TIMER_0, SequencerHW::timerConfig);
         timer_set_counter_value(TIMER_GROUP_0, TIMER_0, 0x00000000ULL);
 
-        uint64_t timerScale = TIMER_BASE_CLK / ControllerHW::timerConfig->divider;
+        uint64_t timerScale = TIMER_BASE_CLK / SequencerHW::timerConfig->divider;
         uint64_t alarmValue = (uint64_t)(period * timerScale);
 
         /* Configure the alarm value and the interrupt on alarm. */
         timer_set_alarm_value(TIMER_GROUP_0, TIMER_0, alarmValue);
         timer_enable_intr(TIMER_GROUP_0, TIMER_0);
         timer_isr_register(TIMER_GROUP_0, TIMER_0, timer_group0_isr,
-                           (void *)ControllerHW::semaphore, ESP_INTR_FLAG_IRAM, NULL);
+                           (void *)SequencerHW::semaphore, ESP_INTR_FLAG_IRAM, NULL);
     }
     else
     {
@@ -70,10 +75,10 @@ void ControllerHW::initHWTimer(double period)
     }
 }
 
-void ControllerHW::initTask(ControllerHW *me)
+void SequencerHW::initTask(SequencerHW *me)
 {
-    ControllerHW::semaphore = xSemaphoreCreateBinary();
-    BaseType_t r = xTaskCreate(ControllerHW::tickTask,
+    SequencerHW::semaphore = xSemaphoreCreateBinary();
+    BaseType_t r = xTaskCreate(SequencerHW::tickTask,
                                "tickTask",
                                2048,
                                me,
@@ -89,15 +94,15 @@ void ControllerHW::initTask(ControllerHW *me)
     }
 }
 
-void ControllerHW::tickTask(void *me)
+void SequencerHW::tickTask(void *me)
 {
     static int v = 0;
-    ControllerHW *obj = (ControllerHW *)me;
+    SequencerHW *obj = (SequencerHW *)me;
     TickType_t timeout = (TickType_t)pdMS_TO_TICKS(1000 * 3 * obj->period);
     uint64_t computationTime;
     while (1)
     {
-        if (xSemaphoreTake(ControllerHW::semaphore, timeout) == pdTRUE)
+        if (xSemaphoreTake(SequencerHW::semaphore, timeout) == pdTRUE)
         {
             digitalWrite(DEBUGPIN, v);
             v = 1 - v;
@@ -112,14 +117,14 @@ void ControllerHW::tickTask(void *me)
     }
 }
 
-void ControllerHW::start()
+void SequencerHW::start()
 {
     timer_set_counter_value(TIMER_GROUP_0, TIMER_0, 0x00000000ULL);
     timer_start(TIMER_GROUP_0, TIMER_0);
     hasStarted();
 }
 
-void ControllerHW::stop()
+void SequencerHW::stop()
 {
     timer_pause(TIMER_GROUP_0, TIMER_0);
     hasStopped();

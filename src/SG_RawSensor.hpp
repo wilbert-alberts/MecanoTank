@@ -10,12 +10,11 @@
 
 #include <vector>
 
+#include "ServoGroup.hpp"
 #include "Block.hpp"
 #include "RawSensor.hpp"
-#include "MeasurementSystem.hpp"
-#include "PID.hpp"
 
-class SG_RawSensor
+class SG_RawSensor: ServoGroup
 {
 public:
     SG_RawSensor(double p);

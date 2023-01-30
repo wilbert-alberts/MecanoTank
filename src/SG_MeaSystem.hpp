@@ -11,18 +11,18 @@
 #include <vector>
 
 #include "Block.hpp"
+#include "ServoGroup.hpp"
 #include "RawSensor.hpp"
 #include "MeasurementSystem.hpp"
 
-class SG_MeaSystem
+class SG_MeaSystem: public ServoGroup
 {
 public:
     SG_MeaSystem(double p);
     virtual ~SG_MeaSystem();
-    std::vector<Block*>* getSequence() ;
+    virtual std::vector<Block*>* getSequence() ;
 private:
     std::vector<Block *> sequence;
-    double period;
 
     RawSensor* rawSensor;
     RawSensor* getRawSensor();

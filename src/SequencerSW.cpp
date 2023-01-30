@@ -2,25 +2,30 @@
 #include <Arduino.h>
 #include <freertos/timers.h>
 
-#include "ControllerSW.hpp"
+#include "SequencerSW.hpp"
 #include "Debugpin.hpp"
 
-ControllerSW::ControllerSW(double p, std::vector<Block *> *s) : Controller(p,s){}
-
-
-ControllerSW::ControllerSW(double p) : Controller(p)
+SequencerSW::SequencerSW(ServoGroup *sg) : Sequencer(sg)
 {
 }
 
-ControllerSW::~ControllerSW() {}
-
-void ControllerSW::tmrTickStatic(TimerHandle_t timerHandle)
+SequencerSW::SequencerSW(double p, std::vector<Block *> *s) : Sequencer(p, s)
 {
-    ControllerSW *obj = static_cast<ControllerSW*>(pvTimerGetTimerID(timerHandle));
+}
+
+SequencerSW::SequencerSW(double p) : Sequencer(p)
+{
+}
+
+SequencerSW::~SequencerSW() {}
+
+void SequencerSW::tmrTickStatic(TimerHandle_t timerHandle)
+{
+    SequencerSW *obj = static_cast<SequencerSW *>(pvTimerGetTimerID(timerHandle));
     obj->tick();
 }
 
-void ControllerSW::tick()
+void SequencerSW::tick()
 {
     static int v = 0;
     digitalWrite(DEBUGPIN, v);
@@ -35,7 +40,7 @@ void ControllerSW::tick()
     Serial.println(remainingTime);
 }
 
-void ControllerSW::start()
+void SequencerSW::start()
 {
     int periodInMs = (int)(period * 1000.0);
     Serial.print("Starting controller with period in ms: ");
@@ -44,12 +49,12 @@ void ControllerSW::start()
                              pdMS_TO_TICKS(periodInMs),
                              true,
                              this,
-                             ControllerSW::tmrTickStatic);
+                             SequencerSW::tmrTickStatic);
     xTimerStart(tmrHandle, pdMS_TO_TICKS(3 * periodInMs));
     hasStarted();
 }
 
-void ControllerSW::stop()
+void SequencerSW::stop()
 {
     xTimerStop(tmrHandle, pdMS_TO_TICKS(1000));
     hasStopped();

@@ -1,18 +1,19 @@
-#ifndef __CONTROLLERSW_HPP__
-#define __CONTROLLERSW_HPP__
+#ifndef __SEQUENCERSW_HPP__
+#define __SEQUENCERSW_HPP__
 
 #include <vector>
 #include <freertos/timers.h>
 
-#include "Controller.hpp"
+#include "Sequencer.hpp"
 #include "Block.hpp"
 
-class ControllerSW: public Controller
+class SequencerSW: public Sequencer
 {
 public:
-    ControllerSW(double period);
-    ControllerSW(double period, std::vector<Block *>* sequence);
-    virtual ~ControllerSW();
+    SequencerSW(ServoGroup* sg);
+    SequencerSW(double period);
+    SequencerSW(double period, std::vector<Block *>* sequence);
+    virtual ~SequencerSW();
 
     virtual void start();
     virtual void stop();

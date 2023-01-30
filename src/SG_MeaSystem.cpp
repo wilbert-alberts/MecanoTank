@@ -7,7 +7,7 @@
 
 #include "SG_MeaSystem.hpp"
 
-SG_MeaSystem::SG_MeaSystem(double p) : period(p), rawSensor(nullptr), measurementSystem(nullptr)
+SG_MeaSystem::SG_MeaSystem(double p) : ServoGroup(p), rawSensor(nullptr), measurementSystem(nullptr)
 {
 }
 
@@ -29,7 +29,7 @@ RawSensor *SG_MeaSystem::getRawSensor()
 {
     if (rawSensor == nullptr)
     {
-        rawSensor = new RawSensor(period);
+        rawSensor = new RawSensor(getPeriod());
     }
     return rawSensor;
 }
@@ -38,7 +38,7 @@ MeasurementSystem *SG_MeaSystem::getMeasurementSystem()
 {
     if (measurementSystem == nullptr)
     {
-        measurementSystem = new MeasurementSystem(period);
+        measurementSystem = new MeasurementSystem(getPeriod());
     }
     return measurementSystem;
 }

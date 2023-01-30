@@ -7,7 +7,7 @@
 
 #include "SG_RawSensor.hpp"
 
-SG_RawSensor::SG_RawSensor(double p) : period(p), rawSensor(nullptr)
+SG_RawSensor::SG_RawSensor(double p) : ServoGroup(p), rawSensor(nullptr)
 {
 }
 

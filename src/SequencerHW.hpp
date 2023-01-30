@@ -1,26 +1,27 @@
-#ifndef __CONTROLLERHW_HPP__
-#define __CONTROLLERHW_HPP__
+#ifndef __SEQUENCERHW_HPP__
+#define __SEQUENCERHW_HPP__
 
 #include <vector>
 #include <freertos/semphr.h>
 #include <driver/timer.h>
 
-#include "Controller.hpp"
+#include "Sequencer.hpp"
 #include "Block.hpp"
 
-class ControllerHW: public Controller
+class SequencerHW: public Sequencer
 {
 public:
-    ControllerHW(double period);
-    ControllerHW(double period, std::vector<Block *>* sequence);
-    virtual ~ControllerHW();
+    SequencerHW(ServoGroup* sg);
+    SequencerHW(double period);
+    SequencerHW(double period, std::vector<Block *>* sequence);
+    virtual ~SequencerHW();
 
     virtual void start();
     virtual void stop();
 
 private:
     static void initHWTimer(double period);
-    static void initTask(ControllerHW* me);
+    static void initTask(SequencerHW* me);
     static void tickTask(void*);
     static timer_config_t* timerConfig;
     static TaskHandle_t tickTaskHandle;

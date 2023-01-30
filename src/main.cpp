@@ -1,11 +1,14 @@
 #include <Arduino.h>
 
-#include "Controller.hpp"
-#include "ControllerSW.hpp"
-#include "ControllerHW.hpp"
+#include "Debugpin.hpp"
+
+#include "Sequencer.hpp"
+#include "SequencerSW.hpp"
+#include "SequencerHW.hpp"
+
 #include "SG_MeaSystem.hpp"
 #include "SG_RawSensor.hpp"
-#include "Debugpin.hpp"
+#include "SG_MotorIntegration.hpp"
 
 
 void setup() {
@@ -14,8 +17,9 @@ void setup() {
   pinMode(DEBUGPIN, OUTPUT);
 
   // SG_RawSensor* sg = new SG_RawSensor(1.0);
-  SG_MeaSystem* mg = new SG_MeaSystem(1.0);
-  Controller* ctrl = new ControllerHW(1.0, mg->getSequence());
+  // SG_MeaSystem* sg = new SG_MeaSystem(1.0);
+  SG_MotorIntegration* sg = new SG_MotorIntegration(1.0);
+  Sequencer* ctrl = new SequencerHW(sg);
   ctrl->start();
 
 }
