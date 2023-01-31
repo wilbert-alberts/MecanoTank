@@ -6,7 +6,7 @@
 class MotorSystem: public Block
 {
 public: 
-    MotorSystem(double p, double fl, double fr, double bl, double br);
+    MotorSystem(const std::string &bn, double p, double fl, double fr, double bl, double br);
     virtual ~MotorSystem();
 
     virtual void calculate();

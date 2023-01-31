@@ -7,9 +7,9 @@
 
 #include "PID.hpp"
 
-PID::PID(double period) : Block(period), output(0), saveInput(0), input(&saveInput), sumInput(
-																						 0),
-						  prevInput(0), kP(1), kI(0), kD(0){};
+PID::PID(const std::string &bn, double period)
+	: Block("PID", bn, period), output(0), saveInput(0), input(&saveInput), sumInput(0),
+	  prevInput(0), kP(1), kI(0), kD(0){};
 PID::~PID() {}
 
 void PID::calculate()

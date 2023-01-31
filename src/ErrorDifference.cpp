@@ -7,7 +7,7 @@
 
 #include "ErrorDifference.hpp"
 
-ErrorDifference::ErrorDifference(double p) : Block(p),
+ErrorDifference::ErrorDifference(const std::string& bn, double p) : Block("ErrorDifference", bn, p),
 											 safe_actual(0), actual(&safe_actual), desired(&safe_actual), error(0)
 {
 }

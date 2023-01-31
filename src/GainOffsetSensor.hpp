@@ -13,7 +13,7 @@
 class GainOffsetSensor : public Block
 {
 public:
-	GainOffsetSensor(double p);
+	GainOffsetSensor(const std::string& bn, double p);
 	virtual ~GainOffsetSensor();
 	virtual void calculate();
 	double *getOutput();

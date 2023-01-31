@@ -7,7 +7,7 @@
 
 #include "GainOffsetSensor.hpp"
 
-GainOffsetSensor::GainOffsetSensor(double p) : Block(p),
+GainOffsetSensor::GainOffsetSensor(const std::string& bn, double p) : Block("GainOffset", bn, p),
 											   gain(0), offset(0), input(&safeValue), output(0), safeValue(0){};
 
 GainOffsetSensor::~GainOffsetSensor()

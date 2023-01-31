@@ -12,10 +12,6 @@ SequencerSW::SequencerSW(ServoGroup *sg) : Sequencer(sg)
 {
 }
 
-SequencerSW::SequencerSW(double p, std::vector<Block *> *s) : Sequencer(p, s)
-{
-}
-
 SequencerSW::SequencerSW(double p) : Sequencer(p)
 {
 }

@@ -13,7 +13,7 @@
 class ErrorDifference : public Block
 {
 public:
-	ErrorDifference(double p);
+	ErrorDifference(const std::string& bn, double p);
 	virtual ~ErrorDifference();
 	virtual void calculate();
 	void setInputActual(double *p);

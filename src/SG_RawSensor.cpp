@@ -24,7 +24,7 @@ RawSensor *SG_RawSensor::getRawSensor()
 {
     if (rawSensor == nullptr)
     {
-        rawSensor = new RawSensor("rawSensor", period);
+        rawSensor = new RawSensor("rs", period);
     }
     return rawSensor;
 }

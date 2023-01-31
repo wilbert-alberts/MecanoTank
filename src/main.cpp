@@ -12,6 +12,8 @@
 
 #include "Tracer.hpp"
 
+void traceConsumer(void *obj);
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -24,14 +26,40 @@ void setup()
   Sequencer *seq = new SequencerHW(sg);
   seq->start();
 
+  xTaskCreate(traceConsumer,
+              "traceConsumer",
+              1024, seq->getTracer(), 0, NULL);
+
   sleep(2);
   Serial.print("Traceables: ");
   Serial.println(seq->getTracer()->getTraceNames().c_str());
 
   sleep(3);
+  // seq->getTracer()->setBufferSize(1);
   seq->getTracer()->startTracing();
   sleep(3);
   seq->getTracer()->stopTracing();
+
+  while (1)
+    ;
+}
+
+/* Task to be created. */
+void traceConsumer(void *obj)
+{
+  Serial.println("traceConsumer started");
+  Tracer *tracer = (Tracer *)obj;
+  while (1)
+  {
+    auto r = tracer->popTrace(portMAX_DELAY);
+    std::for_each(r.begin(), r.end(),
+                  [](double r)
+                  {
+                    Serial.print(r);
+                    Serial.println(' ');
+                  });
+    Serial.println();
+  }
 }
 
 void loop()

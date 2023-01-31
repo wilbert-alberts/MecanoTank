@@ -14,7 +14,6 @@
 class Block
 {
 public:
-	Block(double p);
 	Block(const std::string &tn, const std::string &bn, double p);
 	virtual ~Block();
 	virtual void calculate() = 0;

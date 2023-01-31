@@ -13,7 +13,7 @@
 class MeasurementSystem : public Block
 {
 public:
-	MeasurementSystem(double period);
+	MeasurementSystem(const std::string& bn, double period);
 	virtual ~MeasurementSystem();
 	virtual void calculate();
 	void setInputX1(double *p);

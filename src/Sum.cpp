@@ -1,10 +1,14 @@
 #include "Sum.hpp"
 
-Sum::Sum(double p, double o, double s1_, double s2_, double s3_, double s4_)
-    : Block(p), offset(o), safeValue(0), s1(s1_), s2(s2_), s3(s3_), s4(s4_), out(0), in1(&safeValue), in2(&safeValue), in3(&safeValue), in4(&safeValue)
+Sum::Sum(const std::string &bn, double p, double o, double s1_, double s2_, double s3_, double s4_)
+    : Block("Sum", bn, p), offset(o), safeValue(0), s1(s1_), s2(s2_), s3(s3_), s4(s4_),
+      out(0), in1(&safeValue), in2(&safeValue), in3(&safeValue), in4(&safeValue)
 {
 }
-Sum::Sum(double p, double o) : Block(p), offset(o), safeValue(0), s1(0), s2(0), s3(0), s4(0), out(0), in1(&safeValue), in2(&safeValue), in3(&safeValue), in4(&safeValue)
+Sum::Sum(const std::string &bn, double p, double o)
+    : Block("Inj", bn, p), offset(o), safeValue(0),
+      s1(0), s2(0), s3(0), s4(0), out(0),
+      in1(&safeValue), in2(&safeValue), in3(&safeValue), in4(&safeValue)
 {
 }
 Sum::~Sum(){};

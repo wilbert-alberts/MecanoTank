@@ -7,10 +7,6 @@
 
 #include "Block.hpp"
 
-Block::Block(double p) : typeName("Unknown"), blockName("Unknown"), period(p)
-{
-}
-
 Block::Block(const std::string &tn, const std::string &bn, double p)
 	: typeName(tn), blockName(bn), period(p)
 {

@@ -7,23 +7,17 @@
 
 #include "Sequencer.hpp"
 
-Sequencer::Sequencer(ServoGroup *sg) : running(false), period(sg->getPeriod()), sequence(sg->getSequence())
+Sequencer::Sequencer(ServoGroup *sg) : sequenceCounter(0), running(false), period(sg->getPeriod()), sequence(sg->getSequence())
 {
     Serial.print("Creating Controller with period: ");
     Serial.println(period);
-    tracer = new Tracer("tracer", sg->getPeriod(), sg);
+    tracer = new Tracer(sg);
 }
 
-Sequencer::Sequencer(double p, std::vector<Block *> *s) : running(false), period(p), sequence(s)
+Sequencer::Sequencer(double p) : sequenceCounter(0), running(false), period(p), sequence(new std::vector<Block*>())
 {
     Serial.println("Creating controller with deprecated constructor");
-    tracer = new Tracer("tracer", p, s);
-}
-
-Sequencer::Sequencer(double p) : running(false), period(p), sequence(new std::vector<Block *>())
-{
-    Serial.println("Creating controller with empty sequence.");
-    tracer = new Tracer("tracer", p, sequence);
+    tracer = nullptr;
 }
 
 Sequencer::~Sequencer() {}
@@ -32,7 +26,9 @@ void Sequencer::executeSequence()
 {
     std::for_each(sequence->begin(), sequence->end(), [](Block *block)
                   { block->calculate(); });
-    tracer->calculate();
+    if (tracer != nullptr)
+        tracer->captureTrace(sequenceCounter);
+    sequenceCounter++;
 }
 
 void Sequencer::hasStarted()
@@ -45,6 +41,7 @@ void Sequencer::hasStopped()
     running = false;
 }
 
-const Tracer* Sequencer::getTracer() {
+Tracer *Sequencer::getTracer()
+{
     return tracer;
 }

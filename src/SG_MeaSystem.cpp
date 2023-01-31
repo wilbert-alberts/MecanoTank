@@ -38,7 +38,7 @@ MeasurementSystem *SG_MeaSystem::getMeasurementSystem()
 {
     if (measurementSystem == nullptr)
     {
-        measurementSystem = new MeasurementSystem(getPeriod());
+        measurementSystem = new MeasurementSystem("mea", getPeriod());
     }
     return measurementSystem;
 }

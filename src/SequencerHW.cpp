@@ -35,12 +35,6 @@ SequencerHW::SequencerHW(double period) : Sequencer(period)
     initHWTimer(period);
 }
 
-SequencerHW::SequencerHW(double period, std::vector<Block *> *sequence) : Sequencer(period, sequence)
-{
-    initTask(this);
-    initHWTimer(period);
-}
-
 SequencerHW::~SequencerHW() {}
 
 void SequencerHW::initHWTimer(double period)
@@ -112,7 +106,7 @@ void SequencerHW::tickTask(void *me)
             v = 1 - v;
             obj->executeSequence();
             timer_get_counter_value(TIMER_GROUP_0, TIMER_0, &computationTime);
-            Serial.print("Duration: "); Serial.println(computationTime);
+            // Serial.print("Duration: "); Serial.println(computationTime);
         }
         else
         {

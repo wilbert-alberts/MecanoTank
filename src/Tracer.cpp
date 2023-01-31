@@ -13,12 +13,13 @@ typedef enum
     STOP
 } TracerCommandEnum;
 
-
-
-Tracer::Tracer(const std::string &bn, double period, ServoGroup *sg) : Block("Tracer", bn, period)
+Tracer::Tracer(ServoGroup *sg) : tracing(false)
 {
     commandQueue = xQueueCreate(4, sizeof(TracerCommandEnum));
     commandAckQueue = xQueueCreate(4, sizeof(bool));
+    bufferSem = xSemaphoreCreateCounting(1, 0);
+    bufferMux = xSemaphoreCreateMutex();
+
     auto seq = sg->getSequence();
     std::for_each(seq->begin(), seq->end(), [this](Block *p)
                   {
@@ -30,31 +31,24 @@ Tracer::Tracer(const std::string &bn, double period, ServoGroup *sg) : Block("Tr
         std::for_each(traceNamesForBlock.begin(), traceNamesForBlock.end(), [this, p](const std::string& n){
             traceNames.push_back(p->getBlockName()+ "::" + n);
         }); });
-    values.resize(traceables.size());
+    bufferEntry.resize(1+traceables.size());
 }
 
-Tracer::Tracer(const std::string &bn, double period, std::vector<Block *> *s): Block("Tracer", bn, period)
+Tracer::~Tracer()
 {
-    commandQueue = xQueueCreate(4, sizeof(TracerCommandEnum));
-    commandAckQueue = xQueueCreate(4, sizeof(bool));
-    // auto seq = sg->getSequence();
-    std::for_each(s->begin(), s->end(), [this](Block *p)
-                  {
-        auto traceablesForBlock = p->getTraceables();
-        std::for_each(traceablesForBlock.begin(), traceablesForBlock.end(), [this](const double* tr){
-            traceables.push_back(tr);
-        });
-        auto traceNamesForBlock = p->getTraceNames();
-        std::for_each(traceNamesForBlock.begin(), traceNamesForBlock.end(), [this, p](const std::string& n){
-            traceNames.push_back(p->getBlockName()+ "::" + n);
-        }); });
 }
-
-Tracer::~Tracer() {
-
+void Tracer::setBufferSize(int bs)
+{
+    if (!tracing)
+    {
+        xSemaphoreTake(bufferMux, portMAX_DELAY);
+        traceBuffer.clear();
+        vSemaphoreDelete(bufferSem);
+        bufferSem = xSemaphoreCreateCounting(bs, 0);
+        xSemaphoreGive(bufferMux);
+    }
 }
-
-void Tracer::startTracing() const 
+void Tracer::startTracing() const
 {
     bool ack;
     TracerCommandEnum cmd = TracerCommandEnum::START;
@@ -105,7 +99,7 @@ void Tracer::stopTracing() const
     }
 }
 
-std::string Tracer::getTraceNames() const 
+std::string Tracer::getTraceNames() const
 {
     std::string result("");
     std::for_each(
@@ -116,17 +110,27 @@ std::string Tracer::getTraceNames() const
     return result;
 }
 
-void Tracer::calculate()
+void Tracer::captureTrace(uint64_t traceCounter)
 {
     // Note: this function is called from the Timer task.
     // It should never block and run as quick as possible.
-    static bool tracing = false;
     if (tracing)
     {
-        std::transform(traceables.begin(), traceables.end(), values.begin(), [](const double* r){
-            return *r;
-        });   
-        sendTrace(values);
+        xSemaphoreTake(bufferMux, pdMS_TO_TICKS(1000));
+        traceBuffer.push_front(bufferEntry);
+        traceBuffer.front().at(0) = (double)traceCounter;
+        auto startOfValues = traceBuffer.front().begin();
+        startOfValues++;
+        std::transform(traceables.begin(), traceables.end(), startOfValues, [](const double *r)
+                       { return *r; });
+        auto sg = xSemaphoreGive(bufferSem);
+        if (sg == pdFALSE)
+        {
+            // semGive failed, buffer full? Remove most recently added entry
+            traceBuffer.pop_front();
+            Serial.println("Trace buffer overflow");
+        }
+        xSemaphoreGive(bufferMux);
     }
     if (uxQueueMessagesWaiting(commandQueue) > 0)
     {
@@ -155,8 +159,16 @@ void Tracer::calculate()
     }
 }
 
-void Tracer::sendTrace(const std::vector<double>& vs) {
-    std::for_each(vs.begin(), vs.end(), [](double v){
-        Serial.println(v);
-    });
-} 
+std::vector<double> Tracer::popTrace(TickType_t to)
+{
+    std::vector<double> rv;
+    auto r = xSemaphoreTake(bufferSem, to);
+    if (r == pdTRUE)
+    {
+        xSemaphoreTake(bufferMux, portMAX_DELAY);
+        rv = traceBuffer.back();
+        traceBuffer.pop_back();
+        xSemaphoreGive(bufferMux);
+    }
+    return rv;
+}

@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include "MeasurementSystem.hpp"
 
-MeasurementSystem::MeasurementSystem(double period) : Block(period), x1(&safeValue), y1(&safeValue), x2(&safeValue), y2(
+MeasurementSystem::MeasurementSystem(const std::string& bn, double period) : Block("MeasurementSystem", bn, period), x1(&safeValue), y1(&safeValue), x2(&safeValue), y2(
 																														 &safeValue),
 													  x(0), y(0), rz(0), armY(1), safeValue(0)
 {

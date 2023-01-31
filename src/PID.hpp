@@ -13,7 +13,7 @@
 class PID : public Block
 {
 public:
-	PID(double period);
+	PID(const std::string &bn, double period);
 	virtual ~PID();
 	virtual void calculate();
 	double *getOutput();

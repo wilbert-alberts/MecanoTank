@@ -1,6 +1,8 @@
 #include "MotorSystem.hpp"
 
-MotorSystem::MotorSystem(double p, double fl, double fr, double bl, double br) : Block(p), safeValue(0), frontLeft(fl), frontRight(fr), backLeft(bl), backRight(br), in(&safeValue), outputFrontLeft(0), outputFrontRight(0), outputBackLeft(0), outputBackRight(0)
+MotorSystem::MotorSystem(const std::string &bn, double p, double fl, double fr, double bl, double br)
+    : Block("MotorSystem", bn, p), safeValue(0), frontLeft(fl), frontRight(fr), backLeft(bl), backRight(br), in(&safeValue),
+      outputFrontLeft(0), outputFrontRight(0), outputBackLeft(0), outputBackRight(0)
 {
 }
 

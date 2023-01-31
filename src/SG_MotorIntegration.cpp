@@ -51,7 +51,7 @@ Sum *SG_MotorIntegration::getInjX()
 {
     if (injX == nullptr)
     {
-        injX = new Sum(period, 0, 0, 0, 0, 0);
+        injX = new Sum("injX", period, 0);
     }
     return injX;
 }
@@ -59,7 +59,7 @@ Sum *SG_MotorIntegration::getInjY()
 {
     if (injY == nullptr)
     {
-        injY = new Sum(period, 0, 0, 0, 0, 0);
+        injY = new Sum("injY", period, 0);
     }
     return injY;
 }
@@ -67,7 +67,7 @@ Sum *SG_MotorIntegration::getInjRz()
 {
     if (injRz == nullptr)
     {
-        injRz = new Sum(period, 0, 0, 0, 0, 0);
+        injRz = new Sum("inRz", period, 0);
     }
     return injRz;
 }
@@ -76,7 +76,7 @@ MotorSystem *SG_MotorIntegration::getMotorSysX()
 {
     if (motorSysX == nullptr)
     {
-        motorSysX = new MotorSystem(period, 1.0, -1.0, -1.0, 1.0);
+        motorSysX = new MotorSystem("motsysX", period, 1.0, -1.0, -1.0, 1.0);
     }
     return motorSysX;
 }
@@ -85,7 +85,7 @@ MotorSystem *SG_MotorIntegration::getMotorSysY()
 {
     if (motorSysY == nullptr)
     {
-        motorSysY = new MotorSystem(period, 1.0, 1.0, 1.0, 1.0);
+        motorSysY = new MotorSystem("motsysY",period, 1.0, 1.0, 1.0, 1.0);
     }
     return motorSysY;
 }
@@ -94,7 +94,7 @@ MotorSystem *SG_MotorIntegration::getMotorSysRz()
 {
     if (motorSysRz == nullptr)
     {
-        motorSysRz = new MotorSystem(period, 1.0, 1.0, -1.0, -1.0);
+        motorSysRz = new MotorSystem("motsysRz",period, 1.0, 1.0, -1.0, -1.0);
     }
     return motorSysRz;
 }
@@ -103,7 +103,7 @@ Sum *SG_MotorIntegration::getSumFR()
 {
     if (sumFR == nullptr)
     {
-        sumFR = new Sum(period, 0, 1.0, 1.0, 1.0, 0.0);
+        sumFR = new Sum("motSumFR", period, 0, 1.0, 1.0, 1.0, 0.0);
     }
     return sumFR;
 }
@@ -111,7 +111,7 @@ Sum *SG_MotorIntegration::getSumFL()
 {
     if (sumFL == nullptr)
     {
-        sumFL = new Sum(period, 0, 1.0, 1.0, 1.0, 0.0);
+        sumFL = new Sum("motSumFL", period, 0, 1.0, 1.0, 1.0, 0.0);
     }
     return sumFL;
 }
@@ -119,7 +119,7 @@ Sum *SG_MotorIntegration::getSumBR()
 {
     if (sumBR == nullptr)
     {
-        sumBR = new Sum(period, 0, 1.0, 1.0, 1.0, 0.0);
+        sumBR = new Sum("motSumBR", period, 0, 1.0, 1.0, 1.0, 0.0);
     }
     return sumBR;
 }
@@ -127,7 +127,7 @@ Sum *SG_MotorIntegration::getSumBL()
 {
     if (sumBL == nullptr)
     {
-        sumBL = new Sum(period, 0, 1.0, 1.0, 1.0, 0.0);
+        sumBL = new Sum("motSumBL", period, 0, 1.0, 1.0, 1.0, 0.0);
     }
     return sumFL;
 }

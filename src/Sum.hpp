@@ -6,11 +6,11 @@
 class Sum : public Block
 {
 public:
-    Sum(double p, double o, double s1_, double s2_, double s3_, double s4_);
-    Sum(double p, double o);
+    Sum(const std::string &bn, double p, double o, double s1_, double s2_, double s3_, double s4_);
+    Sum(const std::string &bn, double p, double o);
     virtual ~Sum();
     virtual void calculate();
-    
+
     double *getOutput();
     void setOffset(double o);
     void setFactor1(double o);
