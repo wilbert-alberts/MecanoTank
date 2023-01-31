@@ -14,7 +14,7 @@
 #include "Block.hpp"
 #include "RawSensor.hpp"
 
-class SG_RawSensor: ServoGroup
+class SG_RawSensor: public ServoGroup
 {
 public:
     SG_RawSensor(double p);

@@ -2,8 +2,11 @@
 #include <Arduino.h>
 #include <freertos/timers.h>
 
-#include "SequencerSW.hpp"
 #include "Debugpin.hpp"
+#include "ServoGroup.hpp"
+#include "Block.hpp"
+
+#include "SequencerSW.hpp"
 
 SequencerSW::SequencerSW(ServoGroup *sg) : Sequencer(sg)
 {

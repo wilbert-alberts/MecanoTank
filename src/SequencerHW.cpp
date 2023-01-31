@@ -1,6 +1,10 @@
 // #include "FreeRTOS.h"
 
 #include <Arduino.h>
+
+#include "Block.hpp"
+#include "ServoGroup.hpp"
+
 #include "SequencerHW.hpp"
 #include "Debugpin.hpp"
 

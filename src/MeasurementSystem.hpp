@@ -8,7 +8,6 @@
 #ifndef MEASUREMENTSYSTEM_H_
 #define MEASUREMENTSYSTEM_H_
 
-#include <cmath>
 #include "Block.hpp"
 
 class MeasurementSystem : public Block
