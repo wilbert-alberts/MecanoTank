@@ -29,7 +29,7 @@ RawSensor *SG_MeaSystem::getRawSensor()
 {
     if (rawSensor == nullptr)
     {
-        rawSensor = new RawSensor(getPeriod());
+        rawSensor = new RawSensor("rawSensor", getPeriod());
     }
     return rawSensor;
 }

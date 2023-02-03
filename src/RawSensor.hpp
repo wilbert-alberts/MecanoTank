@@ -12,7 +12,7 @@
 
 class RawSensor: public Block {
 public:
-	RawSensor(double p);
+	// RawSensor(double p);
 	RawSensor(const std::string& bn, double p);
 	virtual ~RawSensor();
 	double* getOutputS1X();

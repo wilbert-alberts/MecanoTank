@@ -47,6 +47,9 @@ void Tracer::setBufferSize(int bs)
         bufferSem = xSemaphoreCreateCounting(bs, 0);
         xSemaphoreGive(bufferMux);
     }
+    else {
+        Serial.println("Error: should not change trace buffer size during tracing.");
+    }
 }
 void Tracer::startTracing() const
 {

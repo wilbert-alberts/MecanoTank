@@ -7,11 +7,13 @@
 #include "Block.hpp"
 #include "Sum.hpp"
 #include "MotorSystem.hpp"
+#include "MotorInterface.hpp"
+#include "RedButton.hpp"
 
-class SG_MotorIntegration: public ServoGroup
+class SG_MotorIntegration : public ServoGroup
 {
 public:
-    SG_MotorIntegration(double p);
+    SG_MotorIntegration(double p, uint8_t redbuttonPin);
     virtual ~SG_MotorIntegration();
     std::vector<Block *> *getSequence();
     Sum *getInjX();
@@ -19,6 +21,9 @@ public:
     Sum *getInjRz();
 
 private:
+    bool emergencyStop;
+    uint8_t redButtonPin;
+
     std::vector<Block *> sequence;
     double period;
 
@@ -43,5 +48,21 @@ private:
     Sum *getSumBR();
     Sum *sumBL;
     Sum *getSumBL();
+
+    RedButton* rbp;
+    RedButton* getRedButton();
+
+    MotorInterface *motoIfFL;
+    MotorInterface *getMotorInterfaceFL();
+
+    MotorInterface *motoIfFR;
+    MotorInterface *getMotorInterfaceFR();
+
+    MotorInterface *motoIfBL;
+    MotorInterface *getMotorInterfaceBL();
+
+    MotorInterface *motoIfBR;
+    MotorInterface *getMotorInterfaceBR();
 };
+
 #endif

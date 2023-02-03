@@ -7,14 +7,6 @@
 #include <Arduino.h>
 #include "RawSensor.hpp"
 
-RawSensor::RawSensor(double p) : Block("RawSensor", "unknown", p), s1x(0), s1y(0), s2x(0), s2y(0){
-	// Deprecated
-	registerTraceable("s1x", &s1x);
-	registerTraceable("s1y", &s1y);
-	registerTraceable("s2x", &s2x);
-	registerTraceable("s2y", &s2y);
-};
-
 RawSensor::RawSensor(const std::string& bn, double p) : Block("RawSensor", bn, p), s1x(0), s1y(0), s2x(0), s2y(0){
 	registerTraceable("s1x", &s1x);
 	registerTraceable("s1y", &s1y);

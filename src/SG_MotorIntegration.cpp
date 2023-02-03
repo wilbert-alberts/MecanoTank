@@ -1,15 +1,20 @@
 
 #include "SG_MotorIntegration.hpp"
 
-SG_MotorIntegration::SG_MotorIntegration(double p) : ServoGroup(p), injX(nullptr), injY(nullptr), injRz(nullptr),
-                                                     motorSysX(nullptr), motorSysY(nullptr), motorSysRz(nullptr),
-                                                     sumFR(nullptr), sumFL(nullptr), sumBR(nullptr), sumBL(nullptr) {}
+SG_MotorIntegration::SG_MotorIntegration(double p, uint8_t rbp)
+    : ServoGroup(p),
+      emergencyStop(false), redButtonPin(rbp),
+      injX(nullptr), injY(nullptr), injRz(nullptr),
+      motorSysX(nullptr), motorSysY(nullptr), motorSysRz(nullptr),
+      sumFR(nullptr), sumFL(nullptr), sumBR(nullptr), sumBL(nullptr) {}
 
 SG_MotorIntegration::~SG_MotorIntegration(){};
 
 std::vector<Block *> *SG_MotorIntegration::getSequence()
 {
     sequence.clear();
+
+    sequence.push_back(getRedButton());
 
     sequence.push_back(getInjX());
     sequence.push_back(getInjY());
@@ -23,6 +28,11 @@ std::vector<Block *> *SG_MotorIntegration::getSequence()
     sequence.push_back(getSumFR());
     sequence.push_back(getSumBL());
     sequence.push_back(getSumBR());
+
+    sequence.push_back(getMotorInterfaceFL());
+    sequence.push_back(getMotorInterfaceFR());
+    sequence.push_back(getMotorInterfaceBL());
+    sequence.push_back(getMotorInterfaceBR());
 
     getMotorSysX()->setInput(getInjX()->getOutput());
     getMotorSysY()->setInput(getInjY()->getOutput());
@@ -44,8 +54,20 @@ std::vector<Block *> *SG_MotorIntegration::getSequence()
     getSumBR()->setIn2(getMotorSysY()->getOutputBackRight());
     getSumBR()->setIn3(getMotorSysRz()->getOutputBackRight());
 
+    getMotorInterfaceFL()->setPWMIn(getSumFL()->getOutput());
+    getMotorInterfaceFR()->setPWMIn(getSumFR()->getOutput());
+    getMotorInterfaceBL()->setPWMIn(getSumBL()->getOutput());
+    getMotorInterfaceBR()->setPWMIn(getSumBR()->getOutput());
+
     return &sequence;
 };
+
+RedButton* SG_MotorIntegration::getRedButton() {
+    if (rbp == nullptr) {
+        rbp = new RedButton("emergencyStop", period, redButtonPin, &emergencyStop);
+    }
+    return rbp;
+}
 
 Sum *SG_MotorIntegration::getInjX()
 {
@@ -85,7 +107,7 @@ MotorSystem *SG_MotorIntegration::getMotorSysY()
 {
     if (motorSysY == nullptr)
     {
-        motorSysY = new MotorSystem("motsysY",period, 1.0, 1.0, 1.0, 1.0);
+        motorSysY = new MotorSystem("motsysY", period, 1.0, 1.0, 1.0, 1.0);
     }
     return motorSysY;
 }
@@ -94,7 +116,7 @@ MotorSystem *SG_MotorIntegration::getMotorSysRz()
 {
     if (motorSysRz == nullptr)
     {
-        motorSysRz = new MotorSystem("motsysRz",period, 1.0, 1.0, -1.0, -1.0);
+        motorSysRz = new MotorSystem("motsysRz", period, 1.0, 1.0, -1.0, -1.0);
     }
     return motorSysRz;
 }
@@ -132,3 +154,38 @@ Sum *SG_MotorIntegration::getSumBL()
     return sumFL;
 }
 
+MotorInterface *SG_MotorIntegration::getMotorInterfaceFL()
+{
+    if (motoIfFL == nullptr)
+    {
+        motoIfFL = new MotorInterface("motIfFL", period, CHANNEL_FL, PIN_PWM_FL, PIN_DIR_FL, &emergencyStop);
+    }
+    return motoIfFL;
+}
+
+MotorInterface *SG_MotorIntegration::getMotorInterfaceFR()
+{
+    if (motoIfFR == nullptr)
+    {
+        motoIfFR = new MotorInterface("motIfFR", period, CHANNEL_FR, PIN_PWM_FR, PIN_DIR_FR, &emergencyStop);
+    }
+    return motoIfFR;
+}
+
+MotorInterface *SG_MotorIntegration::getMotorInterfaceBL()
+{
+    if (motoIfBL == nullptr)
+    {
+        motoIfBL = new MotorInterface("motIfBL", period, CHANNEL_BL, PIN_PWM_BL, PIN_DIR_BL, &emergencyStop);
+    }
+    return motoIfBL;
+}
+
+MotorInterface *SG_MotorIntegration::getMotorInterfaceBR()
+{
+    if (motoIfBR == nullptr)
+    {
+        motoIfBR = new MotorInterface("motIfBR", period, CHANNEL_BR, PIN_PWM_BR, PIN_DIR_BR, &emergencyStop);
+    }
+    return motoIfBR;
+}

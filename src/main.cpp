@@ -12,7 +12,10 @@
 
 #include "Tracer.hpp"
 
+#define REDBUTTONPIN (5)
+
 void traceConsumer(void *obj);
+void waitUntilStarted(uint8_t pin);
 
 void setup()
 {
@@ -20,9 +23,11 @@ void setup()
   Serial.begin(115200);
   pinMode(DEBUGPIN, OUTPUT);
 
-  SG_RawSensor *sg = new SG_RawSensor(1.0);
+  waitUntilStarted(REDBUTTONPIN);
+
+  // SG_RawSensor *sg = new SG_RawSensor(1.0);
   // SG_MeaSystem* sg = new SG_MeaSystem(1.0);
-  // SG_MotorIntegration* sg = new SG_MotorIntegration(1.0);
+  SG_MotorIntegration *sg = new SG_MotorIntegration(1.0, REDBUTTONPIN);
   Sequencer *seq = new SequencerHW(sg);
   seq->start();
 
@@ -41,6 +46,12 @@ void setup()
   seq->getTracer()->stopTracing();
 
   while (1)
+    ;
+}
+
+void waitUntilStarted(uint8_t pin)
+{
+  while (!digitalRead(REDBUTTONPIN))
     ;
 }
 
