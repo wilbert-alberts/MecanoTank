@@ -22,7 +22,6 @@ public:
     std::vector<Block*>* getSequence() ;
 private:
     std::vector<Block *> sequence;
-    double period;
 
     RawSensor* rawSensor;
     RawSensor* getRawSensor();

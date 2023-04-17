@@ -8,11 +8,15 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 #include "Block.hpp"
+#include "Traceable.hpp"
 
 class ServoGroup;
 
 class Tracer 
 {
+    typedef std::vector<double> Trace;
+    typedef std::deque<Trace> TraceBuffer;
+
 public:
     Tracer(ServoGroup *sg);
     virtual ~Tracer();
@@ -21,14 +25,14 @@ public:
     std::string getTraceNames() const;
     virtual void captureTrace(uint64_t sequenceCounter);
     void setBufferSize(int bs);
-    std::vector<double> popTrace(TickType_t timeout);
+    Trace popTrace(TickType_t timeout);
 
 private:
     boolean tracing;
-    std::vector<const double *> traceables;
-    std::vector<std::string> traceNames;
-    std::vector<double> bufferEntry;
-    std::deque<std::vector<double>> traceBuffer;
+    std::vector<Traceable> traceables;
+
+    Trace bufferEntry;
+    TraceBuffer traceBuffer;
     QueueHandle_t commandQueue;
     QueueHandle_t commandAckQueue;
     SemaphoreHandle_t bufferMux;

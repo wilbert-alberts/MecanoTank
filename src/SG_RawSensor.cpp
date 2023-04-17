@@ -7,13 +7,15 @@
 
 #include "SG_RawSensor.hpp"
 
-SG_RawSensor::SG_RawSensor(double p) : ServoGroup(p), rawSensor(nullptr)
+SG_RawSensor::SG_RawSensor(double p)
+    : ServoGroup(p),
+      rawSensor(nullptr)
 {
 }
 
 SG_RawSensor::~SG_RawSensor(){};
 
-std::vector<Block *>* SG_RawSensor::getSequence()
+std::vector<Block *> *SG_RawSensor::getSequence()
 {
     sequence.clear();
     sequence.push_back(getRawSensor());
@@ -24,7 +26,7 @@ RawSensor *SG_RawSensor::getRawSensor()
 {
     if (rawSensor == nullptr)
     {
-        rawSensor = new RawSensor("rs", period);
+        rawSensor = new RawSensor("rs", getPeriod());
     }
     return rawSensor;
 }

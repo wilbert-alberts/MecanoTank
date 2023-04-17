@@ -24,13 +24,10 @@ Tracer::Tracer(ServoGroup *sg) : tracing(false)
     std::for_each(seq->begin(), seq->end(), [this](Block *p)
                   {
         auto traceablesForBlock = p->getTraceables();
-        std::for_each(traceablesForBlock.begin(), traceablesForBlock.end(), [this](const double* tr){
+        std::for_each(traceablesForBlock.begin(), traceablesForBlock.end(), [this](const Traceable& tr){
             traceables.push_back(tr);
         });
-        auto traceNamesForBlock = p->getTraceNames();
-        std::for_each(traceNamesForBlock.begin(), traceNamesForBlock.end(), [this, p](const std::string& n){
-            traceNames.push_back(p->getBlockName()+ "::" + n);
-        }); });
+    });
     bufferEntry.resize(1+traceables.size());
 }
 
@@ -106,8 +103,8 @@ std::string Tracer::getTraceNames() const
 {
     std::string result("");
     std::for_each(
-        traceNames.begin(), traceNames.end(), [&result](const std::string &tr)
-        { result += tr + ","; });
+        traceables.begin(), traceables.end(), [&result](const Traceable &tr)
+        { result += tr.getName() + ","; });
     if (result.at(result.length() - 1) == ',')
         result = result.substr(0, result.length() - 1);
     return result;
@@ -124,8 +121,8 @@ void Tracer::captureTrace(uint64_t traceCounter)
         traceBuffer.front().at(0) = (double)traceCounter;
         auto startOfValues = traceBuffer.front().begin();
         startOfValues++;
-        std::transform(traceables.begin(), traceables.end(), startOfValues, [](const double *r)
-                       { return *r; });
+        std::transform(traceables.begin(), traceables.end(), startOfValues, [](const Traceable& tr)
+                       { return tr.getValue(); });
         auto sg = xSemaphoreGive(bufferSem);
         if (sg == pdFALSE)
         {

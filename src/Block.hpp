@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include "Traceable.hpp"
+
 class Block
 {
 public:
@@ -20,18 +22,17 @@ public:
 
 	const std::string& getBlockName();
 	const std::string& getTypeName();
-	const std::vector<std::string> &getTraceNames();
-	const std::vector<const double *> &getTraceables();
+
+	const std::vector<Traceable> &getTraceables();
 
 protected:
 	void registerTraceable(const std::string &name, const double *ref);
-
-	std::vector<std::string> traceNames;
-	std::vector<const double *> traceables;
+	std::vector<Traceable> traceables;
 
 	std::string typeName;
 	std::string blockName;
 	double period;
 };
+
 
 #endif /* BLOCK_H_ */

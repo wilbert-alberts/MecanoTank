@@ -27,18 +27,13 @@ const std::string &Block::getTypeName()
 	return typeName;
 }
 
-const std::vector<std::string> &Block::getTraceNames()
-{
-	return traceNames;
-}
-
-const std::vector<const double *> &Block::getTraceables()
+const std::vector<Traceable> & Block::getTraceables()
 {
 	return traceables;
 }
 
 void Block::registerTraceable(const std::string &name, const double *ref)
 {
-	traceNames.push_back(name);
-	traceables.push_back(ref);
+	Traceable tr(name, ref);
+	traceables.push_back(tr);
 }

@@ -7,14 +7,18 @@
 
 #include "Sequencer.hpp"
 
-Sequencer::Sequencer(ServoGroup *sg) : sequenceCounter(0), running(false), period(sg->getPeriod()), sequence(sg->getSequence())
+Sequencer::Sequencer(ServoGroup *sg)
+    : sequenceCounter(0),
+      running(false), 
+      period(sg->getPeriod()), 
+      sequence(sg->getSequence())
 {
     Serial.print("Creating Controller with period: ");
     Serial.println(period);
     tracer = new Tracer(sg);
 }
 
-Sequencer::Sequencer(double p) : sequenceCounter(0), running(false), period(p), sequence(new std::vector<Block*>())
+Sequencer::Sequencer(double p) : sequenceCounter(0), running(false), period(p), sequence(new std::vector<Block *>())
 {
     Serial.println("Creating controller with deprecated constructor");
     tracer = nullptr;
