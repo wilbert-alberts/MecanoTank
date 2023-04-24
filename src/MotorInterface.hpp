@@ -19,12 +19,12 @@
 #define PIN_PWM_BL (2)
 #define PIN_PWM_FL (14)
 #define PIN_PWM_FR (26)
-#define PIN_PWM_BR (1)
+#define PIN_PWM_BR (22)
 
 #define PIN_DIR_BL (13)
 #define PIN_DIR_FL (0)
 #define PIN_DIR_FR (25)
-#define PIN_DIR_BR (3)
+#define PIN_DIR_BR (21)
 
 class MotorInterface : public Block
 {

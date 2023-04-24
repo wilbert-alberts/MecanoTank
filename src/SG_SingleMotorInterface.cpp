@@ -1,5 +1,7 @@
 #include "SG_SingleMotorInterface.hpp"
 
+#include <iostream>
+
 static double normalizeDC(double dc)
 {
     if (dc < -1.0)
@@ -53,21 +55,25 @@ void SG_QuadMotorInterface::disable()
 
 void SG_QuadMotorInterface::setFL(double dc)
 {
+    std::cout << "setPWM(FL, " << dc << ")" << std::endl;
     dcFL = normalizeDC(dc);
 }
 
 void SG_QuadMotorInterface::setFR(double dc)
 {
+    std::cout << "setPWM(FR, " << dc << ")" << std::endl;
     dcFR = normalizeDC(dc);
 }
 
 void SG_QuadMotorInterface::setBL(double dc)
 {
+    std::cout << "setPWM(BL, " << dc << ")" << std::endl;
     dcBL = normalizeDC(dc);
 }
 
 void SG_QuadMotorInterface::setBR(double dc)
 {
+    std::cout << "setPWM(BR, " << dc << ")" << std::endl;
     dcBR = normalizeDC(dc);
 }
 

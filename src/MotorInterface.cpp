@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "MotorInterface.hpp"
 
 MotorInterface::MotorInterface(const std::string &bn, double p,
@@ -8,9 +10,13 @@ MotorInterface::MotorInterface(const std::string &bn, double p,
       pwmIn(&safeValue),
       safeValue(0.0), enabled(en)
 {
-    // Serial.println("MotorInterface::MotorInterface()");
-    // Serial.print("pin: "); Serial.println(pp);
-    // Serial.print("channel: "); Serial.println(channel);
+    std::cout << "MotorInterface::MotorInterface(" << bn << ")" << std::endl;
+    std::cout << "pwm: " << (int)pp << std::endl;
+    std::cout << "dir: " << (int)dp << std::endl;
+    std::cout << "channel: " << (int)channel << std::endl;
+
+    // Set direction pin to output
+    pinMode(dp, OUTPUT);
 
     // attach the channel to the GPIO to be controlled
     pinMode(pp, OUTPUT);
@@ -18,7 +24,6 @@ MotorInterface::MotorInterface(const std::string &bn, double p,
 
     // configure LED PWM functionalitites
     ledcSetup(channel, PWM_FREQ, PWM_RESOLUTION);
-
 
     // Serial.println("MotorInterface::MotorInterface() exit");
 }
@@ -34,7 +39,7 @@ void MotorInterface::setPWMIn(double *p)
 void MotorInterface::calculate()
 {
     if (*enabled)
-    {        
+    {
         uint16_t pwmValue = abs(*pwmIn) * PWM_MAX;
         if (*pwmIn < 0)
         {
@@ -48,6 +53,7 @@ void MotorInterface::calculate()
     }
     else
     {
+        digitalWrite(directionPin, false);
         ledcWrite(channel, 0);
     }
 }

@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <iostream>
 
 #include "Debugpin.hpp"
 
@@ -25,11 +26,11 @@ void setup()
   pinMode(DEBUGPIN, OUTPUT);
   pinMode(REDBUTTONPIN, INPUT);
 
-  Serial.println("Push button");
+  std::cout << "Push button" << std::endl;
 
   // waitUntilStarted(REDBUTTONPIN);
 
-  Serial.println("Starting");
+  std::cout << "Starting" << std::endl;
 
   // SG_RawSensor *sg = new SG_RawSensor(1.0);
   // SG_MeaSystem* sg = new SG_MeaSystem(1.0);
@@ -39,14 +40,14 @@ void setup()
   Sequencer *seq = new SequencerHW(sg);
   seq->start();
 
-  // Serial.println("5 seconds to enable motor interface.");
+  std::cout << "5 seconds to enable motor interface." << std::endl;
   sleep(5);
   sg->setFL(-0.5);
-  sg->setFR(-1.0);
-  sg->setBL(0.5);
-  sg->setBR(1.0);
+  sg->setFR(-0.25);
+  sg->setBL(0.25);
+  sg->setBR(0.5);
   sg->enable();
-  Serial.println("Enabled, we have lift of.");
+  std::cout << "Enabled, we have lift of." << std::endl;
 
 
   // xTaskCreate(traceConsumer,
