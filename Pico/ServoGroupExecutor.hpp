@@ -3,7 +3,7 @@
 
 #include "PeriodicTask.hpp"
 
-#include "ServoGroup.hpp"
+#include "SG.hpp"
 
 class ServoGroupExecutor: public PeriodicTask
 {

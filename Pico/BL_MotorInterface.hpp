@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <string>
 
-#include "Block.hpp"
+#include "BL.hpp"
 
 
 class MotorInterfaceBlock : public Block {

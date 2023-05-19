@@ -1,5 +1,6 @@
 
-#include "ServoGroup.hpp"
+#include "SG.hpp"
+#include "BL.hpp"
 
 ServoGroup::ServoGroup(const std::string& n, double p)
 : name(n)

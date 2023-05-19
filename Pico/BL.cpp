@@ -5,7 +5,7 @@
  *      Author: walberts
  */
 
-#include "Block.hpp"
+#include "BL.hpp"
 
 Block::Block(const std::string &tn, const std::string &bn)
 	: typeName(tn), blockName(bn)

@@ -11,7 +11,7 @@
 #include <string>
 #include <iostream>
 
-#include "Block.hpp"
+#include "BL.hpp"
 
 class DebugBlock: public Block
 {
