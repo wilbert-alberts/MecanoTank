@@ -35,7 +35,7 @@ void PeriodicTask::taskFunction()
 
 void PeriodicTask::tick()
 {
-    std::cout << "tick" << std::endl;
+    // std::cout << "tick" << std::endl;
 }
 
 PeriodicTask::PeriodicTask(double sp, const std::string& tn)

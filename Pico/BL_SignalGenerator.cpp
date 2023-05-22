@@ -5,10 +5,15 @@
 SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn)
     : Block("SignalGenerator", bn), signal(0.0), counter(0)
 {
-    signals.push_back(0.0);
-    signals.push_back(0.33);
+    // signals.push_back(0.0);
+    // signals.push_back(0.33);
     signals.push_back(0.5);
-    signals.push_back(1.0);
+    // signals.push_back(1.0);
+}
+
+SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn, double s)
+    : Block("SignalGenerator", bn), signal(s), counter(0)
+{
 }
 
 double *SignalGeneratorBlock::getOutput()

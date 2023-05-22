@@ -1,14 +1,14 @@
 #include "ServoGroupExecutor.hpp"
 
 #include "pico/stdlib.h"
+#include "HSI.hpp"
 
-#define LED_PIN 4
 
 ServoGroupExecutor::ServoGroupExecutor(ServoGroup *sg)
     : PeriodicTask(sg->getPeriod(), sg->getName()), servoGroup(sg)
 {
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
+    gpio_init(PIN_OUT_DEBUG);
+    gpio_set_dir(PIN_OUT_DEBUG, GPIO_OUT);
 
 }
 
@@ -16,7 +16,8 @@ void ServoGroupExecutor::tick()
 {
     static uint l = 1;
 
+    gpio_put(PIN_OUT_DEBUG, 1);
     servoGroup->executeSequence();
-    gpio_put(LED_PIN, l);
+    gpio_put(PIN_OUT_DEBUG, 0);
     l = 1 - l;
 }

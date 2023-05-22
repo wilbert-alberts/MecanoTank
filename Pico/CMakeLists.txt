@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 # Set these environment variables accordingly!
-set(FREERTOS_KERNEL_PATH /home/wilbert/diskstation/Project/Pico/FreeRTOS-SMP-Demos/FreeRTOS/Source)
+set(FREERTOS_KERNEL_PATH /home/ben/Projects/pico-freertos/FreeRTOS-SMP-Demos/FreeRTOS/Source)
 # set(PICO_SDK_PATH )
 
 # Pull in SDK (must be before project)
@@ -23,7 +23,11 @@ add_executable(mecanumtank
         BL_ABDecoder.cpp
         BL_MotorInterface.cpp
         BL_SignalGenerator.cpp
-        
+        # BL_Differentiator.cpp
+        BL_ErrorDifference.cpp
+        BL_PID.cpp
+        BL_Sum.cpp
+                
         ServoGroupExecutor.cpp
         PeriodicTask.cpp
         SG.cpp
@@ -42,5 +46,5 @@ target_link_libraries(mecanumtank pico_stdlib hardware_pwm hardware_gpio FreeRTO
 
 pico_add_extra_outputs(mecanumtank)
 
-pico_enable_stdio_usb(mecanumtank 1)
-pico_enable_stdio_uart(mecanumtank 0)
+pico_enable_stdio_usb(mecanumtank 0)
+pico_enable_stdio_uart(mecanumtank 1)

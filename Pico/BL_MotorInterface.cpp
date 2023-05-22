@@ -42,32 +42,32 @@ void MotorInterfaceBlock::calculate()
 
     pwm = std::abs(pwm);
 
-    std::cout << "pwmPin: " << pwmPin << ", slice: " << sliceNum << ", channel: " << channel << std::endl;
-    std::cout << "input: " << *input << ", pwm: " << pwm << std::endl;
+    // std::cout << "pwmPin: " << pwmPin << ", slice: " << sliceNum << ", channel: " << channel << std::endl;
+    // std::cout << "input: " << *input << ", pwm: " << pwm << std::endl;
 
     uint pwmInt = (uint)(pwm * WRAP_LEVEL);
-    std::cout << "input: " << *input << ", pwm: " << pwm << ", pwmInt: " << pwmInt << std::endl;
+    // std::cout << "input: " << *input << ", pwm: " << pwm << ", pwmInt: " << pwmInt << std::endl;
     
     if ((pwmInt > 0) && (pwmInt < WRAP_LEVEL))
     {
         gpio_set_function(pwmPin, GPIO_FUNC_PWM);
         pwm_set_chan_level(sliceNum, channel, pwmInt);
         pwm_set_enabled(sliceNum, true);
-        std::cout << "pwm set to " << pwmInt << std::endl;
+        // std::cout << "pwm set to " << pwmInt << std::endl;
     }
     if (pwmInt == 0)
     {
         pwm_set_enabled(sliceNum, false);
         gpio_set_function(pwmPin, GPIO_FUNC_SIO);
         gpio_put(pwmPin, 0);
-        std::cout << "pwm set to zero" << std::endl;
+        // std::cout << "pwm set to zero" << std::endl;
     }
     if (pwmInt == WRAP_LEVEL)
     {
         pwm_set_enabled(sliceNum, false);
         gpio_set_function(pwmPin, GPIO_FUNC_SIO);
         gpio_put(pwmPin, 1);
-        std::cout << "pwm set to max" << std::endl;
+        // std::cout << "pwm set to max" << std::endl;
     }
 }
 

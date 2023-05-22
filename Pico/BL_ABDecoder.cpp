@@ -1,5 +1,7 @@
 #include "FreeRTOS.h"
 
+#include <iostream>
+
 #include "hardware/gpio.h"
 #include "algorithm"
 
@@ -20,6 +22,7 @@ ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b)
     , pinA(a)
     , pinB(b)
     , position(0)
+    , positionDbl(0.0)
     , decoder(gpio_get(a), gpio_get(b))
 {
     gpio_set_irq_enabled_with_callback(pinA, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, ABDecoderBlock::pinChangedStatic);
@@ -43,9 +46,11 @@ void ABDecoderBlock::pinChanged()
 void ABDecoderBlock::calculate()
 {
     position = decoder.getPosition();
+    positionDbl = static_cast<double>(position);
+    std::cout << "ABDecoder " << blockName << ": " << position << std::endl;
 }
 
-uint64_t* ABDecoderBlock::getOutput()
+double* ABDecoderBlock::getOutput()
 {
-    return &position;
+    return &positionDbl;
 }

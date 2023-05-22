@@ -9,6 +9,7 @@ class SignalGeneratorBlock: public Block
 {
 public:
     SignalGeneratorBlock(const std::string& bn);
+    SignalGeneratorBlock(const std::string& bn, double sig);
     virtual ~SignalGeneratorBlock() {}
     double* getOutput();
 
@@ -18,6 +19,6 @@ protected:
 private:
     std::vector<double> signals;
     double signal;
-    uint counter;
+    unsigned int counter;
 };
 #endif
