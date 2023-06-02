@@ -13,7 +13,7 @@ class MotorInterfaceBlock : public Block {
 public:
     MotorInterfaceBlock(const std::string& bn, uint8_t pin, uint8_t dir) ;
     ~MotorInterfaceBlock() {}
-    void setInput(double* src);
+    virtual void setInput(double* src);
 
 protected:
     virtual void calculate() ;

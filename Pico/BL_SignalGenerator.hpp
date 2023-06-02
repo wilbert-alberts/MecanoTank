@@ -11,7 +11,7 @@ public:
     SignalGeneratorBlock(const std::string& bn);
     SignalGeneratorBlock(const std::string& bn, double sig);
     virtual ~SignalGeneratorBlock() {}
-    double* getOutput();
+    virtual double* getOutput();
 
 protected:
     virtual void calculate();

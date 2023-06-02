@@ -22,20 +22,18 @@ void ErrorDifferenceBlock::calculate()
 	error = *desired - *actual;
 }
 
-void ErrorDifferenceBlock::setInputActual(double *p)
+void ErrorDifferenceBlock::setInput(unsigned int id, double *p)
 {
-	if (p != nullptr)
+	if (p != nullptr && id == IN_ACTUAL)
 	{
 		actual = p;
 	}
-}
-void ErrorDifferenceBlock::setInputDesired(double *p)
-{
-	if (p != nullptr)
+	if (p != nullptr && id == IN_DESIRED)
 	{
 		desired = p;
 	}
 }
+
 double *ErrorDifferenceBlock::getOutput()
 {
 	return &error;

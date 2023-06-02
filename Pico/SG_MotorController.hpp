@@ -28,18 +28,18 @@ public:
         abDiffFL->setInput(abFL->getOutput());
 
         ErrorDifferenceBlock* abErrorFL = new ErrorDifferenceBlock("FrontLeft_Error");
-        abErrorFL->setInputActual(abDiffFL->getOutput());
-        abErrorFL->setInputDesired(spgFL->getOutput());
+        abErrorFL->setInput(IN_ACTUAL,  abDiffFL->getOutput());
+        abErrorFL->setInput(IN_DESIRED, spgFL->getOutput());
 
         PIDBlock* pidFL = new PIDBlock("FrontLeft_PID", SERVO_FREQUENCY);
         pidFL->setInput(abErrorFL->getOutput());
         pidFL->setKP(20.0);
 
-        SumBlock* sumFL = new SumBlock("FrontLeft_Sum", 0,1,1,0,0);
-        sumFL->setIn1(spgFL->getOutput());
-        sumFL->setIn2(pidFL->getOutput());
-        sumFL->setFactor1(1.0/(2*6800.0));
-        sumFL->setFactor2(1.0/(2*6800.0));
+        SumBlock* sumFL = new SumBlock("FrontLeft_Sum", 2);
+        sumFL->setInput(0, spgFL->getOutput());
+        sumFL->setInput(1, pidFL->getOutput());
+        sumFL->setFactor(0, 1.0/(2*6800.0));
+        sumFL->setFactor(1, 1.0/(2*6800.0));
 
         MotorInterfaceBlock* miFL = new MotorInterfaceBlock("FrontLeft_MI", PIN_OUT_FRONT_RIGHT_PWM, PIN_OUT_FRONT_RIGHT_DIR);
         miFL->setInput(sumFL->getOutput());

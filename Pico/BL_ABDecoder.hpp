@@ -18,7 +18,7 @@ public:
     virtual ~ABDecoderBlock();
 	virtual void calculate();
 
-    double* getOutput();
+    virtual double* getOutput();
 
 private:
     uint8_t pinA;

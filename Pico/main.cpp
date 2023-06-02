@@ -17,6 +17,8 @@
 #include "SG_MotorController.hpp"
 #include "ServoGroupExecutor.hpp"
 
+#include "BL2.hpp"
+
 /*-----------------------------------------------------------*/
 
 int main( void )

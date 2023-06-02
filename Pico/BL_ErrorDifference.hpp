@@ -10,15 +10,17 @@
 
 #include "BL.hpp"
 
+#define IN_ACTUAL  (0)
+#define IN_DESIRED (1)
+
 class ErrorDifferenceBlock : public Block
 {
 public:
 	ErrorDifferenceBlock(const std::string& bn);
 	virtual ~ErrorDifferenceBlock();
 	virtual void calculate();
-	void setInputActual(double *p);
-	void setInputDesired(double *p);
-	double *getOutput();
+	virtual void setInput(unsigned int, double *p);
+	virtual double *getOutput();
 
 private:
 	double safe_actual;

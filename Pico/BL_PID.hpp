@@ -18,8 +18,8 @@ public:
 	PIDBlock(const std::string &bn, double servoFrequency);
 	virtual ~PIDBlock();
 	virtual void calculate();
-	double *getOutput();
-	void setInput(double *p);
+	virtual double *getOutput();
+	virtual void setInput(double *p);
 	void setKP(double p);
 	void setKI(double p);
 	void setKD(double p);

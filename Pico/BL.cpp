@@ -27,3 +27,20 @@ const std::string &Block::getTypeName()
 	return typeName;
 }
 
+double* Block::getOutput()
+{
+    return nullptr;
+}
+
+double* Block::getOutput(unsigned int id)
+{
+    return nullptr;
+}
+
+void Block::setInput(double* src)
+{
+}
+
+void Block::setInput(unsigned int id, double* src)
+{
+}

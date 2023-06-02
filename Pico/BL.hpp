@@ -21,6 +21,11 @@ public:
 	const std::string& getBlockName();
 	const std::string& getTypeName();
 
+	virtual double* getOutput(unsigned int id);
+	virtual double* getOutput();
+	virtual void    setInput(unsigned int id, double* src);
+	virtual void    setInput(double* src);
+
 protected:
 	std::string typeName;
 	std::string blockName;
