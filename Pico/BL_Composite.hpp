@@ -17,7 +17,9 @@
 
 class CompositeBlock: public Block {
 public:
-	CompositeBlock(const std::string &bn, std::vector<Block*> _blocks);
+	typedef std::shared_ptr<Block> BlockPtr;
+
+	CompositeBlock(const std::string &bn, std::vector<BlockPtr> _blocks);
 
 	virtual ~CompositeBlock();
 
@@ -30,10 +32,13 @@ public:
 	virtual void setInput(const CompositeTerminal &t, double *src);
 
 	static const std::string separator;
-	Block* getBlockByName(const std::string& fqn);
+	BlockPtr getBlockByFQN(const std::string &fqn);
 
 protected:
-	std::vector<Block*> blocks;
+	std::vector<BlockPtr> blocks;
+
+	BlockPtr findBlockByNameOrError(const std::string &fqn,
+			const std::string &errorMsg);
 };
 
 #endif /* COMPOSITEBLOCK_H_ */

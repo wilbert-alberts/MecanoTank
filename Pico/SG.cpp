@@ -3,9 +3,12 @@
 #include "BL.hpp"
 
 ServoGroup::ServoGroup(const std::string& n, double p)
-: CompositeBlock(n, std::vector<Block*>())
+: CompositeBlock(n, std::vector<CompositeBlock::BlockPtr>())
 , counter(0)
 , period(p) 
+{}
+
+ServoGroup::~ServoGroup()
 {}
 
 const std::string& ServoGroup::getName()

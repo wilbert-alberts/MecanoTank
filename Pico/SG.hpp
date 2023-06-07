@@ -10,6 +10,7 @@ class ServoGroup: public CompositeBlock
 {
 public:
     ServoGroup(const std::string& name, double period);
+    virtual ~ServoGroup();
     const std::string& getName();
     double getPeriod();
     std::vector<Block *> *getSequence();

@@ -30,30 +30,11 @@ public:
 	static const IDTerminal OUT_OUTPUT ;
 
 protected:
+	void Error(const std::string& message);
+
 	std::string typeName;
 	std::string blockName;
 };
 
-
-//class Block
-//{
-//public:
-//	Block(const std::string &tn, const std::string &bn);
-//	virtual ~Block();
-//	virtual void calculate() = 0;
-//
-//	const std::string& getBlockName();
-//	const std::string& getTypeName();
-//
-//	virtual double* getOutput(unsigned int id);
-//	virtual double* getOutput();
-//	virtual void    setInput(unsigned int id, double* src);
-//	virtual void    setInput(double* src);
-//
-//protected:
-//	std::string typeName;
-//	std::string blockName;
-//};
-//
 
 #endif /* BLOCK_H_ */
