@@ -25,6 +25,18 @@ const std::string& Block::getBlockTypeName() const {
 	return typeName;
 }
 
+double* Block::getOutput(const Terminal &t)
+{
+	Error("Block::getOutput not supported; block has no outputs");
+	return nullptr;
+}
+
+void Block::setInput(const Terminal &t, double *src )
+{
+	Error("Block::setInput not supported; block has no input");
+}
+
+
 void Block::Error(const std::string& msg) {
 	::Error(typeName + "::" + blockName+ ": " + msg);
 }

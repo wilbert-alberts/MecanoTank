@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "BL.hpp"
+#include "BL_Leaf.hpp"
 #include "T.hpp"
 
-class SignalGeneratorBlock: public Block
+class SignalGeneratorBlock: public LeafBlock
 {
 public:
     SignalGeneratorBlock(const std::string& bn);

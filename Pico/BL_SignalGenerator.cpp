@@ -3,8 +3,9 @@
 #include "BL_SignalGenerator.hpp"
 
 SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn)
-    : Block("SignalGenerator", bn), signal(0.0), counter(0)
+    : LeafBlock("SignalGenerator", bn), signal(0.0), counter(0)
 {
+	addDefaultOutput(&signal);
     // signals.push_back(0.0);
     // signals.push_back(0.33);
     signals.push_back(0.5);
@@ -12,8 +13,9 @@ SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn)
 }
 
 SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn, double s)
-    : Block("SignalGenerator", bn), signal(s), counter(0)
+    : LeafBlock("SignalGenerator", bn), signal(s), counter(0)
 {
+	addDefaultOutput(&signal);
 }
 
 double *SignalGeneratorBlock::getOutput(const Terminal &t)

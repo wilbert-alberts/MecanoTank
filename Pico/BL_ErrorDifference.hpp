@@ -8,10 +8,10 @@
 #ifndef _ERRORDIFFERENCE_H_
 #define _ERRORDIFFERENCE_H_
 
-#include "BL.hpp"
+#include "BL_Leaf.hpp"
 #include "T_ID.hpp"
 
-class ErrorDifferenceBlock : public Block
+class ErrorDifferenceBlock : public LeafBlock
 {
 public:
 	ErrorDifferenceBlock(const std::string& bn);
@@ -19,8 +19,8 @@ public:
 
 	virtual void calculate();
 
-	virtual void setInput(const Terminal &t, double *src);
-	virtual double *getOutput(const Terminal &t = OUT_OUTPUT);
+//	virtual void setInput(const Terminal &t, double *src);
+//	virtual double *getOutput(const Terminal &t = OUT_OUTPUT);
 
 	static const IDTerminal IN_ACTUAL;
 	static const IDTerminal IN_DESIRED;

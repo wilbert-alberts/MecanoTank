@@ -23,8 +23,8 @@ public:
     const std::string& getBlockTypeName()  const;
 
 	virtual void calculate() = 0;
-	virtual double* getOutput(const Terminal &t = OUT_OUTPUT) = 0;
-	virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr) = 0;
+	virtual double* getOutput(const Terminal &t = OUT_OUTPUT);
+	virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
 
 	static const IDTerminal IN_INPUT;
 	static const IDTerminal OUT_OUTPUT ;

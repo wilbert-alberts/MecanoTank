@@ -10,16 +10,14 @@
 
 #include <string>
 
-#include "BL.hpp"
+#include "BL_Leaf.hpp"
 
-class DifferentiatorBlock: public Block
+class DifferentiatorBlock: public LeafBlock
 {
 public:
 	DifferentiatorBlock(const std::string &bn, double _servoFrequency);
 	virtual ~DifferentiatorBlock();
 	virtual void calculate();
-	virtual double* getOutput(const Terminal &t = OUT_OUTPUT) = 0;
-	virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr) = 0;
 
 private:
 	double* input;

@@ -14,6 +14,10 @@
 
 const std::string CompositeBlock::separator(".");
 
+CompositeBlock::CompositeBlock(const std::string &bn) :
+		Block("CompositeBlock", bn), blocks(std::vector<BlockPtr>()) {
+}
+
 CompositeBlock::CompositeBlock(const std::string &bn,
 		std::vector<BlockPtr> _blocks) :
 		Block("CompositeBlock", bn), blocks(_blocks) {

@@ -19,6 +19,7 @@ class CompositeBlock: public Block {
 public:
 	typedef std::shared_ptr<Block> BlockPtr;
 
+	CompositeBlock(const std::string &bn);
 	CompositeBlock(const std::string &bn, std::vector<BlockPtr> _blocks);
 
 	virtual ~CompositeBlock();
