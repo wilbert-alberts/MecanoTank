@@ -4,21 +4,20 @@
 #include <vector>
 #include <string>
 
-class Block;
+#include "BL_Composite.hpp"
 
-class ServoGroup
+class ServoGroup: public CompositeBlock
 {
 public:
     ServoGroup(const std::string& name, double period);
     const std::string& getName();
     double getPeriod();
     std::vector<Block *> *getSequence();
+
     void executeSequence();
     int64_t getCounter();
 
 protected:
-    const std::string& name;
-    std::vector<Block *>    sequence;
     int64_t counter;
     double period;
 };

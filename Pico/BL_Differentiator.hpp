@@ -18,8 +18,8 @@ public:
 	DifferentiatorBlock(const std::string &bn, double _servoFrequency);
 	virtual ~DifferentiatorBlock();
 	virtual void calculate();
-	void setInput(double* src);
-	double* getOutput() ;
+	virtual double* getOutput(const Terminal &t = OUT_OUTPUT) = 0;
+	virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr) = 0;
 
 private:
 	double* input;

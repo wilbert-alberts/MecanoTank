@@ -2,6 +2,7 @@
 #define SUM_HPP_
 
 #include "BL.hpp"
+#include "T.hpp"
 
 #include <vector>
 
@@ -12,8 +13,8 @@ public:
     virtual ~SumBlock();
     virtual void calculate();
 
-    double *getOutput();
-    void setInput(unsigned int idx, double *p);
+    double *getOutput(const Terminal &t = OUT_OUTPUT);
+    void setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
 
     void setOffset(double o);
     void setFactor(unsigned int idx, double o);

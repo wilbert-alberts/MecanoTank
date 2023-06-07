@@ -16,7 +16,7 @@ SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn, double s)
 {
 }
 
-double *SignalGeneratorBlock::getOutput()
+double *SignalGeneratorBlock::getOutput(const Terminal &t)
 {
     return &signal;
 }

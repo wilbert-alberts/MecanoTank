@@ -8,7 +8,7 @@
 #include "BL_PID.hpp"
 
 PIDBlock::PIDBlock(const std::string &bn, double _servoFrequency)
-	: Block("PID", bn), servoFrequency(_servoFrequency), saveInput(0), input(&saveInput), sumInput(0),
+	: Block("PID", bn), servoFrequency(_servoFrequency), output(0.0), saveInput(0), input(&saveInput), sumInput(0),
 	  prevInput(0), kP(1), kI(0), kD(0){};
 PIDBlock::~PIDBlock() {}
 
@@ -20,11 +20,11 @@ void PIDBlock::calculate()
 	double d = kD * (*input - prevInput) * servoFrequency;
 	output = p + i + d;
 }
-double *PIDBlock::getOutput()
+double *PIDBlock::getOutput(const Terminal &t)
 {
 	return &output;
 }
-void PIDBlock::setInput(double *p)
+void PIDBlock::setInput(const Terminal &t, double *p)
 {
 	input = p;
 }

@@ -2,11 +2,13 @@
 
 #include <iostream>
 
+#include "T_ID.hpp"
+
 SumBlock::SumBlock(const std::string &bn, unsigned int _nrInputs)
     : Block("Sum", bn), offset(0.0), safeValue(0), nrInputs(_nrInputs)
     , out(0)
 {
-    for (int idx=0; idx< nrInputs; idx++) {
+    for ( unsigned int idx=0; idx< nrInputs; idx++) {
         factors.push_back(1.0);
         in.push_back(&safeValue);
     }
@@ -16,13 +18,13 @@ SumBlock::~SumBlock(){};
 void SumBlock::calculate()
 {
     out = offset;
-    for (int idx=0; idx< nrInputs; idx++) {
+    for (unsigned int idx=0; idx< nrInputs; idx++) {
         out += *(in[idx]) * factors[idx];
     }
     // std::cout<<"SUM in1: " << *in1 << ", in2: " << *in2 << ", out: " << out << std::endl;
     // std::cout<<"SUM in1: " << *in1*s1 << ", in2: " << *in2 * s2 << ", out: " << out << std::endl;
 }
-double *SumBlock::getOutput()
+double *SumBlock::getOutput(const Terminal &t)
 {
     return &out;
 }
@@ -36,8 +38,11 @@ void SumBlock::setFactor(unsigned int idx, double o)
     factors[idx] = o;
 }
 
-void SumBlock::setInput(unsigned int idx, double *p)
+void SumBlock::setInput(const Terminal &t, double *src)
 {
+	const IDTerminal* idT = dynamic_cast<const IDTerminal*>(&t);
+
+	unsigned int idx = (unsigned int)(std::stoi(idT->getID()));
     if (idx>=0 && idx<nrInputs)
-    in[idx] = p;
+    in[idx] = src;
 }

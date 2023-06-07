@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "BL.hpp"
+#include "T.h"
 #include "ABDecoder.hpp"
 
 
@@ -18,7 +19,7 @@ public:
     virtual ~ABDecoderBlock();
 	virtual void calculate();
 
-    virtual double* getOutput();
+    virtual double* getOutput(const Terminal &t = OUT_OUTPUT);
 
 private:
     uint8_t pinA;

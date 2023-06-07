@@ -7,13 +7,13 @@
 #include <string>
 
 #include "BL.hpp"
-
+#include "T.hpp"
 
 class MotorInterfaceBlock : public Block {
 public:
     MotorInterfaceBlock(const std::string& bn, uint8_t pin, uint8_t dir) ;
     ~MotorInterfaceBlock() {}
-    virtual void setInput(double* src);
+    virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
 
 protected:
     virtual void calculate() ;

@@ -9,18 +9,21 @@
 #define _ERRORDIFFERENCE_H_
 
 #include "BL.hpp"
-
-#define IN_ACTUAL  (0)
-#define IN_DESIRED (1)
+#include "T_ID.hpp"
 
 class ErrorDifferenceBlock : public Block
 {
 public:
 	ErrorDifferenceBlock(const std::string& bn);
 	virtual ~ErrorDifferenceBlock();
+
 	virtual void calculate();
-	virtual void setInput(unsigned int, double *p);
-	virtual double *getOutput();
+
+	virtual void setInput(const Terminal &t, double *src);
+	virtual double *getOutput(const Terminal &t = OUT_OUTPUT);
+
+	static const IDTerminal IN_ACTUAL;
+	static const IDTerminal IN_DESIRED;
 
 private:
 	double safe_actual;

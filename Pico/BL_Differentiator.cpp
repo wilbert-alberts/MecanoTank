@@ -27,13 +27,13 @@ void DifferentiatorBlock::calculate()
 	// std::cout << "ED: input: " << *input << ", output: " << output << std::endl;
 }
 
-void DifferentiatorBlock::setInput(double *src)
+void DifferentiatorBlock::setInput(const Terminal &t, double *src)
 {
 	if (src != nullptr)
 		input = src;
 }
 
-double *DifferentiatorBlock::getOutput()
+double *DifferentiatorBlock::getOutput(const Terminal &t)
 {
 	return &output;
 }

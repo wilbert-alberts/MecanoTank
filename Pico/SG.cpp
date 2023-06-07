@@ -3,15 +3,15 @@
 #include "BL.hpp"
 
 ServoGroup::ServoGroup(const std::string& n, double p)
-: name(n)
-, period(p) 
+: CompositeBlock(n, std::vector<Block*>())
 , counter(0)
+, period(p) 
 {}
 
 const std::string& ServoGroup::getName()
 {
     // Serial.println("ServoGroup::getPeriod()");
-    return name;
+    return getBlockName();
 }
 
 double ServoGroup::getPeriod()
@@ -28,7 +28,7 @@ int64_t ServoGroup::getCounter()
 
 void ServoGroup::executeSequence()
 {
-    for (auto b: sequence) {
+    for (auto b: blocks) {
         b->calculate();
     }
 

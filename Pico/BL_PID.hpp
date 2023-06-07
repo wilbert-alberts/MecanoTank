@@ -11,6 +11,7 @@
 #include <string>
 
 #include "BL.hpp"
+#include "T.hpp"
 
 class PIDBlock : public Block
 {
@@ -18,8 +19,8 @@ public:
 	PIDBlock(const std::string &bn, double servoFrequency);
 	virtual ~PIDBlock();
 	virtual void calculate();
-	virtual double *getOutput();
-	virtual void setInput(double *p);
+	virtual double *getOutput(const Terminal &t = OUT_OUTPUT);
+	virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
 	void setKP(double p);
 	void setKI(double p);
 	void setKD(double p);
