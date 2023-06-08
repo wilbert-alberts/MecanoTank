@@ -22,7 +22,9 @@ public:
 	virtual ~LeafBlock();
 
 	virtual double* getOutput(const Terminal &t = Block::OUT_OUTPUT);
+	virtual double* getOutput(const std::string &tid);
 	virtual void setInput(const Terminal &t = Block::IN_INPUT, double *src = nullptr) ;
+	virtual void setInput(const std::string& tid, double *src = nullptr) ;
 
 
 protected:

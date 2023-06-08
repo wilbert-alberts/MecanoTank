@@ -6,6 +6,7 @@
  */
 
 #include "BL_Leaf.hpp"
+#include "T_Factory.hpp"
 
 LeafBlock::LeafBlock(const std::string &_typeName, const std::string &_blockName):
 Block(_typeName, _blockName)
@@ -34,6 +35,11 @@ double* LeafBlock::getOutput(const Terminal &t) {
 	return nullptr;
 }
 
+double* LeafBlock::getOutput(const std::string &tid) {
+	auto t = TerminalFactory::createFromString(tid);
+	return getOutput(*t);
+}
+
 void LeafBlock::setInput(const Terminal &t, double *src) {
 	if (src == nullptr) {
 		Error("LeafBlock::setInput: src should not be null");
@@ -56,9 +62,15 @@ void LeafBlock::setInput(const Terminal &t, double *src) {
 	}
 }
 
+void LeafBlock::setInput(const std::string &tid, double *src) {
+	auto t = TerminalFactory::createFromString(tid);
+	setInput(*t,src);
+}
+
 void LeafBlock::addDefaultOutput(double* src) {
 	addOutput(Block::OUT_OUTPUT, src);
 }
+
 void LeafBlock::addOutput(const IDTerminal& t, double* src) {
 	const std::string id = t.getID();
 	outputTerminals[id] = src;

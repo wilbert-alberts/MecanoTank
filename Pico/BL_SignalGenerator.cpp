@@ -1,4 +1,4 @@
-
+#include <iostream>
 
 #include "BL_SignalGenerator.hpp"
 
@@ -29,5 +29,7 @@ void SignalGeneratorBlock::calculate()
     {
         signal = signals[counter];
         counter = (counter + 1) % signals.size();
+
     }
+    std::cout << "SigGen calculate" << std::endl;
 }

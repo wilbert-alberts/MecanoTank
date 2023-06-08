@@ -32,6 +32,9 @@ public:
 	virtual double* getOutput(const CompositeTerminal &t);
 	virtual void setInput(const CompositeTerminal &t, double *src);
 
+	virtual double* getOutput(const std::string &t);
+	virtual void setInput(const std::string &t, double *src);
+
 	static const std::string separator;
 	BlockPtr getBlockByFQN(const std::string &fqn);
 

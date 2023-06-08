@@ -9,6 +9,7 @@
 
 #include "T_Composite.hpp"
 #include "T_ID.hpp"
+#include "T_Factory.hpp"
 
 #include "BL_Composite.hpp"
 
@@ -59,6 +60,11 @@ double* CompositeBlock::getOutput(const CompositeTerminal &ct) {
 	return block->getOutput(ct.getTail());
 }
 
+double* CompositeBlock::getOutput(const std::string &tid) {
+	auto t = TerminalFactory::createFromString(tid);
+	return getOutput(*t);
+}
+
 void CompositeBlock::setInput(const Terminal &t, double *src) {
 	const CompositeTerminal *ct = dynamic_cast<const CompositeTerminal*>(&t);
 	if (ct == nullptr) {
@@ -82,6 +88,11 @@ void CompositeBlock::setInput(const CompositeTerminal &ct, double *src) {
 			"CompositeBlock::setInput(): Unable to find an block named "
 					+ headIDName);
 	block->setInput(ct.getTail(), src);
+}
+
+void CompositeBlock::setInput(const std::string &tid, double *src) {
+	auto t = TerminalFactory::createFromString(tid);
+	setInput(*t, src);
 }
 
 CompositeBlock::BlockPtr CompositeBlock::getBlockByFQN(const std::string &fqn) {
