@@ -16,15 +16,21 @@
 
 class Block {
 public:
+	typedef std::shared_ptr<Block> BlockPtr;
+
 	Block(const std::string& typeName, const std::string& blockName);
 	virtual ~Block() ;
 
     const std::string& getBlockName() const ;
     const std::string& getBlockTypeName()  const;
 
+    virtual bool hasSubBlocks() const;
+    virtual BlockPtr getSubBlockByName(const std::string& blockname);
+
 	virtual void calculate() = 0;
+
 	virtual double* getOutput(const Terminal &t = OUT_OUTPUT);
-	virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
+	virtual void    setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
 
 	static const IDTerminal IN_INPUT;
 	static const IDTerminal OUT_OUTPUT ;

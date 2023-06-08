@@ -25,6 +25,15 @@ const std::string& Block::getBlockTypeName() const {
 	return typeName;
 }
 
+bool Block::hasSubBlocks() const {
+	return false;
+}
+
+Block::BlockPtr Block::getSubBlockByName(const std::string& blockname) {
+	Error("Block::getSubBlockByName has not subBlocks.");
+	return BlockPtr();
+}
+
 double* Block::getOutput(const Terminal &t)
 {
 	Error("Block::getOutput not supported; block has no outputs");

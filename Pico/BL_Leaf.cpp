@@ -17,11 +17,10 @@ LeafBlock::~LeafBlock() {
 }
 
 double* LeafBlock::getOutput(const Terminal &t) {
-	auto idTerminal = dynamic_cast<const IDTerminal*>(&t);
-	if (idTerminal == nullptr) {
+	if (!t.hasID()) {
 		Error("LeafBlock::getOutput, expected an IDTerminal but got something else.");
 	}
-	const std::string& id = idTerminal->getID();
+	const std::string& id = t.getID();
 	auto entry = std::find_if(outputTerminals.begin(), outputTerminals.end(),
 			[&](auto e) {
 		return e.first == id;
@@ -45,11 +44,10 @@ void LeafBlock::setInput(const Terminal &t, double *src) {
 		Error("LeafBlock::setInput: src should not be null");
 	}
 
-	auto idTerminal = dynamic_cast<const IDTerminal*>(&t);
-	if (idTerminal == nullptr) {
+	if (!t.hasID()) {
 		Error("LeafBlock::setInput, expected an IDTerminal but got something else.");
 	}
-	const std::string& id = idTerminal->getID();
+	const std::string& id = t.getID();
 
 	auto entry = std::find_if(inputTerminals.begin(), inputTerminals.end(),[&](auto e) {
 		return e.first == id;

@@ -17,7 +17,6 @@
 
 class CompositeBlock: public Block {
 public:
-	typedef std::shared_ptr<Block> BlockPtr;
 
 	CompositeBlock(const std::string &bn);
 	CompositeBlock(const std::string &bn, std::vector<BlockPtr> _blocks);
@@ -36,7 +35,9 @@ public:
 	virtual void setInput(const std::string &t, double *src);
 
 	static const std::string separator;
-	BlockPtr getBlockByFQN(const std::string &fqn);
+
+    virtual bool hasSubBlocks() const;
+    virtual BlockPtr getSubBlockByName(const std::string& blockname);
 
 protected:
 	std::vector<BlockPtr> blocks;

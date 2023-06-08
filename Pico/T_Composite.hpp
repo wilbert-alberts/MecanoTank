@@ -14,12 +14,12 @@
 
 class CompositeTerminal: public Terminal {
 public:
-	CompositeTerminal();
 	CompositeTerminal(std::unique_ptr<const IDTerminal> head, std::unique_ptr<const Terminal> tail);
 	virtual ~CompositeTerminal();
 
-	const IDTerminal& getHead() const;
-	const Terminal& getTail() const;
+	virtual bool hasCompositeStructure() const;
+	virtual const Terminal& getHead() const;
+	virtual const Terminal& getTail() const;
 
 protected:
 	virtual bool compareEqual(const Terminal *t) const;

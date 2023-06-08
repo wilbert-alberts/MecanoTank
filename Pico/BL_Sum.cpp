@@ -28,10 +28,7 @@ void SumBlock::calculate()
     // std::cout<<"SUM in1: " << *in1 << ", in2: " << *in2 << ", out: " << out << std::endl;
     // std::cout<<"SUM in1: " << *in1*s1 << ", in2: " << *in2 * s2 << ", out: " << out << std::endl;
 }
-//double *SumBlock::getOutput(const Terminal &t)
-//{
-//    return &out;
-//}
+
 void SumBlock::setOffset(double o)
 {
     offset = o;
@@ -41,12 +38,3 @@ void SumBlock::setFactor(unsigned int idx, double o)
     if (idx>=0 && idx<nrInputs)
     factors[idx] = o;
 }
-
-//void SumBlock::setInput(const Terminal &t, double *src)
-//{
-//	const IDTerminal* idT = dynamic_cast<const IDTerminal*>(&t);
-//
-//	unsigned int idx = (unsigned int)(std::stoi(idT->getID()));
-//    if (idx>=0 && idx<nrInputs)
-//    in[idx] = src;
-//}

@@ -17,7 +17,8 @@ public:
 	IDTerminal(const std::string &n);
 	virtual ~IDTerminal();
 
-    const std::string& getID() const;
+	virtual bool hasID() const;
+	virtual const std::string& getID() const;
 
 protected:
 	virtual bool compareEqual(const Terminal *t) const;

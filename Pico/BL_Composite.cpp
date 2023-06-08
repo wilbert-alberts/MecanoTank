@@ -34,27 +34,28 @@ void CompositeBlock::calculate() {
 }
 
 double* CompositeBlock::getOutput(const Terminal &t) {
-	const CompositeTerminal *ct = dynamic_cast<const CompositeTerminal*>(&t);
-	if (ct == nullptr) {
+	if (!t.hasCompositeStructure()) {
 		Error(
 				"CompositeBlock::getOutput(): Expected an CompositeTerminal but got something else");
 	}
-	const auto head = ct->getHead();
-
-	const std::string headIDName = head.getID();
+	const Terminal& head = t.getHead();
+	if (!head.hasID()) {
+		Error("CompositeBlock::getOutput(): Expected the head of the composite input terminal to have an ID but id doesn't");
+	}
+	const std::string& headIDName = head.getID();
 	auto block = findBlockByNameOrError(headIDName,
 			"CompositeBlock::getOutput(): Unable to find an block named "
 					+ headIDName);
 
-	return block->getOutput(ct->getTail());
+	return block->getOutput(t.getTail());
 
 }
 
 double* CompositeBlock::getOutput(const CompositeTerminal &ct) {
-	const auto head = ct.getHead();
+	const Terminal& head = ct.getHead();
 
-	const std::string headIDName = head.getID();
-	auto block = findBlockByNameOrError(headIDName,
+	const std::string& headIDName = head.getID();
+	BlockPtr block = findBlockByNameOrError(headIDName,
 			"CompositeBlock::getOutput(): Unable to find an block named "
 					+ headIDName);
 	return block->getOutput(ct.getTail());
@@ -66,25 +67,24 @@ double* CompositeBlock::getOutput(const std::string &tid) {
 }
 
 void CompositeBlock::setInput(const Terminal &t, double *src) {
-	const CompositeTerminal *ct = dynamic_cast<const CompositeTerminal*>(&t);
-	if (ct == nullptr) {
+	if (!t.hasCompositeStructure()) {
 		Error(
 				"CompositeBlock::setInput(): Expected an CompositeTerminal but got something else");
 	}
-	const auto head = ct->getHead();
+	const Terminal& head = t.getHead();
 
-	const std::string headIDName = head.getID();
-	auto block = findBlockByNameOrError(headIDName,
+	const std::string& headIDName = head.getID();
+	BlockPtr block = findBlockByNameOrError(headIDName,
 			"CompositeBlock::setInput(): Unable to find an block named "
 					+ headIDName);
-	block->setInput(ct->getTail(), src);
+	block->setInput(t.getTail(), src);
 }
 
 void CompositeBlock::setInput(const CompositeTerminal &ct, double *src) {
-	const auto head = ct.getHead();
+	const Terminal& head = ct.getHead();
 
 	const std::string headIDName = head.getID();
-	auto block = findBlockByNameOrError(headIDName,
+	BlockPtr block = findBlockByNameOrError(headIDName,
 			"CompositeBlock::setInput(): Unable to find an block named "
 					+ headIDName);
 	block->setInput(ct.getTail(), src);
@@ -95,7 +95,10 @@ void CompositeBlock::setInput(const std::string &tid, double *src) {
 	setInput(*t, src);
 }
 
-CompositeBlock::BlockPtr CompositeBlock::getBlockByFQN(const std::string &fqn) {
+bool CompositeBlock::hasSubBlocks() const {
+	return true;
+}
+CompositeBlock::BlockPtr CompositeBlock::getSubBlockByName(const std::string &fqn) {
 	size_t separatorIdx = fqn.find(separator);
 	if (separatorIdx == std::string::npos) {
 		auto block =
@@ -107,19 +110,17 @@ CompositeBlock::BlockPtr CompositeBlock::getBlockByFQN(const std::string &fqn) {
 		auto head = fqn.substr(0, separatorIdx);
 		auto tail = fqn.substr(separatorIdx + 1, std::string::npos);
 
-		auto foundBlock =
+		BlockPtr foundBlock =
 				findBlockByNameOrError(head,
 						"CompositeBlock::getBlockByName(): Unable to find an block named "
 								+ head);
-		auto foundCompositeBlock = dynamic_cast<CompositeBlock*>(foundBlock.get());
 
-		if (foundCompositeBlock != nullptr) {
-			return foundCompositeBlock->getBlockByFQN(tail);
-		} else {
+		if (!foundBlock->hasSubBlocks()) {
 			Error(
 					"CompositeBlock::getBlockByName(): Unable to descend. "
 							+ head + " is not a CompositeBlock");
 		}
+		return foundBlock->getSubBlockByName(tail);
 	}
 	return nullptr;
 }
