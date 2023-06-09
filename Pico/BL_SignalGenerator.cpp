@@ -18,11 +18,6 @@ SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn, double s)
 	addDefaultOutput(&signal);
 }
 
-double *SignalGeneratorBlock::getOutput(const Terminal &t)
-{
-    return &signal;
-}
-
 void SignalGeneratorBlock::calculate()
 {
     if (signals.size() > 0)
@@ -31,5 +26,5 @@ void SignalGeneratorBlock::calculate()
         counter = (counter + 1) % signals.size();
 
     }
-    std::cout << "SigGen calculate" << std::endl;
+    std::cout << "SigGen calculate: " <<signal<< std::endl;
 }

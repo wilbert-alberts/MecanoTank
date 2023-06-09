@@ -12,7 +12,6 @@ public:
     SignalGeneratorBlock(const std::string& bn);
     SignalGeneratorBlock(const std::string& bn, double sig);
     virtual ~SignalGeneratorBlock() {}
-    virtual double* getOutput(const Terminal &t = OUT_OUTPUT);
 
 protected:
     virtual void calculate();

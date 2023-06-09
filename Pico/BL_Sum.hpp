@@ -13,9 +13,6 @@ public:
     virtual ~SumBlock();
     virtual void calculate();
 
-//    double *getOutput(const Terminal &t = OUT_OUTPUT);
-//    void setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
-
     void setOffset(double o);
     void setFactor(unsigned int idx, double o);
 
@@ -27,7 +24,7 @@ private:
     std::vector<double> factors;
 
     double out;
-    std::vector<double *>in;
+    std::vector<double*> inputs;
 };
 
 #endif

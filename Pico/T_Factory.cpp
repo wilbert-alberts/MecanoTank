@@ -18,7 +18,7 @@ namespace TerminalFactory {
 
 std::unique_ptr<const Terminal> createFromString(const std::string& fqn) {
 
-	size_t separatorIdx = fqn.find(separator);
+	size_t separatorIdx = fqn.find(Terminal::separator);
 	if (separatorIdx == std::string::npos) {
 		// No separator, create IDTerminal
 		return std::make_unique<const IDTerminal>(fqn);

@@ -29,3 +29,7 @@ bool IDTerminal::compareEqual(const Terminal *t) const {
 		return false;
 	return t->getID() == id;
 }
+
+const std::string& IDTerminal::getFQN() const {
+	return id;
+}

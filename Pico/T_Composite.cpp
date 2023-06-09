@@ -36,3 +36,7 @@ bool CompositeTerminal::compareEqual(const Terminal *t) const
 
 	return (t->getHead().equals(*head)) && (t->getTail().equals(*tail));
 }
+
+const std::string& CompositeTerminal::getFQN() const {
+	return head->getFQN() + separator + tail->getFQN() ;
+}

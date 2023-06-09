@@ -13,8 +13,6 @@
 
 namespace TerminalFactory {
 
-	const std::string separator(".");
-
 	std::unique_ptr<const Terminal> createFromString(const std::string& fqn);
 }
 #endif /* TERMINALFACTORY_H_ */
