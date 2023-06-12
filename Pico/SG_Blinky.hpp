@@ -16,6 +16,8 @@
 #include "BL_ErrorDifference.hpp"
 #include "BL_PID.hpp"
 #include "BL_Sum.hpp"
+#include "BL_Leaf.hpp"
+#include "BL_Analog.hpp"
 
 class BlinkBlock : public Block
 {
@@ -40,6 +42,7 @@ protected:
     uint pin;
 };
 
+
 class SG_Blinky : public ServoGroup
 {
 public:
@@ -47,6 +50,7 @@ public:
         : ServoGroup("SG_Blinky", SERVO_PERIOD)
     {
         blocks.push_back(std::make_shared<BlinkBlock>("Blinky", 5));
+        blocks.push_back(std::make_shared<CPUTempBlock>("cpuTemp"));
     }
 
     virtual ~SG_Blinky(){};

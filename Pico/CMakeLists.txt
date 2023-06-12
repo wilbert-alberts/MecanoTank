@@ -34,6 +34,7 @@ add_executable(mecanumtank
         BL_PID.cpp
         BL_SignalGenerator.cpp
         BL_Sum.cpp
+        BL_Analog.cpp
 
         PeriodicTask.cpp
         ServoGroupExecutor.cpp
