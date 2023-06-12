@@ -45,7 +45,9 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "map": "cpp",
+        "numbers": "cpp"
     },
 
     // These settings tweaks to the cmake plugin will ensure
@@ -66,5 +68,6 @@
         }
     },
     "cmake.buildBeforeRun": true,
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-    "cortex-debug.openocdPath": "/home/ben/Projects/pico/openocd/src/openocd"}
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    // "cortex-debug.openocdPath": "/home/ben/Projects/pico/openocd/src/openocd"
+}

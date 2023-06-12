@@ -1,3 +1,5 @@
+#include <memory>
+
 #include "SG_Debug.hpp"
 
 
@@ -13,39 +15,39 @@ SG_Debug::SG_Debug()
     , dc(0.33)
 {
 
-    SignalGeneratorBlock *sgFL = new SignalGeneratorBlock("Generator FL");
-    Block *abFL = new ABDecoderBlock("FrontLeft", PIN_IN_FRONT_LEFT_B, PIN_IN_FRONT_LEFT_A);
-    MotorInterfaceBlock *miFL = new MotorInterfaceBlock("FrontLeft", PIN_OUT_FRONT_LEFT_PWM, PIN_OUT_FRONT_LEFT_DIR);
+    auto sgFL = std::make_shared<SignalGeneratorBlock>("Generator FL");
+    auto abFL = std::make_shared<ABDecoderBlock>("FrontLeft", PIN_IN_FRONT_LEFT_B, PIN_IN_FRONT_LEFT_A);
+    auto miFL = std::make_shared<MotorInterfaceBlock>("FrontLeft", PIN_OUT_FRONT_LEFT_PWM, PIN_OUT_FRONT_LEFT_DIR);
 
-    sequence.push_back(sgFL);
-    sequence.push_back(abFL);
-    sequence.push_back(miFL);
+    blocks.push_back(sgFL);
+    blocks.push_back(abFL);
+    blocks.push_back(miFL);
     miFL->setInput(sgFL->getOutput());
 
-    SignalGeneratorBlock *sgFR = new SignalGeneratorBlock("Generator FR");
-    Block *abFR = new ABDecoderBlock("FrontRight", PIN_IN_FRONT_RIGHT_A, PIN_IN_FRONT_RIGHT_B);
-    MotorInterfaceBlock *miFR = new MotorInterfaceBlock("FrontRight", PIN_OUT_FRONT_RIGHT_PWM, PIN_OUT_FRONT_RIGHT_DIR);
+    auto sgFR = std::make_shared<SignalGeneratorBlock>("Generator FR");
+    auto abFR = std::make_shared<ABDecoderBlock>("FrontRight", PIN_IN_FRONT_RIGHT_A, PIN_IN_FRONT_RIGHT_B);
+    auto miFR = std::make_shared<MotorInterfaceBlock>("FrontRight", PIN_OUT_FRONT_RIGHT_PWM, PIN_OUT_FRONT_RIGHT_DIR);
 
-    sequence.push_back(sgFR);
-    sequence.push_back(abFR);
-    sequence.push_back(miFR);
+    blocks.push_back(sgFR);
+    blocks.push_back(abFR);
+    blocks.push_back(miFR);
     miFR->setInput(sgFR->getOutput());
 
-    SignalGeneratorBlock *sgBL = new SignalGeneratorBlock("Generator BL");
-    Block *abBL = new ABDecoderBlock("BackLeft", PIN_IN_BACK_LEFT_A, PIN_IN_BACK_LEFT_B);
-    MotorInterfaceBlock *miBL = new MotorInterfaceBlock("FrontLeft", PIN_OUT_BACK_LEFT_PWM, PIN_OUT_BACK_LEFT_DIR);
+    auto sgBL = std::make_shared<SignalGeneratorBlock>("Generator BL");
+    auto abBL = std::make_shared<ABDecoderBlock>("BackLeft", PIN_IN_BACK_LEFT_A, PIN_IN_BACK_LEFT_B);
+    auto miBL = std::make_shared<MotorInterfaceBlock>("FrontLeft", PIN_OUT_BACK_LEFT_PWM, PIN_OUT_BACK_LEFT_DIR);
 
-    sequence.push_back(sgBL);
-    sequence.push_back(abBL);
-    sequence.push_back(miBL);
+    blocks.push_back(sgBL);
+    blocks.push_back(abBL);
+    blocks.push_back(miBL);
     miBL->setInput(sgBL->getOutput());
 
-    SignalGeneratorBlock *sgBR = new SignalGeneratorBlock("Generator BR");
-    Block *abBR = new ABDecoderBlock("BackRight", PIN_IN_BACK_RIGHT_A, PIN_IN_BACK_RIGHT_B);
-    MotorInterfaceBlock *miBR = new MotorInterfaceBlock("BackRight", PIN_OUT_BACK_RIGHT_PWM, PIN_OUT_BACK_RIGHT_DIR);
+    auto sgBR = std::make_shared<SignalGeneratorBlock>("Generator BR");
+    auto abBR = std::make_shared<ABDecoderBlock>("BackRight", PIN_IN_BACK_RIGHT_A, PIN_IN_BACK_RIGHT_B);
+    auto miBR = std::make_shared<MotorInterfaceBlock>("BackRight", PIN_OUT_BACK_RIGHT_PWM, PIN_OUT_BACK_RIGHT_DIR);
 
-    sequence.push_back(sgBR);
-    sequence.push_back(abBR);
-    sequence.push_back(miBR);
+    blocks.push_back(sgBR);
+    blocks.push_back(abBR);
+    blocks.push_back(miBR);
     miBR->setInput(sgBR->getOutput());
 }

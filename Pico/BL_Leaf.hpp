@@ -21,10 +21,12 @@ public:
 	LeafBlock(const std::string &_typeName, const std::string &_blockName) ;
 	virtual ~LeafBlock();
 
-	virtual double* getOutput(const Terminal &t = Block::OUT_OUTPUT);
+	virtual double* getOutput(const Terminal &t);
 	virtual double* getOutput(const std::string &tid);
+	virtual double* getOutput();
 	virtual void setInput(const Terminal &t = Block::IN_INPUT, double *src = nullptr) ;
 	virtual void setInput(const std::string& tid, double *src = nullptr) ;
+	virtual void setInput(double *src = nullptr) ;
 
 
 protected:

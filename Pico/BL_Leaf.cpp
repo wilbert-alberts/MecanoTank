@@ -39,6 +39,10 @@ double* LeafBlock::getOutput(const std::string &tid) {
 	return getOutput(*t);
 }
 
+double* LeafBlock::getOutput() {
+	return getOutput(Block::OUT_OUTPUT);
+}
+
 void LeafBlock::setInput(const Terminal &t, double *src) {
 	if (src == nullptr) {
 		Error("LeafBlock::setInput: src should not be null");
@@ -63,6 +67,10 @@ void LeafBlock::setInput(const Terminal &t, double *src) {
 void LeafBlock::setInput(const std::string &tid, double *src) {
 	auto t = TerminalFactory::createFromString(tid);
 	setInput(*t,src);
+}
+
+void LeafBlock::setInput(double *src) {
+	setInput(Block::IN_INPUT,src);
 }
 
 void LeafBlock::addDefaultOutput(double* src) {

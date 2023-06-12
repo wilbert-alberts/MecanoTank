@@ -15,9 +15,8 @@
 #include "PeriodicTask.hpp"
 #include "SG_Debug.hpp"
 #include "SG_MotorController.hpp"
+#include "SG_Blinky.hpp"
 #include "ServoGroupExecutor.hpp"
-
-#include "BL2.hpp"
 
 /*-----------------------------------------------------------*/
 
@@ -26,7 +25,9 @@ int main( void )
  
     stdio_init_all();
 
-    ServoGroup* sg = new SG_MotorController();
+    // ServoGroup* sg = new SG_MotorController();
+    ServoGroup* sg = new SG_Blinky();
+    
     ServoGroupExecutor* seq = new ServoGroupExecutor(sg);
 
     seq->start();

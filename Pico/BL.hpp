@@ -29,8 +29,11 @@ public:
 
 	virtual void calculate() = 0;
 
-	virtual double* getOutput(const Terminal &t = OUT_OUTPUT);
-	virtual void    setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
+	virtual double* getOutput(const Terminal &t);
+	virtual void    setInput(const Terminal &t, double *src);
+
+	virtual double* getOutput();
+	virtual void    setInput(double *src);
 
 	static const IDTerminal IN_INPUT;
 	static const IDTerminal OUT_OUTPUT ;

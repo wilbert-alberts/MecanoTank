@@ -1,6 +1,7 @@
 #ifndef __SG_MOTORCONTROLLER_HPP__
 #define __SG_MOTORCONTROLLER_HPP__
 
+#include <memory>
 
 #include "SG.hpp"
 
@@ -20,36 +21,36 @@ public:
     SG_MotorController()
     : ServoGroup("SG_MotorController", SERVO_PERIOD)
     {
-        SignalGeneratorBlock* spgFL = new SignalGeneratorBlock("FrontLeft_SPG", 6800);
+        auto spgFL = std::make_shared<SignalGeneratorBlock>("FrontLeft_SPG", 6800);
 
-        ABDecoderBlock* abFL = new ABDecoderBlock("FrontLeft", PIN_IN_FRONT_RIGHT_A, PIN_IN_FRONT_RIGHT_B);
+        auto abFL = std::make_shared<ABDecoderBlock>("FrontLeft", PIN_IN_FRONT_RIGHT_A, PIN_IN_FRONT_RIGHT_B);
 
-        DifferentiatorBlock* abDiffFL = new DifferentiatorBlock("FrontLeft AB", SERVO_FREQUENCY);
+        auto abDiffFL = std::make_shared<DifferentiatorBlock>("FrontLeft AB", SERVO_FREQUENCY);
         abDiffFL->setInput(abFL->getOutput());
 
-        ErrorDifferenceBlock* abErrorFL = new ErrorDifferenceBlock("FrontLeft_Error");
-        abErrorFL->setInput(IN_ACTUAL,  abDiffFL->getOutput());
-        abErrorFL->setInput(IN_DESIRED, spgFL->getOutput());
+        auto abErrorFL = std::make_shared<ErrorDifferenceBlock>("FrontLeft_Error");
+        abErrorFL->setInput(ErrorDifferenceBlock::IN_ACTUAL,  abDiffFL->getOutput());
+        abErrorFL->setInput(ErrorDifferenceBlock::IN_DESIRED, spgFL->getOutput());
 
-        PIDBlock* pidFL = new PIDBlock("FrontLeft_PID", SERVO_FREQUENCY);
+        auto pidFL = std::make_shared<PIDBlock>("FrontLeft_PID", SERVO_FREQUENCY);
         pidFL->setInput(abErrorFL->getOutput());
         pidFL->setKP(20.0);
 
-        SumBlock* sumFL = new SumBlock("FrontLeft_Sum", 2);
-        sumFL->setInput(0, spgFL->getOutput());
-        sumFL->setInput(1, pidFL->getOutput());
+        auto sumFL = std::make_shared<SumBlock>("FrontLeft_Sum", 2);
+        sumFL->setInput("0", spgFL->getOutput());
+        sumFL->setInput("1", pidFL->getOutput());
         sumFL->setFactor(0, 1.0/(2*6800.0));
         sumFL->setFactor(1, 1.0/(2*6800.0));
 
         MotorInterfaceBlock* miFL = new MotorInterfaceBlock("FrontLeft_MI", PIN_OUT_FRONT_RIGHT_PWM, PIN_OUT_FRONT_RIGHT_DIR);
         miFL->setInput(sumFL->getOutput());
 
-        sequence.push_back(spgFL);
-        sequence.push_back(abFL);
-        sequence.push_back(abDiffFL);
-        sequence.push_back(abErrorFL);
-        sequence.push_back(pidFL);
-        sequence.push_back(sumFL);
+        blocks.push_back(spgFL);
+        blocks.push_back(abFL);
+        blocks.push_back(abDiffFL);
+        blocks.push_back(abErrorFL);
+        blocks.push_back(pidFL);
+        blocks.push_back(sumFL);
         // sequence.push_back(miFL);
 
 

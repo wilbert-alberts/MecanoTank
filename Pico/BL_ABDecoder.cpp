@@ -18,7 +18,7 @@ void ABDecoderBlock::pinChangedStatic(uint gpio, uint32_t mask)
 }
 
 ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b)
-    : Block("ABDecoder", bn)
+    : LeafBlock("ABDecoder", bn)
     , pinA(a)
     , pinB(b)
     , position(0)
@@ -28,6 +28,7 @@ ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b)
     gpio_set_irq_enabled_with_callback(pinA, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, ABDecoderBlock::pinChangedStatic);
     gpio_set_irq_enabled_with_callback(pinB, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, ABDecoderBlock::pinChangedStatic);
     decoders.push_back(this);
+    addDefaultOutput(&positionDbl);
 }
 
 ABDecoderBlock::~ABDecoderBlock() {
@@ -48,9 +49,4 @@ void ABDecoderBlock::calculate()
     position = decoder.getPosition();
     positionDbl = static_cast<double>(position);
     std::cout << "ABDecoder " << blockName << ": " << position << std::endl;
-}
-
-double* ABDecoderBlock::getOutput()
-{
-    return &positionDbl;
 }

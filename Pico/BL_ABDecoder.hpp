@@ -5,21 +5,19 @@
 
 #include <vector>
 
-#include "BL.hpp"
-#include "T.h"
+#include "BL_Leaf.hpp"
+#include "T.hpp"
 #include "ABDecoder.hpp"
 
 
 
 
-class ABDecoderBlock: public Block
+class ABDecoderBlock: public LeafBlock
 {
 public:
     ABDecoderBlock(const std::string& bn, uint8_t a, uint8_t b);
     virtual ~ABDecoderBlock();
 	virtual void calculate();
-
-    virtual double* getOutput(const Terminal &t = OUT_OUTPUT);
 
 private:
     uint8_t pinA;

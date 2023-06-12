@@ -17,22 +17,34 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
+#add_compile_options(-v)
+
 add_executable(mecanumtank
+
         main.cpp
+        ErrorHandling.cpp
 
         BL.cpp
         BL_ABDecoder.cpp
-        BL_MotorInterface.cpp
-        BL_SignalGenerator.cpp
+        BL_Composite.cpp
         BL_Differentiator.cpp
         BL_ErrorDifference.cpp
+        BL_Leaf.cpp
+        BL_MotorInterface.cpp
         BL_PID.cpp
+        BL_SignalGenerator.cpp
         BL_Sum.cpp
-                
-        ServoGroupExecutor.cpp
+
         PeriodicTask.cpp
+        ServoGroupExecutor.cpp
+
         SG.cpp
         SG_Debug.cpp
+
+        T.cpp
+        T_Composite.cpp
+        T_Factory.cpp
+        T_ID.cpp
       )
 
 target_compile_definitions(mecanumtank PRIVATE
@@ -43,9 +55,9 @@ target_include_directories(mecanumtank PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/../../Common/include
       )
 
-target_link_libraries(mecanumtank pico_stdlib hardware_pwm hardware_gpio FreeRTOS-Kernel FreeRTOS-Kernel-Heap1)
+target_link_libraries(mecanumtank pico_stdlib hardware_adc hardware_pwm hardware_gpio FreeRTOS-Kernel FreeRTOS-Kernel-Heap1)
 
 pico_add_extra_outputs(mecanumtank)
 
-pico_enable_stdio_usb(mecanumtank 0)
-pico_enable_stdio_uart(mecanumtank 1)
+pico_enable_stdio_usb(mecanumtank 1)
+pico_enable_stdio_uart(mecanumtank 0)

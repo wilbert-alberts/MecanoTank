@@ -3,7 +3,8 @@
 
 // --------------- WHEELS ----------------
 
-#define SERVO_FREQUENCY (100.0)
+#define SERVO_FREQUENCY (2.0)
+// #define SERVO_FREQUENCY (100.0)
 #define SERVO_PERIOD    (1/SERVO_FREQUENCY)
 
 #define PIN_OUT_FRONT_LEFT_DIR 19
@@ -29,7 +30,8 @@
 #define PIN_OUT_CS_CAMERA_LINKS  27
 #define PIN_OUT_CS_CAMERA_RECHTS 5
 
-#define PIN_OUT_DEBUG            7
+// #define PIN_OUT_DEBUG            7
+#define PIN_OUT_DEBUG            25
 
 
 // --------- START STOP BUTTON -----------

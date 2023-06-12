@@ -12,7 +12,9 @@
 void Error(const std::string& msg)
 {
 	std::cerr <<"Error: "<< msg << std::endl;
+#if ((PICO_CXX_ENABLE_EXCEPTIONS==1) || !defined(PICO_CXX_ENABLE_EXCEPTIONS) )
 	throw std::invalid_argument(msg);
+#endif
 }
 
 void Warn(const std::string& msg)  {

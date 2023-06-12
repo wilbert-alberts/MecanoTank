@@ -26,11 +26,6 @@ MotorInterfaceBlock::MotorInterfaceBlock(const std::string &bn, uint8_t pin, uin
     std::cout << "pwmPin: " << pwmPin << ", slice: " << sliceNum << ", channel: " << channel << std::endl;
 }
 
-void MotorInterfaceBlock::setInput(double *src)
-{
-    input = src;
-}
-
 void MotorInterfaceBlock::calculate()
 {
     double pwm = enforceLimits(*input);

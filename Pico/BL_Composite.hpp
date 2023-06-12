@@ -34,6 +34,9 @@ public:
 	virtual double* getOutput(const std::string &t);
 	virtual void setInput(const std::string &t, double *src);
 
+	virtual double* getOutput();
+	virtual void setInput(double *src);
+
 	static const std::string separator;
 
     virtual bool hasSubBlocks() const;

@@ -40,7 +40,18 @@ double* Block::getOutput(const Terminal &t)
 	return nullptr;
 }
 
+double* Block::getOutput()
+{
+	Error("Block::getOutput not supported; block has no outputs");
+	return nullptr;
+}
+
 void Block::setInput(const Terminal &t, double *src )
+{
+	Error("Block::setInput not supported; block has no input");
+}
+
+void Block::setInput(double *src )
 {
 	Error("Block::setInput not supported; block has no input");
 }

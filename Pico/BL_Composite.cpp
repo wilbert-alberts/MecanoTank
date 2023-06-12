@@ -66,6 +66,10 @@ double* CompositeBlock::getOutput(const std::string &tid) {
 	return getOutput(*t);
 }
 
+double* CompositeBlock::getOutput() {
+	return getOutput(Block::OUT_OUTPUT);
+}
+
 void CompositeBlock::setInput(const Terminal &t, double *src) {
 	if (!t.hasCompositeStructure()) {
 		Error(
@@ -93,6 +97,10 @@ void CompositeBlock::setInput(const CompositeTerminal &ct, double *src) {
 void CompositeBlock::setInput(const std::string &tid, double *src) {
 	auto t = TerminalFactory::createFromString(tid);
 	setInput(*t, src);
+}
+
+void CompositeBlock::setInput(double *src) {
+	setInput(Block::IN_INPUT, src);
 }
 
 bool CompositeBlock::hasSubBlocks() const {
