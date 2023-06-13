@@ -23,7 +23,7 @@ public:
 	virtual const std::string& getID() const;
 
 	static const std::string separator;
-	virtual const std::string& getFQN() const;
+	virtual const std::string getFQN() const;
 
 	virtual bool hasCompositeStructure() const;
 	virtual const Terminal& getHead() const;

@@ -30,7 +30,7 @@ const std::string& Terminal::getID() const {
 	return nullString;
 }
 
-const std::string& Terminal::getFQN() const {
+const std::string Terminal::getFQN() const {
 	::Error("Trying to getFQN() from element that doesn't support it.");
 	return nullString;
 }

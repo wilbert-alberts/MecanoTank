@@ -17,7 +17,7 @@ public:
 	CompositeTerminal(std::unique_ptr<const IDTerminal> head, std::unique_ptr<const Terminal> tail);
 	virtual ~CompositeTerminal();
 
-	virtual const std::string& getFQN() const;
+	virtual const std::string getFQN() const;
 
 	virtual bool hasCompositeStructure() const;
 	virtual const Terminal& getHead() const;

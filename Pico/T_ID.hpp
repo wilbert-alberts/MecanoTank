@@ -17,7 +17,7 @@ public:
 	IDTerminal(const std::string &n);
 	virtual ~IDTerminal();
 
-	virtual const std::string& getFQN() const;
+	virtual const std::string getFQN() const;
 
 	virtual bool hasID() const;
 	virtual const std::string& getID() const;
