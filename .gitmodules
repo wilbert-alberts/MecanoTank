@@ -1,0 +1,3 @@
+[submodule "Pico/ruckig"]
+	path = Pico/ruckig
+	url = https://github.com/pantor/ruckig.git
