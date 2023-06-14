@@ -40,6 +40,7 @@ public:
 
 protected:
 	void Error(const std::string& message);
+	void Warning(const std::string& message);
 
 	std::string typeName;
 	std::string blockName;

@@ -61,5 +61,9 @@ void Block::Error(const std::string& msg) {
 	::Error(typeName + "::" + blockName+ ": " + msg);
 }
 
+void Block::Warning(const std::string& msg) {
+	::Warning(typeName + "::" + blockName+ ": " + msg);
+}
+
 const IDTerminal Block::IN_INPUT("input");
 const IDTerminal Block::OUT_OUTPUT("output");

@@ -17,6 +17,6 @@ void Error(const std::string& msg)
 #endif
 }
 
-void Warn(const std::string& msg)  {
+void Warning(const std::string& msg)  {
 	std::cerr <<"Warning: "<< msg << std::endl;
 }

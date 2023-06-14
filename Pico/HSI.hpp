@@ -3,9 +3,9 @@
 
 // --------------- WHEELS ----------------
 
-#define SERVO_FREQUENCY (2.0)
-// #define SERVO_FREQUENCY (100.0)
-#define SERVO_PERIOD    (1/SERVO_FREQUENCY)
+// #define SERVO_FREQUENCY (2.0)
+#define SERVO_FREQUENCY (10.0)
+#define SERVO_PERIOD    (1.0/SERVO_FREQUENCY)
 
 #define PIN_OUT_FRONT_LEFT_DIR 19
 #define PIN_OUT_FRONT_LEFT_PWM 18

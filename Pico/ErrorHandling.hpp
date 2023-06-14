@@ -11,4 +11,4 @@
 
 void Error(const std::string& msg);
 
-void Warn(const std::string& msg);
+void Warning(const std::string& msg);

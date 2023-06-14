@@ -16,12 +16,13 @@
                 "target/rp2040.cfg"
             ],
             "openOCDLaunchCommands": [
-                "adapter speed 8000"
+                "adapter speed 1000"
             ],
             "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
             "runToMain": true,
             // Work around for stopping at main on restart
             "postRestartCommands": [
+                "set remotetimeout 10000",
                 "break main",
                 "continue"
             ]
@@ -34,6 +35,7 @@
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "pyocd",
+            "serverArgs": ["--config=/home/wilbert/diskstation/Project/MecanoTank/Pico/pyocd.yaml"],
             // This may need to be arm-none-eabi-gdb depending on your system
             "gdbPath" : "gdb-multiarch",
             "device": "RP2040",

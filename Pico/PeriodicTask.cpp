@@ -51,7 +51,7 @@ void PeriodicTask::start()
 {
     BaseType_t r = xTaskCreate(PeriodicTask::staticTaskFunction,
                 "Sequencer",
-                1024,
+                10240,
                 this,
                 1,
                 &tickTask);
