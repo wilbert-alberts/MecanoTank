@@ -8,6 +8,7 @@
 #include "SG.hpp"
 
 #include "BL_SPG.hpp"
+#include "BL_Trace.hpp"
 
 class SG_SPG : public ServoGroup
 {
@@ -19,6 +20,10 @@ public:
         spgBlock = std::make_shared<SPGBlock>("SPG", SERVO_FREQUENCY);
         blocks.push_back(spgBlock);
 
+        traceBlock = std::make_shared<TraceBlock>();
+        blocks.push_back(traceBlock);
+
+        traceBlock->addTraceable("Pos_x", spgBlock->getOutput(SPGBlock::OUT_POS_X));
 
         SPGBlock::MovementParameters mp;
         mp.x.j = 10.0;
@@ -47,8 +52,13 @@ public:
         while(spgBlock->getState() == SPGBlock::State::MOVING);
     }
 
+    void dumpTrace() {
+        traceBlock->dumpTrace();
+    }
+
 private:
     std::shared_ptr<SPGBlock> spgBlock;
+    std::shared_ptr<TraceBlock> traceBlock;
 };
 
 #endif

@@ -32,6 +32,7 @@ int main(void)
 
     // ServoGroup* sg = new SG_MotorController();
     // ServoGroup* sg = new SG_Blinky();
+
     SG_SPG *sg = new SG_SPG();
 
     ServoGroupExecutor *seq = new ServoGroupExecutor(sg);
@@ -71,6 +72,7 @@ void mainTask(void *pvParameters)
     }
     std::cout << "Moving" << std::endl;
     sg->move(10.0, 5.0, 1.0);
+    sg->dumpTrace();
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     std::cout << "Moving finished" << std::endl;
 

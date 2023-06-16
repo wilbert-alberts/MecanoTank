@@ -38,6 +38,7 @@ add_executable(mecanumtank
         BL_Sum.cpp
         BL_Analog.cpp
         BL_SPG.cpp
+        BL_Trace.cpp
 
         PeriodicTask.cpp
         ServoGroupExecutor.cpp
@@ -63,5 +64,5 @@ target_link_libraries(mecanumtank ruckig pico_stdlib hardware_adc hardware_pwm h
 
 pico_add_extra_outputs(mecanumtank)
 
-pico_enable_stdio_usb(mecanumtank 1)
-pico_enable_stdio_uart(mecanumtank 0)
+pico_enable_stdio_usb(mecanumtank 0)
+pico_enable_stdio_uart(mecanumtank 1)

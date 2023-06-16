@@ -22,6 +22,8 @@ public:
     } DOF3;
 
     typedef DOF3 Position;
+    typedef DOF3 Velocity;
+    typedef DOF3 Acceleration;
 
     typedef struct
     {
@@ -51,17 +53,23 @@ public:
 
     void startMove(const Position &target);
 
-    static const IDTerminal OUT_X;
-    static const IDTerminal OUT_Y;
-    static const IDTerminal OUT_RZ;
+    static const IDTerminal OUT_POS_X;
+    static const IDTerminal OUT_POS_Y;
+    static const IDTerminal OUT_POS_RZ;
+
+    static const IDTerminal OUT_VEL_X;
+    static const IDTerminal OUT_VEL_Y;
+    static const IDTerminal OUT_VEL_RZ;
+
+    static const IDTerminal OUT_ACC_X;
+    static const IDTerminal OUT_ACC_Y;
+    static const IDTerminal OUT_ACC_RZ;
 
 private:
     State state;
     ruckig::Ruckig<3> ruckig;
     ruckig::InputParameter<3> input;
     ruckig::OutputParameter<3> output;
-
-    Position out;
 };
 
 #endif

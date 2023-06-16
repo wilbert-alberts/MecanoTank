@@ -4,16 +4,32 @@
 
 #include "T_Factory.hpp"
 
-const IDTerminal SPGBlock::OUT_X("out_x");
-const IDTerminal SPGBlock::OUT_Y("out_y");
-const IDTerminal SPGBlock::OUT_RZ("out_rz");
+const IDTerminal SPGBlock::OUT_POS_X("x");
+const IDTerminal SPGBlock::OUT_POS_Y("y");
+const IDTerminal SPGBlock::OUT_POS_RZ("rz");
+
+const IDTerminal SPGBlock::OUT_VEL_X("v_x");
+const IDTerminal SPGBlock::OUT_VEL_Y("v_y");
+const IDTerminal SPGBlock::OUT_VEL_RZ("v_rz");
+
+const IDTerminal SPGBlock::OUT_ACC_X("a_x");
+const IDTerminal SPGBlock::OUT_ACC_Y("a_y");
+const IDTerminal SPGBlock::OUT_ACC_RZ("a_rz");
 
 SPGBlock::SPGBlock(const std::string &bn, double _servoFrequency)
     : LeafBlock("SPG", bn), state(State::IDLE), ruckig(1.0 / _servoFrequency)
 {
-    addOutput(OUT_X, &out.x);
-    addOutput(OUT_Y, &out.y);
-    addOutput(OUT_RZ, &out.rz);
+    addOutput(OUT_POS_X, &output.new_position.at(0));
+    addOutput(OUT_POS_Y, &output.new_position.at(1));
+    addOutput(OUT_POS_RZ, &output.new_position.at(2));
+
+    addOutput(OUT_VEL_X, &output.new_position.at(0));
+    addOutput(OUT_VEL_Y, &output.new_position.at(1));
+    addOutput(OUT_VEL_RZ, &output.new_position.at(2));
+
+    addOutput(OUT_ACC_X, &output.new_position.at(0));
+    addOutput(OUT_ACC_Y, &output.new_position.at(1));
+    addOutput(OUT_ACC_RZ, &output.new_position.at(2));
 }
 
 SPGBlock::~SPGBlock()
