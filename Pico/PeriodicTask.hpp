@@ -11,7 +11,7 @@ class PeriodicTask
 public:
     PeriodicTask(double servoPeriod, const std::string& taskName);
     virtual ~PeriodicTask() {};
-    void start();
+    void startExecutorTask();
     void stop();
 
 protected:

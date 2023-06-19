@@ -47,7 +47,7 @@ PeriodicTask::PeriodicTask(double sp, const std::string& tn)
 {
 }
 
-void PeriodicTask::start()
+void PeriodicTask::startExecutorTask()
 {
     BaseType_t r = xTaskCreate(PeriodicTask::staticTaskFunction,
                 "Sequencer",

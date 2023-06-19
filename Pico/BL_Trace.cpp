@@ -110,7 +110,7 @@ TraceBlock::TraceBlock()
     : TraceBlockAbstract(BUFFERSIZE_IN_DOUBLES),
       Block("TraceBlock", "tracer")
 {
-    std::cout << "Traceblock: allocating memory for: " << BUFFERSIZE_IN_DOUBLES << " doubles"<< std::endl;
+    // std::cout << "Traceblock: allocating memory for: " << BUFFERSIZE_IN_DOUBLES << " doubles"<< std::endl;
     semDumping = xSemaphoreCreateBinary();
     xSemaphoreGive(semDumping);
 }

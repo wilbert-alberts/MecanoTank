@@ -19,37 +19,35 @@
 #include "SG_SPG.hpp"
 #include "ServoGroupExecutor.hpp"
 
+#include "CLI.hpp"
+
 /*-----------------------------------------------------------*/
 
+void createMainTask();
 void mainTask(void *);
+
+void createSerialTask();
 
 int main(void)
 {
     // prvSetupHardware();
     stdio_init_all();
+    stdio_set_translate_crlf(&stdio_uart, true);
 
-    std::cout << "Starting" << std::endl;
 
-    // ServoGroup* sg = new SG_MotorController();
-    // ServoGroup* sg = new SG_Blinky();
-
+    // Create ServoGroup
     SG_SPG *sg = new SG_SPG();
 
+    // Create Executor and start execution task.
     ServoGroupExecutor *seq = new ServoGroupExecutor(sg);
+    seq->startExecutorTask();
 
-    seq->start();
+    // Create CLI and start command line interpreter task.
+    MecanumCLI *cli = MecanumCLI::getInstance();
+    cli->startCLITask();
 
-    TaskHandle_t mainTaskHandle;
-    BaseType_t r = xTaskCreate(mainTask,
-                               "MainTask",
-                               1000,
-                               sg,
-                               1,
-                               &mainTaskHandle);
-    std::cout << "TaskCreated: " << r << std::endl;
-
-    if (r != pdPASS)
-        printf("xTaskCreate failed.");
+    // Tell CLI which ServoGroup to act upon.
+    cli->setServoGroup(sg);
 
     vTaskStartScheduler();
 
@@ -57,6 +55,32 @@ int main(void)
         ;
 
     return 0;
+}
+
+void createMainTask()
+{
+    // ServoGroup* sg = new SG_MotorController();
+    // ServoGroup* sg = new SG_Blinky();
+
+    //  createConsoleTask();
+
+    // SG_SPG *sg = new SG_SPG();
+
+    // ServoGroupExecutor *seq = new ServoGroupExecutor(sg);
+
+    // seq->start();
+
+    // TaskHandle_t mainTaskHandle;
+    // BaseType_t r = xTaskCreate(mainTask,
+    //                            "MainTask",
+    //                            1000,
+    //                            sg,
+    //                            1,
+    //                            &mainTaskHandle);
+    // std::cout << "TaskCreated: " << r << std::endl;
+
+    // if (r != pdPASS)
+    //     printf("xTaskCreate failed.");
 }
 
 void mainTask(void *pvParameters)
@@ -111,3 +135,44 @@ extern "C" void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskN
     configASSERT((volatile void *)NULL);
 }
 /*-----------------------------------------------------------*/
+
+TaskStatus_t traceArray[10];
+
+extern "C" void vApplicationTickHook(void)
+{
+    volatile size_t xFreeHeapSpace;
+
+    /* This is just a trivial example of an idle hook.  It is called on each
+    cycle of the idle task.  It must *NOT* attempt to block.  In this case the
+    idle task just queries the amount of FreeRTOS heap that remains.  See the
+    memory management section on the http://www.FreeRTOS.org web site for memory
+    management options.  If there is a lot of heap memory free then the
+    configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
+    RAM. */
+    xFreeHeapSpace = xPortGetFreeHeapSize();
+
+    static int counter(0);
+    static int period(configTICK_RATE_HZ);
+
+    counter++;
+    if (counter == period)
+    {
+        // std::cout << "mem: " << xFreeHeapSpace << std::endl;
+        // printf("Free mem: %d\n", xFreeHeapSpace);
+        counter = 0;
+
+        int nrTraces = uxTaskGetSystemState(traceArray, 10, NULL);
+
+        for (int i = 0; i < nrTraces; i++)
+        {
+            const char *taskName = traceArray[i].pcTaskName;
+            auto taskHandle = traceArray[i].xHandle;
+            UBaseType_t remainingStack = uxTaskGetStackHighWaterMark(taskHandle);
+            // std::cout << taskName << ": " << remainingStack << std::endl;
+            // printf("Free stack: %s: %d\n", taskName, remainingStack);
+        }
+    }
+
+    /* Remove compiler warning about xFreeHeapSpace being set but never used. */
+    (void)xFreeHeapSpace;
+}

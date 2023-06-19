@@ -23,6 +23,9 @@ add_subdirectory(ruckig)
 
 add_executable(mecanumtank
 
+        FreeRTOS_CLI.c
+        CLI.cpp
+
         main.cpp
         ErrorHandling.cpp
 
@@ -50,6 +53,9 @@ add_executable(mecanumtank
         T_Composite.cpp
         T_Factory.cpp
         T_ID.cpp
+
+        CLI_time.cpp
+        # SerialTask.cpp
       )
 
 target_compile_definitions(mecanumtank PRIVATE

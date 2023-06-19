@@ -37,4 +37,10 @@
 // --------- START STOP BUTTON -----------
 
 
+// Task priorities (higher is more priority)
+
+#define TASK_PRIO_CONSOLE   1
+#define TASK_PRIO_SERVO     10
+
+
 #endif
