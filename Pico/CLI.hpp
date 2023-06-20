@@ -9,17 +9,24 @@
 
 #include "SG.hpp"
 
+class TimeCommand;
+class AddTraceeableCommand;
+
 class MecanumCLI
 {
 public:
     static MecanumCLI *getInstance();
     virtual ~MecanumCLI();
     void startCLITask();
-    void setServoGroup(ServoGroup* sg);
+    void setServoGroup(ServoGroup *sg);
 
 protected:
     MecanumCLI();
-    ServoGroup* servoGroup;
+    void initializeCommands();
+    ServoGroup *servoGroup;
+
+    TimeCommand *timeCmd;
+    AddTraceeableCommand *addTraceableCmd;
 
 private:
     static MecanumCLI *instance;

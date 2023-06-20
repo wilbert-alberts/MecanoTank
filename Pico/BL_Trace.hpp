@@ -25,6 +25,10 @@ protected:
     virtual void dumpLabels();
     virtual void dumpTrace(uint time, double *traceables, uint nrTraceables);
     virtual void Error(const std::string &msg);
+    virtual void lockTraceData() =0;
+    virtual bool tryLockTraceData() = 0;
+    virtual void unlockTraceData() =0;
+
 
 private:
     double *buffer;
@@ -44,13 +48,17 @@ public:
     virtual ~TraceBlock();
 
     virtual void calculate();
-    virtual void dumpTrace();
-    
+ 
     static const uint BUFFERSIZE_IN_KB = (10);
     static const uint BUFFERSIZE_IN_DOUBLES = (BUFFERSIZE_IN_KB * 1024) / sizeof(double);
 
+protected:
+    virtual void lockTraceData();
+    virtual bool tryLockTraceData();
+    virtual void unlockTraceData();
+
 private:
-    SemaphoreHandle_t semDumping;
+    SemaphoreHandle_t semTraceData;
 };
 
 #endif

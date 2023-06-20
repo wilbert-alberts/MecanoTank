@@ -35,10 +35,10 @@ int main(void)
     stdio_set_translate_crlf(&stdio_uart, true);
 
 
-    // Create ServoGroup
+    // // Create ServoGroup
     SG_SPG *sg = new SG_SPG();
 
-    // Create Executor and start execution task.
+    // // Create Executor and start execution task.
     ServoGroupExecutor *seq = new ServoGroupExecutor(sg);
     seq->startExecutorTask();
 

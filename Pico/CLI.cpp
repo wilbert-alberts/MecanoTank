@@ -15,6 +15,7 @@
 #include "CLI.hpp"
 
 #include "CLI_time.hpp"
+#include "CLI_trace.hpp"
 
 #define MAX_INPUT_LENGTH 255
 #define MAX_OUTPUT_LENGTH 255
@@ -34,6 +35,7 @@ MecanumCLI *MecanumCLI::getInstance()
 
 MecanumCLI::MecanumCLI()
 {
+    initializeCommands();
     initIO();
 }
 
@@ -42,10 +44,17 @@ MecanumCLI::~MecanumCLI()
     termIO();
 }
 
+void MecanumCLI::initializeCommands()
+{
+    timeCmd = TimeCommand::getInstance();
+    addTraceableCmd = AddTraceeableCommand::getInstance();
+}
+
 void MecanumCLI::setServoGroup(ServoGroup *sg)
 {
     servoGroup = sg;
-    TimeCommand::registerServoGroup(sg);
+    timeCmd->registerServoGroup(sg);
+    addTraceableCmd->registerServoGroup(sg);
 }
 
 void MecanumCLI::startCLITask()
@@ -65,13 +74,13 @@ void MecanumCLI::initIO()
     // std::cerr << "initIO: waitingOnCharsSem: " << waitingOnCharsSem << std::endl;
     // std::cerr << "initIO: waitingOnCharsSem count: " << uxSemaphoreGetCount(waitingOnCharsSem) << std::endl;
     // std::cerr << "initIO: this: " << this << std::endl;
-    stdio_set_chars_available_callback(MecanumCLI::charsArrivedStaticFromISR, this);
+    // stdio_set_chars_available_callback(MecanumCLI::charsArrivedStaticFromISR, this);
     // std::cerr << "initIO: Registered callback." << std::endl;
 }
 
 void MecanumCLI::termIO()
 {
-    stdio_set_chars_available_callback(NULL, this);
+    // stdio_set_chars_available_callback(NULL, this);
     vSemaphoreDelete(waitingOnCharsSem);
 }
 
@@ -88,7 +97,7 @@ void MecanumCLI::charsArrivedFromISR()
     BaseType_t contextSwitchRequested = pdFALSE;
 
     xSemaphoreGiveFromISR(waitingOnCharsSem, &contextSwitchRequested);
-    portYIELD_FROM_ISR(contextSwitchRequested);
+    // portYIELD_FROM_ISR(contextSwitchRequested);
 }
 
 void MecanumCLI::CLIReadChar(char *c)
@@ -100,7 +109,9 @@ void MecanumCLI::CLIReadChar(char *c)
         // std::cerr << "CLIReadChar: no data" << std::endl;
         // std::cerr << "CLIReadChar: waitingOnCharsSem: " << waitingOnCharsSem << std::endl;
         // std::cerr << "charsArrivedFromISR: waitingOnCharsSem count: " << uxSemaphoreGetCount(waitingOnCharsSem) << std::endl;
+        stdio_set_chars_available_callback(MecanumCLI::charsArrivedStaticFromISR, this);
         xSemaphoreTake(waitingOnCharsSem, portMAX_DELAY);
+        stdio_set_chars_available_callback(nullptr, this);
         // std::cerr << "charsArrivedFromISR: waitingOnCharsSem count: " << uxSemaphoreGetCount(waitingOnCharsSem) << std::endl;
     }
     *c = (char)r;
@@ -155,14 +166,15 @@ void MecanumCLI::consoleTaskStatic(void *p)
 void MecanumCLI::consoleTask()
 {
 
-    char cRxedChar, cInputIndex = 0;
+    char cRxedChar = 0;
+    char cInputIndex = 0;
     BaseType_t xMoreDataToFollow;
     /* The input and output buffers are declared static to keep them off the stack. */
     static char pcOutputString[MAX_OUTPUT_LENGTH];
     static char pcInputString[MAX_INPUT_LENGTH];
 
     // Suspend for a second to get serial connections up and running
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    vTaskDelay(2000 / portTICK_PERIOD_MS);
 
     /* Send a welcome message to the user knows they are connected. */
     CLIWriteMsg(welcomeMessage, strlen(welcomeMessage));

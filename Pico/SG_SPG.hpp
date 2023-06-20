@@ -18,12 +18,12 @@ public:
     {
 
         spgBlock = std::make_shared<SPGBlock>("SPG", SERVO_FREQUENCY);
-        blocks.push_back(spgBlock);
+        addBlock(spgBlock);
 
-        traceBlock = std::make_shared<TraceBlock>();
-        blocks.push_back(traceBlock);
+        // traceBlock = std::make_shared<TraceBlock>();
+        // blocks.push_back(traceBlock);
 
-        traceBlock->addTraceable("Pos_x", spgBlock->getOutput(SPGBlock::OUT_POS_X));
+        // traceBlock->addTraceable("Pos_x", spgBlock->getOutput(SPGBlock::OUT_POS_X));
 
         SPGBlock::MovementParameters mp;
         mp.x.j = 10.0;

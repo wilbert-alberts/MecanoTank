@@ -22,35 +22,35 @@ TraceBlockAbstract::~TraceBlockAbstract()
 
 void TraceBlockAbstract::calculate()
 {
-    // Todo: skip calculate when dump is in progress
-    // Retrieve and store all traceables
-    for (uint i = 0; i < traceables.size(); i++)
+
+    if (tryLockTraceData())
     {
-        buffer[idx++] = *(traceables[i]);
+        // Retrieve and store all traceables
+        for (uint i = 0; i < traceables.size(); i++)
+        {
+            buffer[idx++] = *(traceables[i]);
+        }
+        // See whether we need to start back at idx 0
+        if (idx + nrTraceables > bufferSize)
+        {
+            idx = 0;
+        }
+        // Increase time.
+        time++;
+        unlockTraceData();
     }
-    // See whether we need to start back at idx 0
-    if (idx + nrTraceables > bufferSize)
-    {
-        idx = 0;
-    }
-    // Increase time.
-    time++;
 }
 
 void TraceBlockAbstract::addTraceable(const std::string &name, double *src)
 {
-    // Adding traceables only possible at time zero.
-    if (time == 0)
-    {
-        traceables.push_back(src);
-        labels.push_back(name);
-        nrTraceables++;
-        nrTraces = bufferSize / nrTraceables;
-    }
-    else
-    {
-        Error("Adding traceables not possible anymore, sequence has already started.");
-    }
+    lockTraceData();
+    traceables.push_back(src);
+    labels.push_back(name);
+    nrTraceables++;
+    nrTraces = bufferSize / nrTraceables;
+    time = 0;
+    idx = 0;
+    unlockTraceData();
 }
 
 void TraceBlockAbstract::dumpTrace()
@@ -92,11 +92,13 @@ void TraceBlockAbstract::dumpLabels()
 
 void TraceBlockAbstract::dumpTrace(uint time, double *traceables, uint nrTraceables)
 {
+    lockTraceData();
     std::cout << time;
     for (uint i = 0; i < nrTraceables; i++)
     {
         std::cout << ", " << traceables[i];
     }
+    unlockTraceData();
     std::cout << std::endl;
 }
 
@@ -111,8 +113,8 @@ TraceBlock::TraceBlock()
       Block("TraceBlock", "tracer")
 {
     // std::cout << "Traceblock: allocating memory for: " << BUFFERSIZE_IN_DOUBLES << " doubles"<< std::endl;
-    semDumping = xSemaphoreCreateBinary();
-    xSemaphoreGive(semDumping);
+    semTraceData = xSemaphoreCreateBinary();
+    xSemaphoreGive(semTraceData);
 }
 TraceBlock::~TraceBlock()
 {
@@ -120,26 +122,23 @@ TraceBlock::~TraceBlock()
 
 void TraceBlock::calculate()
 {
-    auto r = xSemaphoreTake(semDumping, 0);
-
-    if (r == pdTRUE)
-    {
-        TraceBlockAbstract::calculate();
-        xSemaphoreGive(semDumping);
-    }
+    TraceBlockAbstract::calculate();    
 }
 
-void TraceBlock::dumpTrace()
+void TraceBlock::lockTraceData()
 {
-    const TickType_t takeDumping = 5000 / portTICK_PERIOD_MS;
+    // const TickType_t takeDumping = 5000 / portTICK_PERIOD_MS;
 
-    auto r = xSemaphoreTake(semDumping, takeDumping);
-    if (r == pdTRUE)
-    {
-        TraceBlockAbstract::dumpTrace();
-        xSemaphoreGive(semDumping);
-    }
-    else {
-        std::cerr <<"Unable to dumpTrace, taking semaphore failed." << std::endl;
-    }
+    auto r = xSemaphoreTake(semTraceData, portMAX_DELAY);
+}
+
+bool TraceBlock::tryLockTraceData()
+{
+    auto r = xSemaphoreTake(semTraceData, 0);
+    return r == pdTRUE;
+}
+
+void TraceBlock::unlockTraceData()
+{
+    xSemaphoreGive(semTraceData);
 }

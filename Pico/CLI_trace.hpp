@@ -1,24 +1,24 @@
-#ifndef _CLI_TEST_HPP_
-#define _CLI_TEST_HPP_
+#ifndef _CLI_TRACE_HPP_
+#define _CLI_TRACE_HPP_
 
 #include "FreeRTOS.h"
 #include "FreeRTOS_CLI.h"
 
 #include "SG.hpp"
 
-class TimeCommand
+class AddTraceeableCommand
 {
 public:
-    static TimeCommand *getInstance();
+    static AddTraceeableCommand *getInstance();
 
-    virtual ~TimeCommand();
+    virtual ~AddTraceeableCommand();
     void registerServoGroup(ServoGroup *sg);
 
 protected:
-    TimeCommand();
+    AddTraceeableCommand();
     static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
 
-    static TimeCommand *instance;
+    static AddTraceeableCommand *instance;
     ServoGroup *servoGroup;
 };
 

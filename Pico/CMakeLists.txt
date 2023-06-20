@@ -21,6 +21,7 @@ pico_sdk_init()
 
 add_subdirectory(ruckig)
 
+
 add_executable(mecanumtank
 
         FreeRTOS_CLI.c
@@ -55,6 +56,7 @@ add_executable(mecanumtank
         T_ID.cpp
 
         CLI_time.cpp
+        CLI_trace.cpp
         # SerialTask.cpp
       )
 
