@@ -25,27 +25,27 @@ public:
 
 	virtual void calculate();
 
-	virtual double* getOutput(const Terminal &t);
+	virtual SuccessT<double*> getOutput(const Terminal &t);
 	virtual void setInput(const Terminal &t, double *src);
 
-	virtual double* getOutput(const CompositeTerminal &t);
+	virtual SuccessT<double*> getOutput(const CompositeTerminal &t);
 	virtual void setInput(const CompositeTerminal &t, double *src);
 
-	virtual double* getOutput(const std::string &t);
+	virtual SuccessT<double*> getOutput(const std::string &t);
 	virtual void setInput(const std::string &t, double *src);
 
-	virtual double* getOutput();
+	virtual SuccessT<double*> getOutput();
 	virtual void setInput(double *src);
 
 	static const std::string separator;
 
     virtual bool hasSubBlocks() const;
-    virtual BlockPtr getSubBlockByName(const std::string& blockname);
+    virtual SuccessT<BlockPtr>  getSubBlockByName(const std::string& blockname);
 
 protected:
 	std::vector<BlockPtr> blocks;
 
-	BlockPtr findBlockByNameOrError(const std::string &fqn,
+	SuccessT<BlockPtr>  findBlockByNameOrError(const std::string &fqn,
 			const std::string &errorMsg);
 };
 

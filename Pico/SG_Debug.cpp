@@ -22,7 +22,7 @@ SG_Debug::SG_Debug()
     blocks.push_back(sgFL);
     blocks.push_back(abFL);
     blocks.push_back(miFL);
-    miFL->setInput(sgFL->getOutput());
+    miFL->setInput(sgFL->getOutput().result);
 
     auto sgFR = std::make_shared<SignalGeneratorBlock>("Generator FR");
     auto abFR = std::make_shared<ABDecoderBlock>("FrontRight", PIN_IN_FRONT_RIGHT_A, PIN_IN_FRONT_RIGHT_B);
@@ -31,7 +31,7 @@ SG_Debug::SG_Debug()
     blocks.push_back(sgFR);
     blocks.push_back(abFR);
     blocks.push_back(miFR);
-    miFR->setInput(sgFR->getOutput());
+    miFR->setInput(sgFR->getOutput().result);
 
     auto sgBL = std::make_shared<SignalGeneratorBlock>("Generator BL");
     auto abBL = std::make_shared<ABDecoderBlock>("BackLeft", PIN_IN_BACK_LEFT_A, PIN_IN_BACK_LEFT_B);
@@ -40,7 +40,7 @@ SG_Debug::SG_Debug()
     blocks.push_back(sgBL);
     blocks.push_back(abBL);
     blocks.push_back(miBL);
-    miBL->setInput(sgBL->getOutput());
+    miBL->setInput(sgBL->getOutput().result);
 
     auto sgBR = std::make_shared<SignalGeneratorBlock>("Generator BR");
     auto abBR = std::make_shared<ABDecoderBlock>("BackRight", PIN_IN_BACK_RIGHT_A, PIN_IN_BACK_RIGHT_B);
@@ -49,5 +49,5 @@ SG_Debug::SG_Debug()
     blocks.push_back(sgBR);
     blocks.push_back(abBR);
     blocks.push_back(miBR);
-    miBR->setInput(sgBR->getOutput());
+    miBR->setInput(sgBR->getOutput().result);
 }

@@ -29,21 +29,19 @@ bool Block::hasSubBlocks() const {
 	return false;
 }
 
-Block::BlockPtr Block::getSubBlockByName(const std::string& blockname) {
-	Error("Block::getSubBlockByName has not subBlocks.");
-	return BlockPtr();
+SuccessT<Block::BlockPtr> Block::getSubBlockByName(const std::string& blockname) {
+	return SuccessT<Block::BlockPtr>(nullptr, false, "Block::getSubBlockByName has not subBlocks.");
 }
 
-double* Block::getOutput(const Terminal &t)
+
+SuccessT<double*> Block::getOutput(const Terminal &t)
 {
-	Error("Block::getOutput not supported; block has no outputs");
-	return nullptr;
+	return SuccessT<double*>(nullptr, false, "Block::getOutput not supported; block has no outputs");
 }
 
-double* Block::getOutput()
+SuccessT<double*> Block::getOutput()
 {
-	Error("Block::getOutput not supported; block has no outputs");
-	return nullptr;
+	return SuccessT<double*>(nullptr, false, "Block::getOutput not supported; block has no outputs");
 }
 
 void Block::setInput(const Terminal &t, double *src )

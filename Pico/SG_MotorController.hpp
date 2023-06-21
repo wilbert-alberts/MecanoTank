@@ -26,24 +26,24 @@ public:
         auto abFL = std::make_shared<ABDecoderBlock>("FrontLeft", PIN_IN_FRONT_RIGHT_A, PIN_IN_FRONT_RIGHT_B);
 
         auto abDiffFL = std::make_shared<DifferentiatorBlock>("FrontLeft AB", SERVO_FREQUENCY);
-        abDiffFL->setInput(abFL->getOutput());
+        abDiffFL->setInput(abFL->getOutput().result);
 
         auto abErrorFL = std::make_shared<ErrorDifferenceBlock>("FrontLeft_Error");
-        abErrorFL->setInput(ErrorDifferenceBlock::IN_ACTUAL,  abDiffFL->getOutput());
-        abErrorFL->setInput(ErrorDifferenceBlock::IN_DESIRED, spgFL->getOutput());
+        abErrorFL->setInput(ErrorDifferenceBlock::IN_ACTUAL,  abDiffFL->getOutput().result);
+        abErrorFL->setInput(ErrorDifferenceBlock::IN_DESIRED, spgFL->getOutput().result);
 
         auto pidFL = std::make_shared<PIDBlock>("FrontLeft_PID", SERVO_FREQUENCY);
-        pidFL->setInput(abErrorFL->getOutput());
+        pidFL->setInput(abErrorFL->getOutput().result);
         pidFL->setKP(20.0);
 
         auto sumFL = std::make_shared<SumBlock>("FrontLeft_Sum", 2);
-        sumFL->setInput("0", spgFL->getOutput());
-        sumFL->setInput("1", pidFL->getOutput());
+        sumFL->setInput("0", spgFL->getOutput().result);
+        sumFL->setInput("1", pidFL->getOutput().result);
         sumFL->setFactor(0, 1.0/(2*6800.0));
         sumFL->setFactor(1, 1.0/(2*6800.0));
 
         MotorInterfaceBlock* miFL = new MotorInterfaceBlock("FrontLeft_MI", PIN_OUT_FRONT_RIGHT_PWM, PIN_OUT_FRONT_RIGHT_DIR);
-        miFL->setInput(sumFL->getOutput());
+        miFL->setInput(sumFL->getOutput().result);
 
         blocks.push_back(spgFL);
         blocks.push_back(abFL);

@@ -36,9 +36,9 @@ BaseType_t AddTraceeableCommand::command(char *outputBuffer, size_t outputLen, c
     const char *traceableName = FreeRTOS_CLIGetParameter(command, 1, &traceableNameLength);
     std::string traceableNameString(traceableName, traceableNameLength);
 
-    double *output = instance->servoGroup->getOutput(traceableNameString);
+    auto output = instance->servoGroup->getOutput(traceableNameString);
 
-    if (output == nullptr)
+    if (!output.success)
     {
         std::cerr << "Error: unable to find output " << traceableNameString << std::endl;
     }

@@ -23,9 +23,7 @@ add_subdirectory(ruckig)
 
 
 add_executable(mecanumtank
-
-        FreeRTOS_CLI.c
-        CLI.cpp
+        # FreeRTOS-openocd.c
 
         main.cpp
         ErrorHandling.cpp
@@ -55,6 +53,8 @@ add_executable(mecanumtank
         T_Factory.cpp
         T_ID.cpp
 
+        FreeRTOS_CLI.c
+        CLI.cpp
         CLI_time.cpp
         CLI_trace.cpp
         # SerialTask.cpp
