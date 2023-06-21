@@ -1,25 +1,45 @@
 #ifndef _CLI_TRACE_HPP_
 #define _CLI_TRACE_HPP_
 
-#include "FreeRTOS.h"
-#include "FreeRTOS_CLI.h"
+#include "CLI_command.hpp"
 
-#include "SG.hpp"
-
-class AddTraceeableCommand
+class AddTraceeableCommand : public AbstractCommand
 {
 public:
     static AddTraceeableCommand *getInstance();
-
     virtual ~AddTraceeableCommand();
-    void registerServoGroup(ServoGroup *sg);
 
 protected:
     AddTraceeableCommand();
     static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
 
     static AddTraceeableCommand *instance;
-    ServoGroup *servoGroup;
+};
+
+class ClearTraceablesCommand: public AbstractCommand
+{
+public:
+    static ClearTraceablesCommand *getInstance();
+    virtual ~ClearTraceablesCommand();
+
+protected:
+    ClearTraceablesCommand();
+    static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
+
+    static ClearTraceablesCommand *instance;
+};
+
+class ClearTraceableCommand: public AbstractCommand
+{
+public:
+    static ClearTraceableCommand *getInstance();
+    virtual ~ClearTraceableCommand();
+
+protected:
+    ClearTraceableCommand();
+    static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
+
+    static ClearTraceableCommand *instance;
 };
 
 #endif

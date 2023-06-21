@@ -41,6 +41,18 @@ void TraceBlockAbstract::calculate()
     }
 }
 
+void TraceBlockAbstract::clearTraceables()
+{
+    lockTraceData();
+    traceables.clear();
+    labels.clear();
+    nrTraceables = 0;
+    nrTraces = 0;
+    time = 0;
+    idx = 0;
+    unlockTraceData();
+}
+
 void TraceBlockAbstract::addTraceable(const std::string &name, double *src)
 {
     lockTraceData();
@@ -51,6 +63,37 @@ void TraceBlockAbstract::addTraceable(const std::string &name, double *src)
     time = 0;
     idx = 0;
     unlockTraceData();
+}
+
+VoidSuccessT TraceBlockAbstract::clearTraceable(const std::string &name)
+{
+    lockTraceData();
+
+    int i = 0;
+    auto labelsIter = labels.begin();
+    auto traceablesIter = traceables.begin();
+    auto r = VoidSuccessT();
+    while (i < nrTraceables && labels[i] != name)
+    {
+        i++;
+        labelsIter++;
+        traceablesIter++;
+    }
+    if (i < nrTraceables)
+    {
+        // We found the traceable.
+        traceables.erase(traceablesIter);
+        labels.erase(labelsIter);
+        nrTraceables--;
+        nrTraces = bufferSize / nrTraceables;
+        time = 0;
+        idx = 0;
+    }
+    else {
+        r = VoidSuccessT(false, "Unable to find traceable.");
+    }
+    unlockTraceData();
+    return r;
 }
 
 void TraceBlockAbstract::dumpTrace()
@@ -122,7 +165,7 @@ TraceBlock::~TraceBlock()
 
 void TraceBlock::calculate()
 {
-    TraceBlockAbstract::calculate();    
+    TraceBlockAbstract::calculate();
 }
 
 void TraceBlock::lockTraceData()

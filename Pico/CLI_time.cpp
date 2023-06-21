@@ -15,11 +15,6 @@ TimeCommand *TimeCommand::getInstance()
     return instance;
 }
 
-void TimeCommand::registerServoGroup(ServoGroup *sg)
-{
-    servoGroup = sg;
-}
-
 BaseType_t TimeCommand::command(char *outputBuffer, size_t outputLen, const char *command)
 {
     // std::cerr << "TimeCommand::command: instance " << instance << std::endl;
@@ -36,12 +31,10 @@ BaseType_t TimeCommand::command(char *outputBuffer, size_t outputLen, const char
     return pdFALSE;
 }
 
-TimeCommand::TimeCommand() : servoGroup(nullptr)
+TimeCommand::TimeCommand() : AbstractCommand(
+    "time",
+    "time:\n Print time of ServoGroup.\n\n",
+    TimeCommand::command,
+    0)
 {
-    static const CLI_Command_Definition_t timeCmd{
-        .pcCommand = "time",
-        .pcHelpString = "time:\n Print time of ServoGroup.\n\n",
-        .pxCommandInterpreter = TimeCommand::command,
-        .cExpectedNumberOfParameters = 0};
-    FreeRTOS_CLIRegisterCommand(&timeCmd);
 }

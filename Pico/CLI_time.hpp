@@ -4,22 +4,22 @@
 #include "FreeRTOS.h"
 #include "FreeRTOS_CLI.h"
 
-#include "SG.hpp"
+#include "CLI_command.hpp"
 
-class TimeCommand
+class TimeCommand: public AbstractCommand
 {
 public:
     static TimeCommand *getInstance();
 
     virtual ~TimeCommand();
-    void registerServoGroup(ServoGroup *sg);
+
 
 protected:
     TimeCommand();
     static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
 
     static TimeCommand *instance;
-    ServoGroup *servoGroup;
+
 };
 
 #endif

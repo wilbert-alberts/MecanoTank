@@ -19,6 +19,8 @@ public:
 
     virtual void calculate();
     virtual void addTraceable(const std::string &name, double *src);
+    virtual void clearTraceables();
+    virtual VoidSuccessT clearTraceable(const std::string &name);
     virtual void dumpTrace();
 
 protected:
