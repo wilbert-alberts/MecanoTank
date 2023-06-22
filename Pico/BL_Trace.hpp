@@ -10,57 +10,69 @@
 
 #include "BL.hpp"
 
-class TraceBlockAbstract
-{
+class TraceBlockAbstract {
 public:
-    TraceBlockAbstract(uint nrOfDoublesToBuffer);
+	TraceBlockAbstract(uint nrOfDoublesToBuffer);
 
-    virtual ~TraceBlockAbstract();
+	virtual ~TraceBlockAbstract();
 
-    virtual void calculate();
-    virtual void addTraceable(const std::string &name, double *src);
-    virtual void clearTraceables();
-    virtual VoidSuccessT clearTraceable(const std::string &name);
-    virtual void dumpTrace();
+	virtual void calculate();
+
+	virtual void addTraceable(const std::string &name, double *src);
+	virtual void clearTraceables();
+	virtual VoidSuccessT clearTraceable(const std::string &name);
+
+	virtual void dumpTraceToStdout();
+	virtual std::string dumpTraceToString();
+
+	virtual void startDump();
+	virtual std::string getHeader(const std::string fieldSeparator = ", ");
+	virtual uint getStartTime();
+	virtual uint getEndTime();
+	virtual std::string getTraceOfTime(uint time, const std::string fieldSeparator = ", ");
+	virtual void endDump();
 
 protected:
-    virtual void dumpLabels();
-    virtual void dumpTrace(uint time, double *traceables, uint nrTraceables);
-    virtual void Error(const std::string &msg);
-    virtual void lockTraceData() =0;
-    virtual bool tryLockTraceData() = 0;
-    virtual void unlockTraceData() =0;
-
+//	virtual void dumpLabels();
+//	virtual void dumpTrace(uint time, double *traceables, uint nrTraceables);
+	virtual void Error(const std::string &msg);
+	virtual void lockTraceData() =0;
+	virtual bool tryLockTraceData() = 0;
+	virtual void unlockTraceData() =0;
 
 private:
-    double *buffer;
-    uint bufferSize;
-    uint time;
-    uint idx;
-    std::vector<double *> traceables;
-    uint nrTraceables;
-    uint nrTraces;
-    std::vector<std::string> labels;
+	double *buffer;
+	uint bufferSize;
+	uint time;
+	uint idx;
+	std::vector<double*> traceables;
+	uint nrTraceables;
+	uint nrTraces;
+	std::vector<std::string> labels;
+
+	bool dumping;
+	uint dumpStartTime;
 };
 
-class TraceBlock : public TraceBlockAbstract, public Block
-{
+class TraceBlock: public TraceBlockAbstract, public Block {
 public:
-    TraceBlock();
-    virtual ~TraceBlock();
+	TraceBlock();
+	virtual ~TraceBlock();
 
-    virtual void calculate();
- 
-    static const uint BUFFERSIZE_IN_KB = (10);
-    static const uint BUFFERSIZE_IN_DOUBLES = (BUFFERSIZE_IN_KB * 1024) / sizeof(double);
+	virtual void calculate();
+
+	static const uint BUFFERSIZE_IN_KB = (10);
+	static const uint BUFFERSIZE_IN_DOUBLES = (BUFFERSIZE_IN_KB * 1024)
+			/ sizeof(double);
 
 protected:
-    virtual void lockTraceData();
-    virtual bool tryLockTraceData();
-    virtual void unlockTraceData();
+	virtual void lockTraceData();
+	virtual bool tryLockTraceData();
+	virtual void unlockTraceData();
 
 private:
-    SemaphoreHandle_t semTraceData;
+	SemaphoreHandle_t semTraceData;
 };
+
 
 #endif

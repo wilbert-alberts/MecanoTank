@@ -20,6 +20,7 @@ protected:
                     const pdCOMMAND_LINE_CALLBACK func,
                     int8_t nrParams);
 
+    CLI_Command_Definition_t cmdDefinition;
     ServoGroup *servoGroup;
 };
 

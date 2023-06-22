@@ -42,4 +42,16 @@ protected:
     static ClearTraceableCommand *instance;
 };
 
+class DumpTracesCommand: public AbstractCommand
+{
+public:
+    static DumpTracesCommand *getInstance();
+    virtual ~DumpTracesCommand();
+
+protected:
+    DumpTracesCommand();
+    static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
+
+    static ClearTraceableCommand *instance;
+};
 #endif
