@@ -22,9 +22,11 @@ void TraceBlockAbstract::calculate()
 	if (tryLockTraceData())
 	{
 		// Retrieve and store all traceables
-		for (uint i = 0; i < traceables.size(); i++)
+		for (uint i = 0; i < nrTraceables; i++)
 		{
-			buffer[idx++] = *(traceables[i]);
+			auto value = *(traceables[i]);
+			buffer[idx++] = value;
+			// std::cout << "Trace: store " << value << " at position " << idx << std::endl; 
 		}
 		// See whether we need to start back at idx 0
 		if (idx + nrTraceables > bufferSize)
@@ -135,10 +137,11 @@ std::string TraceBlockAbstract::getTraceOfTime(uint t,
 		if (nrTraceables > 0)
 		{
 			uint traceIdx = t % nrTraces;
-			uint arrayIdx = buffer[traceIdx * nrTraceables];
+			uint arrayIdx = traceIdx * nrTraceables;
 			for (int i = 0; i < nrTraceables; i++)
 			{
-				result += fieldSeparator+ std::to_string(buffer[arrayIdx + i]);
+				double value = buffer[arrayIdx + i];
+				result += fieldSeparator+ std::to_string(value);
 			}
 		}
 		return result;

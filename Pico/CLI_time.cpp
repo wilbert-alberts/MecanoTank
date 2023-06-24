@@ -22,7 +22,7 @@ BaseType_t TimeCommand::command(char *outputBuffer, size_t outputLen, const char
     if (instance->servoGroup != nullptr)
     {
         int64_t r = instance->servoGroup->getCounter();
-        snprintf(outputBuffer, outputLen, "Time: %ju\n\n", r);
+        snprintf(outputBuffer, outputLen, "Time: %ju\nOK.\n", r);
     }
     else
     {
@@ -33,7 +33,7 @@ BaseType_t TimeCommand::command(char *outputBuffer, size_t outputLen, const char
 
 TimeCommand::TimeCommand() : AbstractCommand(
     "time",
-    "time:\n Print time of ServoGroup.\n\nOK\n",
+    "time:\n Print time of ServoGroup.\n",
     TimeCommand::command,
     0)
 {

@@ -88,6 +88,18 @@ SuccessT<double *> CompositeBlock::getOutput()
 	return getOutput(Block::OUT_OUTPUT);
 }
 
+std::vector<std::string> CompositeBlock::getOutputNames()
+{
+	auto result = std::vector<std::string>();
+	for(auto b: blocks) {
+		auto blockOutputs = b->getOutputNames();
+		for (auto n: blockOutputs) {
+			result.push_back(blockName + separator + n);
+		}
+	}
+	return result;
+}
+
 void CompositeBlock::setInput(const Terminal &t, double *src)
 {
 	if (!t.hasCompositeStructure())

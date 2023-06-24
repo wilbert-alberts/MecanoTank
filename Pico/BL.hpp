@@ -37,6 +37,9 @@ public:
 	virtual SuccessT<double*> getOutput();
 	virtual void    setInput(double *src);
 
+
+	virtual std::vector<std::string> getOutputNames();
+
 	static const IDTerminal IN_INPUT;
 	static const IDTerminal OUT_OUTPUT ;
 

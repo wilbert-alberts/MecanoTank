@@ -1,3 +1,6 @@
+#include <vector>
+#include <string>
+
 #include "CLI_trace.hpp"
 
 AddTraceeableCommand *AddTraceeableCommand::instance(nullptr);
@@ -15,9 +18,10 @@ AddTraceeableCommand::~AddTraceeableCommand()
 {
 }
 
-AddTraceeableCommand::AddTraceeableCommand() : AbstractCommand("addTraceable",
-															   "addTraceable <output>:\n Start tracing output.\n\n",
-															   AddTraceeableCommand::command, 1)
+AddTraceeableCommand::AddTraceeableCommand()
+	: AbstractCommand("addTraceable",
+					  "addTraceable <output>:\n Start tracing output.\n",
+					  AddTraceeableCommand::command, 1)
 {
 }
 
@@ -63,9 +67,10 @@ ClearTraceablesCommand::~ClearTraceablesCommand()
 {
 }
 
-ClearTraceablesCommand::ClearTraceablesCommand() : AbstractCommand("clearTraceables",
-																   "clearTraceables:\n Remove all tracebles.\n\n",
-																   ClearTraceablesCommand::command, 0)
+ClearTraceablesCommand::ClearTraceablesCommand()
+	: AbstractCommand("clearTraceables",
+					  "clearTraceables:\n Remove all tracebles.\n",
+					  ClearTraceablesCommand::command, 0)
 {
 }
 
@@ -95,9 +100,10 @@ ClearTraceableCommand::~ClearTraceableCommand()
 {
 }
 
-ClearTraceableCommand::ClearTraceableCommand() : AbstractCommand("clearTraceable",
-																 "clearTraceable <output>:\n Remove output from tracebles.\n\n",
-																 ClearTraceableCommand::command, 1)
+ClearTraceableCommand::ClearTraceableCommand()
+	: AbstractCommand("clearTraceable",
+					  "clearTraceable <output>:\n Remove output from tracebles.\n",
+					  ClearTraceableCommand::command, 1)
 {
 }
 
@@ -141,8 +147,9 @@ DumpTraceCommand::~DumpTraceCommand()
 {
 }
 
-DumpTraceCommand::DumpTraceCommand() : AbstractCommand("dumpTrace", "dumpTrace:\n Dump all traceables.\n\n",
-													   DumpTraceCommand::command, 0)
+DumpTraceCommand::DumpTraceCommand()
+	: AbstractCommand("dumpTrace", "dumpTrace:\n Dump all traceables.\n",
+					  DumpTraceCommand::command, 0)
 {
 }
 
@@ -178,4 +185,50 @@ BaseType_t DumpTraceCommand::command(char *outputBuffer, size_t outputLen,
 	}
 	snprintf(outputBuffer, outputLen, line.c_str());
 	return dumping;
+}
+
+GetTraceablesCommand *GetTraceablesCommand::instance(nullptr);
+
+GetTraceablesCommand::~GetTraceablesCommand() {}
+
+GetTraceablesCommand *GetTraceablesCommand::getInstance()
+{
+	if (instance == nullptr)
+		instance = new GetTraceablesCommand();
+	return instance;
+}
+
+BaseType_t GetTraceablesCommand::command(char *outputBuffer, size_t outputLen, const char *command)
+{
+	static bool dumping = false;
+	static std::vector<std::string> traceables;
+	static std::vector<std::string>::iterator iter;
+	std::string line;
+
+	if (!dumping)
+	{
+		dumping = true;
+		traceables = instance->servoGroup->getOutputNames();
+		iter = traceables.begin();
+		line += "Traceables:\n";
+	}
+	line += "\t" + *iter + "\n";
+	iter++;
+	if (iter == traceables.end())
+	{
+		line += "OK.\n";
+		dumping = false;
+		traceables.clear();
+	}
+	snprintf(outputBuffer, outputLen, line.c_str());
+	return dumping;
+}
+
+GetTraceablesCommand::GetTraceablesCommand()
+	: AbstractCommand(
+		  "getTraceables",
+		  "getTraceables:\n Print list of all traceables.\n",
+		  GetTraceablesCommand::command,
+		  0)
+{
 }

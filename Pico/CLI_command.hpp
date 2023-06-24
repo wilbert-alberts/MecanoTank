@@ -20,6 +20,10 @@ protected:
                     const pdCOMMAND_LINE_CALLBACK func,
                     int8_t nrParams);
 
+    std::string getStringParameter(uint idx, const char* cmdString);
+    int  getIntParameter(uint idx, const char* cmdString);
+    double getDoubleParameter(uint idx, const char* cmdString);
+
     CLI_Command_Definition_t cmdDefinition;
     ServoGroup *servoGroup;
 };

@@ -59,7 +59,7 @@ add_executable(mecanumtank
         CLI_time.cpp
         CLI_trace.cpp
         CLI_FreeRTOS.cpp
-        # SerialTask.cpp
+        CLI_move.cpp
       )
 
 target_compile_definitions(mecanumtank PRIVATE

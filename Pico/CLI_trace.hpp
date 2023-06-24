@@ -54,4 +54,17 @@ protected:
 
     static DumpTraceCommand *instance;
 };
+
+class GetTraceablesCommand: public AbstractCommand
+{
+public:
+    static GetTraceablesCommand *getInstance();
+    virtual ~GetTraceablesCommand();
+
+protected:
+    GetTraceablesCommand();
+    static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
+
+    static GetTraceablesCommand *instance;
+};
 #endif
