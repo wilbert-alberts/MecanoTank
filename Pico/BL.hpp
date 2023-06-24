@@ -40,6 +40,8 @@ public:
 	static const IDTerminal IN_INPUT;
 	static const IDTerminal OUT_OUTPUT ;
 
+	
+
 protected:
 	void Error(const std::string& message);
 	void Warning(const std::string& message);

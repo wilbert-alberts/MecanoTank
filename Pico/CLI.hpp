@@ -1,16 +1,16 @@
 #ifndef __CLI_HPP__
 #define __CLI_HPP__
 
+#include <vector>
+
 #include "FreeRTOS.h"
 #include "FreeRTOS_CLI.h"
 
 #include "task.h"
 #include "semphr.h"
 
-#include "SG.hpp"
-
-class TimeCommand;
-class AddTraceeableCommand;
+class ServoGroup;
+class AbstractCommand;
 
 class MecanumCLI
 {
@@ -23,10 +23,9 @@ public:
 protected:
     MecanumCLI();
     void initializeCommands();
+    
     ServoGroup *servoGroup;
-
-    TimeCommand *timeCmd;
-    AddTraceeableCommand *addTraceableCmd;
+    std::vector<AbstractCommand*> commands;
 
 private:
     static MecanumCLI *instance;

@@ -28,8 +28,8 @@ public:
 	virtual ~CLI_taskStatsCommand();
 
 protected:
-	CLI_heapStatsCommand();
-    static CLI_taskStatsCommand command(char *outputBuffer, size_t outputLen, const char *command);
+	CLI_taskStatsCommand();
+    static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
 
     static CLI_taskStatsCommand *instance;
 };

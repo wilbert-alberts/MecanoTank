@@ -36,7 +36,7 @@ int64_t ServoGroup::getCounter()
 void ServoGroup::addBlock(Block::BlockPtr blockPtr)
 {
     auto iter = blocks.end();
-    iter--; // iter now points add the traceblock;
+    iter--; // iter now points at the traceblock;
     blocks.insert(iter, blockPtr);
 }
 

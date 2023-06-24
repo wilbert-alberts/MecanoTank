@@ -2,6 +2,36 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Picoprobe debug",
+            "cwd": "${workspaceRoot}",
+            "executable": "${command:cmake.launchTargetPath}",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            // "serverArgs": [],
+            "rtos": "auto",
+            // This may need to be arm-none-eabi-gdb depending on your system
+            "gdbPath" : "gdb-multiarch",
+            "device": "rp2040",
+            // "openOCDPreConfigLaunchCommands": [],
+            "configFiles": [
+                "interface/cmsis-dap.cfg",
+                "target/rp2040.cfg"
+            ],
+            // "showDevDebugOutput": "vscode",
+            "openOCDLaunchCommands": [
+                "adapter speed 950",
+            ],
+            "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
+            "runToEntryPoint": "main",
+            // Work around for stopping at main on restart
+            "postRestartCommands": [
+                "set remotetimeout 10000",
+                "break main",
+                "continue"
+            ]
+            // "searchDir": ["/home/ben/Projects/pico/openocd/tcl"],
+        },        {
             "name": "Pico Debug",
             "cwd": "${workspaceRoot}",
             "executable": "${command:cmake.launchTargetPath}",

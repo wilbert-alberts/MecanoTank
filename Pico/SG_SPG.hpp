@@ -53,7 +53,7 @@ public:
     }
 
     void dumpTrace() {
-        traceBlock->dumpTrace();
+        traceBlock->dumpTraceToStdout();
     }
 
 private:

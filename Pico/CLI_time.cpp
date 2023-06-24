@@ -33,7 +33,7 @@ BaseType_t TimeCommand::command(char *outputBuffer, size_t outputLen, const char
 
 TimeCommand::TimeCommand() : AbstractCommand(
     "time",
-    "time:\n Print time of ServoGroup.\n\n",
+    "time:\n Print time of ServoGroup.\n\nOK\n",
     TimeCommand::command,
     0)
 {
