@@ -23,6 +23,8 @@ public:
     void executeSequence();
     int64_t getCounter();
 
+	virtual std::vector<std::string> getOutputNames();
+
 protected:
     std::shared_ptr<TraceBlock> traceBlock;
     int64_t counter;
