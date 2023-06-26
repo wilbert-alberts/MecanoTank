@@ -45,7 +45,8 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "numbers": "cpp"
     },
 
     // These settings tweaks to the cmake plugin will ensure

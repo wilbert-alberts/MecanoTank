@@ -18,6 +18,7 @@ void ServoGroupExecutor::tick()
 
     gpio_put(PIN_OUT_DEBUG, 1);
     servoGroup->executeSequence();
+    
     gpio_put(PIN_OUT_DEBUG, 0);
     l = 1 - l;
 }

@@ -17,12 +17,13 @@ void ABDecoderBlock::pinChangedStatic(uint gpio, uint32_t mask)
     }
 }
 
-ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b)
+ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b, float MPI)
     : Block("ABDecoder", bn)
     , pinA(a)
     , pinB(b)
+    , meterPerIncrement(MPI)
     , position(0)
-    , positionDbl(0.0)
+    , positionMeter(0.0)
     , decoder(gpio_get(a), gpio_get(b))
 {
     gpio_set_irq_enabled_with_callback(pinA, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, ABDecoderBlock::pinChangedStatic);
@@ -43,14 +44,13 @@ void ABDecoderBlock::pinChanged()
     decoder.stateChanged(newA, newB);
 }
 
-void ABDecoderBlock::calculate()
+void ABDecoderBlock::calculate(int64_t counter)
 {
-    position = decoder.getPosition();
-    positionDbl = static_cast<double>(position);
-    std::cout << "ABDecoder " << blockName << ": " << position << std::endl;
+    position      = decoder.getPosition();
+    positionMeter = static_cast<float>(position) * meterPerIncrement;
 }
 
-double* ABDecoderBlock::getOutput()
+float* ABDecoderBlock::getOutput()
 {
-    return &positionDbl;
+    return &positionMeter;
 }

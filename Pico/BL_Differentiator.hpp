@@ -1,5 +1,5 @@
 /*
- * Block.h
+ * BL_Differentiator.h
  *
  *  Created on: 25 Jan 2023
  *      Author: walberts
@@ -15,7 +15,7 @@
 class DifferentiatorBlock: public Block
 {
 public:
-	DifferentiatorBlock(const std::string &bn, double _servoFrequency) 
+	DifferentiatorBlock(const std::string &bn, float _servoFrequency) 
 	: Block("Differentiator", bn)
 	, input(&safeInput)
 	, previousInput(safeInput)
@@ -24,25 +24,26 @@ public:
 	, safeInput(0.0)
 	{}
 	virtual ~DifferentiatorBlock() {};
-	virtual void calculate() {		
+
+	virtual void calculate(int64_t) {		
 		output = (*input - previousInput)*servoFrequency;
 		previousInput = *input;
-		// std::cout << "ED: input: " << *input << ", output: " << output << std::endl;
 	}
-	void setInput(double* src) {
+
+	void setInput(float* src) {
 		if (src != nullptr)
 		input = src;
 	}
-	double* getOutput() {
+	float* getOutput() {
 		return &output;
 	}
 
 private:
-	double* input;
-	double  previousInput;
-	double  output;
-	double  servoFrequency;
-	double  safeInput;
+	float* input;
+	float  previousInput;
+	float  output;
+	float  servoFrequency;
+	float  safeInput;
 };
 
 

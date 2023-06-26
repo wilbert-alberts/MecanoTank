@@ -11,7 +11,14 @@
 #define WRAP_LEVEL (1000)
 
 MotorInterfaceBlock::MotorInterfaceBlock(const std::string &bn, uint8_t pin, uint8_t dir)
-    : Block("MotdorInterfaceBlock", bn), safePWM(0.0), input(&safePWM), sliceNum(0), channel(0), pwmPin(pin), dirPin(dir)
+    : Block("MotorInterfaceBlock", bn), 
+    safePWM(0.0), 
+    input(&safePWM), 
+    batFactor (&safePWM), 
+    sliceNum(0), 
+    channel(0), 
+    pwmPin(pin), 
+    dirPin(dir)
 {
     gpio_set_dir(dirPin, GPIO_OUT);
     gpio_set_function(dirPin, GPIO_FUNC_SIO);
@@ -23,17 +30,21 @@ MotorInterfaceBlock::MotorInterfaceBlock(const std::string &bn, uint8_t pin, uin
     channel = pwm_gpio_to_channel(pwmPin);
     pwm_set_wrap(sliceNum, WRAP_LEVEL);
 
-    std::cout << "pwmPin: " << pwmPin << ", slice: " << sliceNum << ", channel: " << channel << std::endl;
+    //std::cout << "pwmPin: " << pwmPin << ", slice: " << sliceNum << ", channel: " << channel << std::endl;
 }
 
-void MotorInterfaceBlock::setInput(double *src)
+void MotorInterfaceBlock::setInput(float *src)
 {
     input = src;
 }
-
-void MotorInterfaceBlock::calculate()
+void MotorInterfaceBlock::setBatteryFactor (float *bf)
 {
-    double pwm = enforceLimits(*input);
+    batFactor = bf;
+}
+
+void MotorInterfaceBlock::calculate(int64_t counter)
+{
+    float pwm = enforceLimits(*input * *batFactor);
 
     uint8_t dirValue = 1;
     if (pwm < 0)
@@ -71,7 +82,7 @@ void MotorInterfaceBlock::calculate()
     }
 }
 
-double MotorInterfaceBlock::enforceLimits(double v)
+float MotorInterfaceBlock::enforceLimits(float v)
 {
     if (v > 1.0)
         return 1.0;

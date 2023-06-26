@@ -1,31 +1,31 @@
 
 
 #include "BL_SignalGenerator.hpp"
+#include <math.h>
 
-SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn)
-    : Block("SignalGenerator", bn), signal(0.0), counter(0)
-{
-    // signals.push_back(0.0);
-    // signals.push_back(0.33);
-    signals.push_back(0.5);
-    // signals.push_back(1.0);
-}
-
-SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn, double s)
-    : Block("SignalGenerator", bn), signal(s), counter(0)
+SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn, float sfr)
+    : Block("SignalGenerator", bn), 
+    sampleFrequency (sfr), speed (0.1), position (0.0), output (0.0)
 {
 }
 
-double *SignalGeneratorBlock::getOutput()
+SignalGeneratorBlock::SignalGeneratorBlock(const std::string &bn, float _speed, float sfr)
+    : Block("SignalGenerator", bn), 
+    sampleFrequency (sfr), speed (_speed), position (0.0), output (0.0)
 {
-    return &signal;
 }
 
-void SignalGeneratorBlock::calculate()
+float *SignalGeneratorBlock::getOutput()
 {
-    if (signals.size() > 0)
-    {
-        signal = signals[counter];
-        counter = (counter + 1) % signals.size();
-    }
+    return &output;
+}
+
+void SignalGeneratorBlock::calculate(int64_t counter)
+{
+    float arg = counter/sampleFrequency/5;
+    float a = sin (arg);
+    float sp = speed * a;
+    position += sp/sampleFrequency;
+    output = position;
+
 }

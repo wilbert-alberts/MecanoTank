@@ -8,17 +8,18 @@
 class SignalGeneratorBlock: public Block
 {
 public:
-    SignalGeneratorBlock(const std::string& bn);
-    SignalGeneratorBlock(const std::string& bn, double sig);
+    SignalGeneratorBlock(const std::string& bn, float sfr);
+    SignalGeneratorBlock(const std::string& bn, float sig, float sfr);
     virtual ~SignalGeneratorBlock() {}
-    double* getOutput();
+    float* getOutput();
 
 protected:
-    virtual void calculate();
+    virtual void calculate(int64_t counter);
 
 private:
-    std::vector<double> signals;
-    double signal;
-    unsigned int counter;
+    float sampleFrequency;
+    float speed;
+    float position;
+    float output;
 };
 #endif

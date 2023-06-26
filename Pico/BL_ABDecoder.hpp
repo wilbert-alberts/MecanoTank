@@ -14,18 +14,19 @@
 class ABDecoderBlock: public Block
 {
 public:
-    ABDecoderBlock(const std::string& bn, uint8_t a, uint8_t b);
+    ABDecoderBlock(const std::string& bn, uint8_t a, uint8_t b, float MPI);
     virtual ~ABDecoderBlock();
-	virtual void calculate();
+	virtual void calculate(int64_t);
 
-    double* getOutput();
+    float* getOutput();
 
 private:
-    uint8_t pinA;
-    uint8_t pinB;
-    uint64_t position;
-    double   positionDbl;
-    ABDecoder decoder;
+    uint8_t           pinA;
+    uint8_t           pinB;
+    volatile int      position;
+    float             meterPerIncrement;
+    float             positionMeter;
+    ABDecoder         decoder;
 
     static void pinChangedStatic(uint gpio, uint32_t mask);
     static std::vector<ABDecoderBlock*> decoders;

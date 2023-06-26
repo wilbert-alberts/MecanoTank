@@ -22,14 +22,14 @@ double ServoGroup::getPeriod()
 
 int64_t ServoGroup::getCounter()
 {
-    // Serial.println("ServoGroup::getPeriod()");
+    // Serial.println("ServoGroup::getCounter()");
     return counter;
 }
 
 void ServoGroup::executeSequence()
 {
     for (auto b: sequence) {
-        b->calculate();
+        b->calculate(counter);
     }
 
     counter++;

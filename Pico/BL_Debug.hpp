@@ -18,7 +18,7 @@ class DebugBlock: public Block
 public:
 	DebugBlock(const std::string &bn) : Block("DebugBlock", bn) {}
 	virtual ~DebugBlock() {};
-	virtual void calculate() {
+	virtual void calculate(int64_t counter) {
 		std::cout << "calculate: " << getBlockName() << std::endl;
 	}
 };

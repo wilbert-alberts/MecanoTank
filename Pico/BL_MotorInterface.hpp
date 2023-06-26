@@ -13,21 +13,23 @@ class MotorInterfaceBlock : public Block {
 public:
     MotorInterfaceBlock(const std::string& bn, uint8_t pin, uint8_t dir) ;
     ~MotorInterfaceBlock() {}
-    void setInput(double* src);
+    void setInput(float* src);
+    void setBatteryFactor (float *bf);
 
 protected:
-    virtual void calculate() ;
+    virtual void calculate(int64_t counter) ;
 
 private:
-    double safePWM;
-    double* input;
+    float safePWM;
+    float* input;
+    float* batFactor;
     
     uint sliceNum;
     uint channel;
     uint pwmPin;
     uint dirPin;
 
-    double enforceLimits(double v);
+    float enforceLimits(float v);
 };
 
 #endif

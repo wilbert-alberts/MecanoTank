@@ -25,6 +25,7 @@
                 "break main",
                 "continue"
             ],
+            "showDevDebugOutput": "raw"
             "searchDir": ["/home/ben/Projects/pico/openocd/tcl"],
         }
     ]

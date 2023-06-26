@@ -18,15 +18,18 @@ pico_sdk_init()
 
 add_executable(mecanumtank
         main.cpp
+        adc.c
 
+        BL_BatteryMonitor.cpp
         BL.cpp
         BL_ABDecoder.cpp
         BL_MotorInterface.cpp
         BL_SignalGenerator.cpp
-        # BL_Differentiator.cpp
         BL_ErrorDifference.cpp
+        BL_MultClip.cpp
         BL_PID.cpp
         BL_Sum.cpp
+        BL_Tracer.cpp
                 
         ServoGroupExecutor.cpp
         PeriodicTask.cpp

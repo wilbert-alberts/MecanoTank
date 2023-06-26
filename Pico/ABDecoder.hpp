@@ -1,3 +1,11 @@
+/*
+ * ABDecoder 
+ * Interrupt driven AB decoder
+ * WAlb
+ * 
+ * 28 May 2023 BSla made thread-safe 
+ */
+
 #ifndef __ABDECODER_HPP__
 #define __ABDECODER_HPP__
 
@@ -83,7 +91,7 @@ private:
     uint8_t currentA;
     uint8_t currentB;
 
-    int64_t position;
+    volatile int position = 0;
 };
 
 #endif

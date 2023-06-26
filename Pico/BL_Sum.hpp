@@ -6,35 +6,35 @@
 class SumBlock : public Block
 {
 public:
-    SumBlock(const std::string &bn, double o, double s1_, double s2_, double s3_, double s4_);
-    SumBlock(const std::string &bn, double o);
+    SumBlock(const std::string &bn, float o, float s1_, float s2_, float s3_, float s4_);
+    SumBlock(const std::string &bn, float o);
     virtual ~SumBlock();
-    virtual void calculate();
+    virtual void calculate(int64_t);
 
-    double *getOutput();
-    void setOffset(double o);
-    void setFactor1(double o);
-    void setFactor2(double o);
-    void setFactor3(double o);
-    void setFactor4(double o);
-    void setIn1(double *p);
-    void setIn2(double *p);
-    void setIn3(double *p);
-    void setIn4(double *p);
+    float *getOutput();
+    void setOffset(float o);
+    void setFactor1(float o);
+    void setFactor2(float o);
+    void setFactor3(float o);
+    void setFactor4(float o);
+    void setIn1(float *p);
+    void setIn2(float *p);
+    void setIn3(float *p);
+    void setIn4(float *p);
 
 private:
-    double offset;
-    double safeValue;
-    double s1;
-    double s2;
-    double s3;
-    double s4;
+    float offset;
+    float safeValue;
+    float s1;
+    float s2;
+    float s3;
+    float s4;
 
-    double out;
-    double *in1;
-    double *in2;
-    double *in3;
-    double *in4;
+    float out;
+    float *in1;
+    float *in2;
+    float *in3;
+    float *in4;
 };
 
 #endif

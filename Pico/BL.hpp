@@ -16,7 +16,7 @@ class Block
 public:
 	Block(const std::string &tn, const std::string &bn);
 	virtual ~Block();
-	virtual void calculate() = 0;
+	virtual void calculate(int64_t counter) = 0;
 
 	const std::string& getBlockName();
 	const std::string& getTypeName();

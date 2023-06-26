@@ -15,16 +15,20 @@ class ErrorDifferenceBlock : public Block
 public:
 	ErrorDifferenceBlock(const std::string& bn);
 	virtual ~ErrorDifferenceBlock();
-	virtual void calculate();
-	void setInputActual(double *p);
-	void setInputDesired(double *p);
-	double *getOutput();
+	virtual void calculate(int64_t counter);
+	void setInputActual(float *p);
+	void setInputDesired(float *p);
+	float *getOutput () { return &difference;} 
+	bool  *getCSOutput () {return &changedSign;}
+
 
 private:
-	double safe_actual;
-	double *actual;
-	double *desired;
-	double error;
+	float safeValue;
+	float *actual;
+	float *desired;
+	float difference;
+	float previousDifference;
+	bool  changedSign;
 };
 
 #endif /* ERRORDIFFERENCE_H_ */

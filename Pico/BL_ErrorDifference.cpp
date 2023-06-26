@@ -8,35 +8,42 @@
 #include "BL_ErrorDifference.hpp"
 
 ErrorDifferenceBlock::ErrorDifferenceBlock(const std::string& bn) 
-: Block("ErrorDifferenceBlock", bn)
-, safe_actual(0), actual(&safe_actual), desired(&safe_actual), error(0)
+: Block("ErrorDifferenceBlock", bn),
+   safeValue(0.0), 
+   actual(&safeValue), 
+   desired(&safeValue), 
+   difference (0.0),
+   previousDifference (0.0),
+   changedSign (false)
 {
 }
+
 ErrorDifferenceBlock::~ErrorDifferenceBlock()
 {
 	// TODO Auto-generated destructor stub
 }
 
-void ErrorDifferenceBlock::calculate()
+void ErrorDifferenceBlock::calculate(int64_t counter)
 {
-	error = *desired - *actual;
+	difference = *desired - *actual;
+	if ((difference >= 0 && previousDifference <  0) ||
+	    (difference >  0 && previousDifference <= 0)   ) {
+		changedSign = true;
+	}
+	previousDifference = difference;
 }
 
-void ErrorDifferenceBlock::setInputActual(double *p)
+void ErrorDifferenceBlock::setInputActual(float *p)
 {
 	if (p != nullptr)
 	{
 		actual = p;
 	}
 }
-void ErrorDifferenceBlock::setInputDesired(double *p)
+void ErrorDifferenceBlock::setInputDesired(float *p)
 {
 	if (p != nullptr)
 	{
 		desired = p;
 	}
-}
-double *ErrorDifferenceBlock::getOutput()
-{
-	return &error;
 }
