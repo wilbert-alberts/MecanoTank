@@ -45,6 +45,15 @@ SuccessT<double *> LeafBlock::getOutput()
 	return getOutput(Block::OUT_OUTPUT);
 }
 
+std::vector<std::string> LeafBlock::getOutputNames()
+{
+	auto result = std::vector<std::string>();
+	for (const auto& [k,v]: outputTerminals) {
+		result.push_back(blockName + "." + k);
+	}
+	return result;
+}
+
 void LeafBlock::setInput(const Terminal &t, double *src)
 {
 	if (src == nullptr)

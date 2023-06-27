@@ -4,25 +4,33 @@
 
 #include "BL_Trace.hpp"
 
-TraceBlockAbstract::TraceBlockAbstract(uint nrOfDoublesToBuffer) :
-		buffer(new double[nrOfDoublesToBuffer]), bufferSize(
-				nrOfDoublesToBuffer), time(0), idx(0), nrTraceables(0), nrTraces(
-				0) {
+TraceBlockAbstract::TraceBlockAbstract(uint nrOfDoublesToBuffer) : buffer(new double[nrOfDoublesToBuffer]), bufferSize(
+																												nrOfDoublesToBuffer),
+																   time(0), idx(0), nrTraceables(0), nrTraces(
+																										 0)
+{
 }
 
-TraceBlockAbstract::~TraceBlockAbstract() {
+TraceBlockAbstract::~TraceBlockAbstract()
+{
 	delete[] buffer;
 }
 
-void TraceBlockAbstract::calculate() {
+void TraceBlockAbstract::calculate()
+{
 
-	if (tryLockTraceData()) {
+	if (tryLockTraceData())
+	{
 		// Retrieve and store all traceables
-		for (uint i = 0; i < traceables.size(); i++) {
-			buffer[idx++] = *(traceables[i]);
+		for (uint i = 0; i < nrTraceables; i++)
+		{
+			auto value = *(traceables[i]);
+			buffer[idx++] = value;
+			// std::cout << "Trace: store " << value << " at position " << idx << std::endl; 
 		}
 		// See whether we need to start back at idx 0
-		if (idx + nrTraceables > bufferSize) {
+		if (idx + nrTraceables > bufferSize)
+		{
 			idx = 0;
 		}
 		// Increase time.
@@ -31,7 +39,8 @@ void TraceBlockAbstract::calculate() {
 	}
 }
 
-void TraceBlockAbstract::clearTraceables() {
+void TraceBlockAbstract::clearTraceables()
+{
 	lockTraceData();
 	traceables.clear();
 	labels.clear();
@@ -42,7 +51,8 @@ void TraceBlockAbstract::clearTraceables() {
 	unlockTraceData();
 }
 
-void TraceBlockAbstract::addTraceable(const std::string &name, double *src) {
+void TraceBlockAbstract::addTraceable(const std::string &name, double *src)
+{
 	lockTraceData();
 	traceables.push_back(src);
 	labels.push_back(name);
@@ -53,19 +63,22 @@ void TraceBlockAbstract::addTraceable(const std::string &name, double *src) {
 	unlockTraceData();
 }
 
-VoidSuccessT TraceBlockAbstract::clearTraceable(const std::string &name) {
+VoidSuccessT TraceBlockAbstract::clearTraceable(const std::string &name)
+{
 	lockTraceData();
 
 	int i = 0;
 	auto labelsIter = labels.begin();
 	auto traceablesIter = traceables.begin();
 	auto r = VoidSuccessT();
-	while (i < nrTraceables && labels[i] != name) {
+	while (i < nrTraceables && labels[i] != name)
+	{
 		i++;
 		labelsIter++;
 		traceablesIter++;
 	}
-	if (i < nrTraceables) {
+	if (i < nrTraceables)
+	{
 		// We found the traceable.
 		traceables.erase(traceablesIter);
 		labels.erase(labelsIter);
@@ -73,109 +86,134 @@ VoidSuccessT TraceBlockAbstract::clearTraceable(const std::string &name) {
 		nrTraces = bufferSize / nrTraceables;
 		time = 0;
 		idx = 0;
-	} else {
+	}
+	else
+	{
 		r = VoidSuccessT(false, "Unable to find traceable.");
 	}
 	unlockTraceData();
 	return r;
 }
-void TraceBlockAbstract::startDump() {
+void TraceBlockAbstract::startDump()
+{
 	lockTraceData();
-	if (time * nrTraceables > bufferSize) {
+	if (time * nrTraceables > bufferSize)
+	{
 		dumpStartTime = time - nrTraces;
-	} else {
+	}
+	else
+	{
 		dumpStartTime = 0;
 	}
 	dumping = true;
 }
 
-std::string TraceBlockAbstract::getHeader(const std::string fieldSeparator) {
+std::string TraceBlockAbstract::getHeader(const std::string fieldSeparator)
+{
 	std::string result = "time";
-	for (auto iter = labels.begin(); iter != labels.end(); iter++) {
+	for (auto iter = labels.begin(); iter != labels.end(); iter++)
+	{
 		result += fieldSeparator + *iter;
 	}
 	return result;
 }
 
-uint TraceBlockAbstract::getStartTime() {
+uint TraceBlockAbstract::getStartTime()
+{
 	return dumpStartTime;
 }
 
-uint TraceBlockAbstract::getEndTime() {
+uint TraceBlockAbstract::getEndTime()
+{
 	return time;
 }
 
 std::string TraceBlockAbstract::getTraceOfTime(uint t,
-		const std::string fieldSeparator) {
-	if (t >= dumpStartTime && t < time) {
-		std::string result = std::to_string(time) + fieldSeparator;
-		uint traceIdx = t % nrTraces;
-		uint arrayIdx = buffer[traceIdx * nrTraceables];
-		for (int i = 0; i < nrTraceables; i++) {
-			result += std::to_string(buffer[arrayIdx + i]);
+											   const std::string fieldSeparator)
+{
+	if (t >= dumpStartTime && t < time)
+	{
+		std::string result = std::to_string(t);
+		if (nrTraceables > 0)
+		{
+			uint traceIdx = t % nrTraces;
+			uint arrayIdx = traceIdx * nrTraceables;
+			for (int i = 0; i < nrTraceables; i++)
+			{
+				double value = buffer[arrayIdx + i];
+				result += fieldSeparator+ std::to_string(value);
+			}
 		}
 		return result;
-	} else {
+	}
+	else
+	{
 		return "Error: Illegal time in getTraceOfTime()";
 	}
 }
 
-void TraceBlockAbstract::endDump() {
-	dumpStartTime = UINTMAX_MAX;
+void TraceBlockAbstract::endDump()
+{
+	dumpStartTime = UINT32_MAX;
 	dumping = false;
 	unlockTraceData();
 }
 
-std::string TraceBlockAbstract::dumpTraceToString() {
+std::string TraceBlockAbstract::dumpTraceToString()
+{
 	std::string result;
 	startDump();
 	result += getHeader() + "\n";
-	for (uint t = getStartTime(); t < getEndTime(); t++) {
+	for (uint t = getStartTime(); t < getEndTime(); t++)
+	{
 		result += getTraceOfTime(t) + "\n";
 	}
 	endDump();
+	return result;
 }
 
-void TraceBlockAbstract::dumpTraceToStdout() {
+void TraceBlockAbstract::dumpTraceToStdout()
+{
 	startDump();
 	std::cout << getHeader() << std::endl;
-	for (uint t = getStartTime(); t < getEndTime(); t++) {
+	for (uint t = getStartTime(); t < getEndTime(); t++)
+	{
 		std::cout << getTraceOfTime(t) << std::endl;
 	}
 	endDump();
 
-//	uint dumpIdx(0);
-//	uint dumpTime(0);
-//	dumpLabels();
-//	if (time * nrTraceables > bufferSize) { // We've overrun the buffer
-//											// Start at idx and dump until idx-1 (mod bufferSize)
-//		dumpIdx = idx;
-//		dumpTime = time - nrTraces;
-//		// First dump from idx to bufferSize
-//		while (dumpIdx < (nrTraces * nrTraceables)) {
-//			dumpTrace(dumpTime, buffer + dumpIdx, nrTraceables);
-//			dumpIdx += nrTraceables;
-//			dumpTime++;
-//		}
-//	} // Start at 0 and dump until idx-1
-//	dumpIdx = 0;
-//	while (dumpIdx < idx) {
-//		dumpTrace(dumpTime, buffer + dumpIdx, nrTraceables);
-//		dumpIdx += nrTraceables;
-//		dumpTime++;
-//	}
+	//	uint dumpIdx(0);
+	//	uint dumpTime(0);
+	//	dumpLabels();
+	//	if (time * nrTraceables > bufferSize) { // We've overrun the buffer
+	//											// Start at idx and dump until idx-1 (mod bufferSize)
+	//		dumpIdx = idx;
+	//		dumpTime = time - nrTraces;
+	//		// First dump from idx to bufferSize
+	//		while (dumpIdx < (nrTraces * nrTraceables)) {
+	//			dumpTrace(dumpTime, buffer + dumpIdx, nrTraceables);
+	//			dumpIdx += nrTraceables;
+	//			dumpTime++;
+	//		}
+	//	} // Start at 0 and dump until idx-1
+	//	dumpIdx = 0;
+	//	while (dumpIdx < idx) {
+	//		dumpTrace(dumpTime, buffer + dumpIdx, nrTraceables);
+	//		dumpIdx += nrTraceables;
+	//		dumpTime++;
+	//	}
 }
 
-//void TraceBlockAbstract::dumpLabels() {
+// void TraceBlockAbstract::dumpLabels() {
 //
 //	std::cout << "time";
 //	for (uint i = 0; i < traceables.size(); i++) {
 //		std::cout << ", " << labels[i];
 //	}
 //	std::cout << std::endl;
-//}
+// }
 //
-//void TraceBlockAbstract::dumpTrace(uint time, double *traceables,
+// void TraceBlockAbstract::dumpTrace(uint time, double *traceables,
 //		uint nrTraceables) {
 //	lockTraceData();
 //	std::cout << time;
@@ -184,38 +222,44 @@ void TraceBlockAbstract::dumpTraceToStdout() {
 //	}
 //	unlockTraceData();
 //	std::cout << std::endl;
-//}
+// }
 
-void TraceBlockAbstract::Error(const std::string &msg) {
+void TraceBlockAbstract::Error(const std::string &msg)
+{
 	std::cerr << "Error: " << msg << std::endl;
 }
 
 /************************ TraceBlock *******************************8*/
 
-TraceBlock::TraceBlock() :
-		TraceBlockAbstract(BUFFERSIZE_IN_DOUBLES), Block("TraceBlock", "tracer") {
-// std::cout << "Traceblock: allocating memory for: " << BUFFERSIZE_IN_DOUBLES << " doubles"<< std::endl;
+TraceBlock::TraceBlock() : TraceBlockAbstract(BUFFERSIZE_IN_DOUBLES), Block("TraceBlock", "tracer")
+{
+	// std::cout << "Traceblock: allocating memory for: " << BUFFERSIZE_IN_DOUBLES << " doubles"<< std::endl;
 	semTraceData = xSemaphoreCreateBinary();
 	xSemaphoreGive(semTraceData);
 }
-TraceBlock::~TraceBlock() {
+TraceBlock::~TraceBlock()
+{
 }
 
-void TraceBlock::calculate() {
+void TraceBlock::calculate()
+{
 	TraceBlockAbstract::calculate();
 }
 
-void TraceBlock::lockTraceData() {
-// const TickType_t takeDumping = 5000 / portTICK_PERIOD_MS;
+void TraceBlock::lockTraceData()
+{
+	// const TickType_t takeDumping = 5000 / portTICK_PERIOD_MS;
 
 	auto r = xSemaphoreTake(semTraceData, portMAX_DELAY);
 }
 
-bool TraceBlock::tryLockTraceData() {
+bool TraceBlock::tryLockTraceData()
+{
 	auto r = xSemaphoreTake(semTraceData, 0);
 	return r == pdTRUE;
 }
 
-void TraceBlock::unlockTraceData() {
+void TraceBlock::unlockTraceData()
+{
 	xSemaphoreGive(semTraceData);
 }

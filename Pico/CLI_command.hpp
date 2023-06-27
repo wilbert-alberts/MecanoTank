@@ -15,10 +15,14 @@ public:
     void registerServoGroup(ServoGroup *sg);
 
 protected:
-    AbstractCommand(const std::string &cmdName,
-                    const std::string &help,
+    AbstractCommand(const char* cmdName,
+                    const char* help,
                     const pdCOMMAND_LINE_CALLBACK func,
                     int8_t nrParams);
+
+    std::string getStringParameter(uint idx, const char* cmdString);
+    int  getIntParameter(uint idx, const char* cmdString);
+    double getDoubleParameter(uint idx, const char* cmdString);
 
     CLI_Command_Definition_t cmdDefinition;
     ServoGroup *servoGroup;

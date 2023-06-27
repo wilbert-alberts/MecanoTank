@@ -24,6 +24,8 @@ public:
 	virtual SuccessT<double*> getOutput(const Terminal &t);
 	virtual SuccessT<double*> getOutput(const std::string &tid);
 	virtual SuccessT<double*> getOutput();
+	virtual std::vector<std::string> getOutputNames();
+
 	virtual void setInput(const Terminal &t = Block::IN_INPUT, double *src = nullptr) ;
 	virtual void setInput(const std::string& tid, double *src = nullptr) ;
 	virtual void setInput(double *src = nullptr) ;

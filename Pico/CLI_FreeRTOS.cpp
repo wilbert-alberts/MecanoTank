@@ -5,63 +5,65 @@
  *      Author: walberts
  */
 
-#include "CLIFreeRTOS.hpp"
+#include "FreeRTOS.h"
+#include "FreeRTOS_CLI.h"
 
-CLI_heapStatsCommand *CLI_heapStatsCommand::instance(nullptr);
+#include "CLI_FreeRTOS.hpp"
 
-CLI_heapStatsCommand* CLI_heapStatsCommand::getInstance() {
+HeapStatsCommand *HeapStatsCommand::instance(nullptr);
+
+HeapStatsCommand* HeapStatsCommand::getInstance() {
 	if (instance == nullptr) {
-		instance = new CLI_heapStatsCommand();
+		instance = new HeapStatsCommand();
 	}
 	return instance;
 }
 
-CLI_heapStatsCommand::~CLI_heapStatsCommand() {
+HeapStatsCommand::~HeapStatsCommand() {
 }
 
-CLI_heapStatsCommand::CLI_heapStatsCommand() :
-		AbstractCommand("heapStats", "heapStats:\n Dump heap statistics.\n\n",
-				CLI_heapStatsCommand::command, 1) {
+HeapStatsCommand::HeapStatsCommand() :
+		AbstractCommand("heapStats", "heapStats:\n Dump heap statistics.\n",
+				HeapStatsCommand::command, 0) {
 }
 
-BaseType_t CLI_heapStatsCommand::command(char *outputBuffer, size_t outputLen,
+BaseType_t HeapStatsCommand::command(char *outputBuffer, size_t outputLen,
 		const char *command) {
 
 	HeapStats_t stats;
 
-	vPortGetHeapStats(&stats);
-	snprintf(outputBuffer, output,
+	auto curFreeHeapSize = xPortGetFreeHeapSize();
+	auto minFreeHeapSize = xPortGetMinimumEverFreeHeapSize();
+
+	snprintf(outputBuffer, outputLen,
 
 	"Heapstats:\n"
 			"	available:          %d bytes\n"
-			"	min ever available: %d bytes\n"
-			"	nr Allocs:          %d\n"
-			"	nr Frees:           %d\n", stats.xAvailableHeapSpaceInBytes,
-			stats.xMinimumEverFreeBytesRemaining,
-			stats.xNumberOfSuccessfulAllocations,
-			stats.xNumberOfSuccessfulFrees);
+			"	min ever available: %d bytes\nOK\n",
+			curFreeHeapSize,
+			minFreeHeapSize);
 
 	return pdFALSE;
 }
 
-CLI_taskStatsCommand *CLI_taskStatsCommand::instance(nullptr);
+TaskStatsCommand *TaskStatsCommand::instance(nullptr);
 
-CLI_taskStatsCommand* CLI_taskStatsCommand::getInstance() {
+TaskStatsCommand* TaskStatsCommand::getInstance() {
 	if (instance == nullptr) {
-		instance = new CLI_taskStatsCommand();
+		instance = new TaskStatsCommand();
 	}
 	return instance;
 }
 
-CLI_taskStatsCommand::~CLI_taskStatsCommand() {
+TaskStatsCommand::~TaskStatsCommand() {
 }
 
-CLI_taskStatsCommand::CLI_taskStatsCommand() :
-		AbstractCommand("taskStats", "taskStats:\n Dump task statistics.\n\n",
-				CLI_taskStatsCommand::command, 1) {
+TaskStatsCommand::TaskStatsCommand() :
+		AbstractCommand("taskStats", "taskStats:\n Dump task statistics.\n",
+				TaskStatsCommand::command, 0) {
 }
 
-BaseType_t CLI_taskStatsCommand::command(char *outputBuffer, size_t outputLen,
+BaseType_t TaskStatsCommand::command(char *outputBuffer, size_t outputLen,
 		const char *command) {
 
 	/* Take a snapshot of the number of tasks in case it changes while this
@@ -69,16 +71,16 @@ BaseType_t CLI_taskStatsCommand::command(char *outputBuffer, size_t outputLen,
 	UBaseType_t uxArraySize(uxTaskGetNumberOfTasks());
 	unsigned long ulTotalRunTime;
 	static const char *nullTaskName = "<null>";
-	static const char ** stateToString = {
+	static const char * stateToString[] = {
 			"Ready", "Running", "Blocked", "Suspended", "Deleted"
 	};
 
 	/* Allocate a TaskStatus_t structure for each task.  An array could be
 	 allocated statically at compile time. */
-	TaskStatus_t *taskStatusArray(
-			pvPortMalloc(uxArraySize * sizeof(TaskStatus_t)));
+	TaskStatus_t *taskStatusArray= (TaskStatus_t*)
+			pvPortMalloc(uxArraySize * sizeof(TaskStatus_t));
 
-	if (pxTaskStatusArray != NULL) {
+	if (taskStatusArray != NULL) {
 		std::string result("");
 		/* Generate raw status information about each task. */
 		uxArraySize = uxTaskGetSystemState(taskStatusArray, uxArraySize,
@@ -88,16 +90,21 @@ BaseType_t CLI_taskStatsCommand::command(char *outputBuffer, size_t outputLen,
 			eTaskState state(taskStatusArray[i].eCurrentState);
 			configSTACK_DEPTH_TYPE waterMark(
 					taskStatusArray[i].usStackHighWaterMark);
-			char *taskName(nullTaskName);
+			const char *taskName(nullTaskName);
 			if (taskStatusArray[i].pcTaskName != nullptr) {
 				taskName = taskStatusArray[i].pcTaskName;
 			}
-			result+= "task: " + taskName +", stack: " + waterMark;
-			result+= ", state: " + stateToString[state] + "\n";
+			result+= "task: ";
+			result.append(taskName);
+			result+=", stack: ";
+			result+=std::to_string(waterMark);
+			result+= ", state: ";
+			result.append(stateToString[state]);
+			result+="\n";
 		}
 
-		snprintf("Taskstats:\n%s", result.c_str());
-		vPortFree (pxTaskStatusArray);
+		snprintf(outputBuffer, outputLen, "Taskstats:\n%sOK.\n", result.c_str());
+		vPortFree (taskStatusArray);
 	}
 
 	return pdFALSE;

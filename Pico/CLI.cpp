@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 
 #include "FreeRTOS.h"
 #include "FreeRTOS_CLI.h"
@@ -16,6 +17,11 @@
 
 #include "CLI_time.hpp"
 #include "CLI_trace.hpp"
+#include "CLI_FreeRTOS.hpp"
+#include "CLI_move.hpp"
+
+#include "SG.hpp"
+
 
 #define MAX_INPUT_LENGTH 255
 #define MAX_OUTPUT_LENGTH 255
@@ -46,15 +52,24 @@ MecanumCLI::~MecanumCLI()
 
 void MecanumCLI::initializeCommands()
 {
-    timeCmd = TimeCommand::getInstance();
-    addTraceableCmd = AddTraceeableCommand::getInstance();
+    commands.push_back(TimeCommand::getInstance());
+    commands.push_back(AddTraceeableCommand::getInstance());
+    commands.push_back(ClearTraceableCommand::getInstance());
+    commands.push_back(ClearTraceablesCommand::getInstance());
+    commands.push_back(GetTraceablesCommand::getInstance());
+    commands.push_back(DumpTraceCommand::getInstance());
+    commands.push_back(HeapStatsCommand::getInstance());
+    commands.push_back(TaskStatsCommand::getInstance());
+    commands.push_back(GetPositionCommand::getInstance());
+    commands.push_back(StartMoveCommand::getInstance());
 }
 
 void MecanumCLI::setServoGroup(ServoGroup *sg)
 {
     servoGroup = sg;
-    timeCmd->registerServoGroup(sg);
-    addTraceableCmd->registerServoGroup(sg);
+    std::for_each(commands.begin(), commands.end(), [&](auto c){
+        c->registerServoGroup(sg);
+    });
 }
 
 void MecanumCLI::startCLITask()
@@ -259,20 +274,4 @@ void MecanumCLI::consoleTask()
             }
         }
     }
-}
-
-BaseType_t testCommand(char *outputBuffer, size_t outputLen, const char *command)
-{
-    strncpy(outputBuffer, "Test command succeeded.\n", outputLen);
-    return pdFALSE;
-}
-
-void registerTestCommand()
-{
-    static const CLI_Command_Definition_t greetTheWorldCmd{
-        .pcCommand = "test",
-        .pcHelpString = "test:\n Test whether CLI console is working.\n\n",
-        .pxCommandInterpreter = testCommand,
-        .cExpectedNumberOfParameters = 0};
-    FreeRTOS_CLIRegisterCommand(&greetTheWorldCmd);
 }

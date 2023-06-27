@@ -38,6 +38,8 @@ public:
 	virtual void setInput(double *src);
 
 	static const std::string separator;
+	
+	virtual std::vector<std::string> getOutputNames();
 
     virtual bool hasSubBlocks() const;
     virtual SuccessT<BlockPtr>  getSubBlockByName(const std::string& blockname);

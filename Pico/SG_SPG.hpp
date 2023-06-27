@@ -20,11 +20,6 @@ public:
         spgBlock = std::make_shared<SPGBlock>("SPG", SERVO_FREQUENCY);
         addBlock(spgBlock);
 
-        // traceBlock = std::make_shared<TraceBlock>();
-        // blocks.push_back(traceBlock);
-
-        // traceBlock->addTraceable("Pos_x", spgBlock->getOutput(SPGBlock::OUT_POS_X));
-
         SPGBlock::MovementParameters mp;
         mp.x.j = 10.0;
         mp.x.a = 3.0;
@@ -35,25 +30,35 @@ public:
 
         spgBlock->setMovementParameters(mp);
 
-        SPGBlock::Position pos { 0.0, 0.0, 0.0 };
+        SPGBlock::Position pos{0.0, 0.0, 0.0};
         spgBlock->setPosition(pos);
-
     }
 
     virtual ~SG_SPG(){};
 
-    void move(double x, double y, double rz) {
+    void move(double x, double y, double rz)
+    {
         SPGBlock::Position target;
         target.x = x;
         target.y = y;
-        target.rz= rz;
+        target.rz = rz;
         spgBlock->startMove(target);
 
-        while(spgBlock->getState() == SPGBlock::State::MOVING);
+        while (spgBlock->getState() == SPGBlock::State::MOVING)
+            ;
     }
 
-    void dumpTrace() {
-        traceBlock->dumpTrace();
+    void getPosition(double *x, double *y, double *rz)
+    {
+       auto pos =  spgBlock->getPosition();
+       *x = pos.x;
+       *y = pos.y;
+       *rz = pos.rz;
+    }
+
+    void dumpTrace()
+    {
+        traceBlock->dumpTraceToStdout();
     }
 
 private:

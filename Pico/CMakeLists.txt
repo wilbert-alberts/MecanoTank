@@ -55,9 +55,11 @@ add_executable(mecanumtank
 
         FreeRTOS_CLI.c
         CLI.cpp
+        CLI_command.cpp
         CLI_time.cpp
         CLI_trace.cpp
-        # SerialTask.cpp
+        CLI_FreeRTOS.cpp
+        CLI_move.cpp
       )
 
 target_compile_definitions(mecanumtank PRIVATE
@@ -68,7 +70,7 @@ target_include_directories(mecanumtank PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/../../Common/include
       )
 
-target_link_libraries(mecanumtank ruckig pico_stdlib hardware_adc hardware_pwm hardware_gpio FreeRTOS-Kernel FreeRTOS-Kernel-Heap1)
+target_link_libraries(mecanumtank ruckig pico_stdlib hardware_adc hardware_pwm hardware_gpio FreeRTOS-Kernel FreeRTOS-Kernel-Heap4)
 
 pico_add_extra_outputs(mecanumtank)
 

@@ -10,58 +10,65 @@
 
 #include "BL.hpp"
 
-Block::Block(const std::string &_typeName, const std::string &_blockName) :
-		typeName(_typeName), blockName(_blockName) {
+Block::Block(const std::string &_typeName, const std::string &_blockName) : typeName(_typeName), blockName(_blockName)
+{
 }
-Block::~Block() {
-}
-;
+Block::~Block(){};
 
-const std::string& Block::getBlockName() const {
+const std::string &Block::getBlockName() const
+{
 	return blockName;
-}
-;
-const std::string& Block::getBlockTypeName() const {
+};
+const std::string &Block::getBlockTypeName() const
+{
 	return typeName;
 }
 
-bool Block::hasSubBlocks() const {
+bool Block::hasSubBlocks() const
+{
 	return false;
 }
 
-SuccessT<Block::BlockPtr> Block::getSubBlockByName(const std::string& blockname) {
+SuccessT<Block::BlockPtr> Block::getSubBlockByName(const std::string &blockname)
+{
 	return SuccessT<Block::BlockPtr>(nullptr, false, "Block::getSubBlockByName has not subBlocks.");
 }
 
-
-SuccessT<double*> Block::getOutput(const Terminal &t)
+SuccessT<double *> Block::getOutput(const Terminal &t)
 {
-	return SuccessT<double*>(nullptr, false, "Block::getOutput not supported; block has no outputs");
+	return SuccessT<double *>(nullptr, false, "Block::getOutput not supported; block has no outputs");
 }
 
-SuccessT<double*> Block::getOutput()
+SuccessT<double *> Block::getOutput()
 {
-	return SuccessT<double*>(nullptr, false, "Block::getOutput not supported; block has no outputs");
+	return SuccessT<double *>(nullptr, false, "Block::getOutput not supported; block has no outputs");
 }
 
-void Block::setInput(const Terminal &t, double *src )
+std::vector<std::string> Block::getOutputNames()
+{
+	return std::vector<std::string>();
+}
+
+void Block::setInput(const Terminal &t, double *src)
 {
 	Error("Block::setInput not supported; block has no input");
 }
 
-void Block::setInput(double *src )
+void Block::setInput(double *src)
 {
 	Error("Block::setInput not supported; block has no input");
 }
 
-
-void Block::Error(const std::string& msg) {
-	::Error(typeName + "::" + blockName+ ": " + msg);
+void Block::Error(const std::string &msg)
+{
+	::Error(typeName + "::" + blockName + ": " + msg);
 }
 
-void Block::Warning(const std::string& msg) {
-	::Warning(typeName + "::" + blockName+ ": " + msg);
+void Block::Warning(const std::string &msg)
+{
+	::Warning(typeName + "::" + blockName + ": " + msg);
 }
 
 const IDTerminal Block::IN_INPUT("input");
 const IDTerminal Block::OUT_OUTPUT("output");
+

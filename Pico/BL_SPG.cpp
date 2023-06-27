@@ -19,17 +19,28 @@ const IDTerminal SPGBlock::OUT_ACC_RZ("a_rz");
 SPGBlock::SPGBlock(const std::string &bn, double _servoFrequency)
     : LeafBlock("SPG", bn), state(State::IDLE), ruckig(1.0 / _servoFrequency)
 {
-    addOutput(OUT_POS_X, &output.new_position.at(0));
-    addOutput(OUT_POS_Y, &output.new_position.at(1));
-    addOutput(OUT_POS_RZ, &output.new_position.at(2));
+    // addOutput(OUT_POS_X, &output.new_position.at(0));
+    // addOutput(OUT_POS_Y, &output.new_position.at(1));
+    // addOutput(OUT_POS_RZ, &output.new_position.at(2));
 
-    addOutput(OUT_VEL_X, &output.new_position.at(0));
-    addOutput(OUT_VEL_Y, &output.new_position.at(1));
-    addOutput(OUT_VEL_RZ, &output.new_position.at(2));
+    // addOutput(OUT_VEL_X, &output.new_position.at(0));
+    // addOutput(OUT_VEL_Y, &output.new_position.at(1));
+    // addOutput(OUT_VEL_RZ, &output.new_position.at(2));
 
-    addOutput(OUT_ACC_X, &output.new_position.at(0));
-    addOutput(OUT_ACC_Y, &output.new_position.at(1));
-    addOutput(OUT_ACC_RZ, &output.new_position.at(2));
+    // addOutput(OUT_ACC_X, &output.new_position.at(0));
+    // addOutput(OUT_ACC_Y, &output.new_position.at(1));
+    // addOutput(OUT_ACC_RZ, &output.new_position.at(2));
+    addOutput(OUT_POS_X, &input.current_position.at(0));
+    addOutput(OUT_POS_Y, &input.current_position.at(1));
+    addOutput(OUT_POS_RZ, &input.current_position.at(2));
+
+    addOutput(OUT_VEL_X, &input.current_velocity.at(0));
+    addOutput(OUT_VEL_Y, &input.current_velocity.at(1));
+    addOutput(OUT_VEL_RZ, &input.current_velocity.at(2));
+
+    addOutput(OUT_ACC_X, &input.current_acceleration.at(0));
+    addOutput(OUT_ACC_Y, &input.current_acceleration.at(1));
+    addOutput(OUT_ACC_RZ, &input.current_acceleration.at(2));
 }
 
 SPGBlock::~SPGBlock()

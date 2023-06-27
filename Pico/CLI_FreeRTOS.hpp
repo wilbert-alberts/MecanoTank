@@ -10,28 +10,28 @@
 
 #include "CLI_command.hpp"
 
-class CLI_heapStatsCommand: public AbstractCommand {
+class HeapStatsCommand: public AbstractCommand {
 public:
-    static CLI_heapStatsCommand *getInstance();
-	virtual ~CLI_heapStatsCommand();
+    static HeapStatsCommand *getInstance();
+	virtual ~HeapStatsCommand();
 
 protected:
-	CLI_heapStatsCommand();
+	HeapStatsCommand();
     static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
 
-    static CLI_heapStatsCommand *instance;
+    static HeapStatsCommand *instance;
 };
 
-class CLI_taskStatsCommand: public AbstractCommand {
+class TaskStatsCommand: public AbstractCommand {
 public:
-    static CLI_taskStatsCommand *getInstance();
-	virtual ~CLI_taskStatsCommand();
+    static TaskStatsCommand *getInstance();
+	virtual ~TaskStatsCommand();
 
 protected:
-	CLI_heapStatsCommand();
-    static CLI_taskStatsCommand command(char *outputBuffer, size_t outputLen, const char *command);
+	TaskStatsCommand();
+    static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
 
-    static CLI_taskStatsCommand *instance;
+    static TaskStatsCommand *instance;
 };
 
 #endif /* CLIFREERTOS_HPP_ */
