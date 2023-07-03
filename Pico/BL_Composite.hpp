@@ -15,40 +15,41 @@
 #include "T.hpp"
 #include "T_Composite.hpp"
 
-class CompositeBlock: public Block {
+class CompositeBlock : public Block
+{
 public:
-
 	CompositeBlock(const std::string &bn);
 	CompositeBlock(const std::string &bn, std::vector<BlockPtr> _blocks);
-
 	virtual ~CompositeBlock();
+
+	virtual void addBlock(Block::BlockPtr blockPtr);
 
 	virtual void calculate();
 
-	virtual SuccessT<double*> getOutput(const Terminal &t);
+	virtual SuccessT<double *> getOutput(const Terminal &t);
 	virtual void setInput(const Terminal &t, double *src);
 
-	virtual SuccessT<double*> getOutput(const CompositeTerminal &t);
+	virtual SuccessT<double *> getOutput(const CompositeTerminal &t);
 	virtual void setInput(const CompositeTerminal &t, double *src);
 
-	virtual SuccessT<double*> getOutput(const std::string &t);
+	virtual SuccessT<double *> getOutput(const std::string &t);
 	virtual void setInput(const std::string &t, double *src);
 
-	virtual SuccessT<double*> getOutput();
+	virtual SuccessT<double *> getOutput();
 	virtual void setInput(double *src);
 
 	static const std::string separator;
-	
+
 	virtual std::vector<std::string> getOutputNames();
 
-    virtual bool hasSubBlocks() const;
-    virtual SuccessT<BlockPtr>  getSubBlockByName(const std::string& blockname);
+	virtual bool hasSubBlocks() const;
+	virtual SuccessT<BlockPtr> getSubBlockByName(const std::string &blockname);
 
 protected:
 	std::vector<BlockPtr> blocks;
 
-	SuccessT<BlockPtr>  findBlockByNameOrError(const std::string &fqn,
-			const std::string &errorMsg);
+	SuccessT<BlockPtr> findBlockByNameOrError(const std::string &fqn,
+											  const std::string &errorMsg);
 };
 
 #endif /* COMPOSITEBLOCK_H_ */

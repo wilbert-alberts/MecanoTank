@@ -17,10 +17,11 @@ void ABDecoderBlock::pinChangedStatic(uint gpio, uint32_t mask)
     }
 }
 
-ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b)
+ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b, double metersPerInc)
     : LeafBlock("ABDecoder", bn)
     , pinA(a)
     , pinB(b)
+    , meterPerIncrement(metersPerInc)
     , position(0)
     , positionDbl(0.0)
     , decoder(gpio_get(a), gpio_get(b))
@@ -47,6 +48,6 @@ void ABDecoderBlock::pinChanged()
 void ABDecoderBlock::calculate()
 {
     position = decoder.getPosition();
-    positionDbl = static_cast<double>(position);
-    std::cout << "ABDecoder " << blockName << ": " << position << std::endl;
+    positionDbl = static_cast<double>(position) * meterPerIncrement;
+    // std::cout << "ABDecoder " << blockName << ": " << position << std::endl;
 }

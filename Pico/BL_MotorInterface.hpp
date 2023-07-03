@@ -6,10 +6,10 @@
 #include <stdint.h>
 #include <string>
 
-#include "BL.hpp"
+#include "BL_Leaf.hpp"
 #include "T.hpp"
 
-class MotorInterfaceBlock : public Block {
+class MotorInterfaceBlock : public LeafBlock {
 public:
     MotorInterfaceBlock(const std::string& bn, uint8_t pin, uint8_t dir) ;
     ~MotorInterfaceBlock() {}
@@ -20,6 +20,7 @@ protected:
 private:
     double safePWM;
     double* input;
+    double  output;
     
     uint sliceNum;
     uint channel;

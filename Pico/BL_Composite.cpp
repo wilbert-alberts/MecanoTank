@@ -28,6 +28,10 @@ CompositeBlock::~CompositeBlock()
 {
 }
 
+void CompositeBlock::addBlock(Block::BlockPtr blockPtr)
+{
+    blocks.push_back(blockPtr);
+}
 void CompositeBlock::calculate()
 {
 	for (auto b : blocks)

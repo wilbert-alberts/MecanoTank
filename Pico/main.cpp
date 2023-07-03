@@ -36,7 +36,7 @@ int main(void)
 
 
     // // Create ServoGroup
-    SG_SPG *sg = new SG_SPG();
+    ServoGroup *sg = new SG_MotorController();
 
     // // Create Executor and start execution task.
     ServoGroupExecutor *seq = new ServoGroupExecutor(sg);

@@ -17,7 +17,7 @@ public:
 
     std::vector<Block *> *getSequence();
 
-    void addBlock(Block::BlockPtr blockPtr);
+    virtual void addBlock(Block::BlockPtr blockPtr);
     TraceBlock* getTraceBlock();
 
     void executeSequence();

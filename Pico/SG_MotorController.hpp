@@ -6,58 +6,155 @@
 #include "SG.hpp"
 
 #include "HSI.hpp"
-#include "BL_Debug.hpp"
-#include "BL_ABDecoder.hpp"
-#include "BL_MotorInterface.hpp"
-#include "BL_SignalGenerator.hpp"
-#include "BL_Differentiator.hpp"
-#include "BL_ErrorDifference.hpp"
-#include "BL_PID.hpp"
-#include "BL_Sum.hpp"
 
-class SG_MotorController: public ServoGroup
+#include "BL_SPG.hpp"
+#include "BL_Composite.hpp"
+#include "BL_ABDecoder.hpp"
+#include "BL_PID.hpp"
+#include "BL_MotorInterface.hpp"
+
+// #include "BL_Debug.hpp"
+// #include "BL_SignalGenerator.hpp"
+// #include "BL_Differentiator.hpp"
+// #include "BL_ErrorDifference.hpp"
+// #include "BL_Sum.hpp"
+
+class DecoderBlockGroup : public CompositeBlock
+{
+public:
+    DecoderBlockGroup(const std::string &bn) : CompositeBlock(bn)
+    {
+        std::shared_ptr<ABDecoderBlock> backLeft = std::make_shared<ABDecoderBlock>("BL",
+                                                                                    PIN_IN_BACK_LEFT_A,
+                                                                                    PIN_IN_BACK_LEFT_B,
+                                                                                    METERS_PER_INCREMENT);
+        addBlock(backLeft);
+        std::shared_ptr<ABDecoderBlock> frontLeft = std::make_shared<ABDecoderBlock>("FL",
+                                                                                     PIN_IN_FRONT_LEFT_A,
+                                                                                     PIN_IN_FRONT_LEFT_B,
+                                                                                     METERS_PER_INCREMENT);
+        addBlock(frontLeft);
+        std::shared_ptr<ABDecoderBlock> frontRight = std::make_shared<ABDecoderBlock>("FR",
+                                                                                      PIN_IN_FRONT_RIGHT_A,
+                                                                                      PIN_IN_FRONT_RIGHT_B,
+                                                                                      METERS_PER_INCREMENT);
+        addBlock(frontRight);
+        std::shared_ptr<ABDecoderBlock> backRight = std::make_shared<ABDecoderBlock>("BR",
+                                                                                     PIN_IN_BACK_RIGHT_A,
+                                                                                     PIN_IN_BACK_RIGHT_B,
+                                                                                     METERS_PER_INCREMENT);
+        addBlock(backRight);
+    }
+    virtual ~DecoderBlockGroup() {}
+};
+
+class PIDBlockGroup : public CompositeBlock
+{
+public:
+    PIDBlockGroup(const std::string &bn, double servoFreq, bool avoidWindup) : CompositeBlock(bn)
+    {
+        std::shared_ptr<PIDBlock> backLeft = std::make_shared<PIDBlock>("BL", servoFreq, avoidWindup);
+        addBlock(backLeft);
+        std::shared_ptr<PIDBlock> frontLeft = std::make_shared<PIDBlock>("FL", servoFreq, avoidWindup);
+        addBlock(frontLeft);
+        std::shared_ptr<PIDBlock> frontRight = std::make_shared<PIDBlock>("FR", servoFreq, avoidWindup);
+        addBlock(frontRight);
+        std::shared_ptr<PIDBlock> backRight = std::make_shared<PIDBlock>("BR", servoFreq, avoidWindup);
+        addBlock(backRight);
+    }
+    virtual ~PIDBlockGroup() {}
+};
+
+class MotorBlockGroup : public CompositeBlock
+{
+public:
+    MotorBlockGroup(const std::string &bn) : CompositeBlock(bn)
+    {
+        std::shared_ptr<MotorInterfaceBlock> backLeft = std::make_shared<MotorInterfaceBlock>("BL", PIN_OUT_BACK_LEFT_PWM, PIN_OUT_BACK_LEFT_DIR);
+        addBlock(backLeft);
+        std::shared_ptr<MotorInterfaceBlock> frontLeft = std::make_shared<MotorInterfaceBlock>("FL", PIN_OUT_FRONT_LEFT_PWM, PIN_OUT_FRONT_LEFT_DIR);
+        addBlock(frontLeft);
+        std::shared_ptr<MotorInterfaceBlock> frontRight = std::make_shared<MotorInterfaceBlock>("FR", PIN_OUT_FRONT_RIGHT_PWM, PIN_OUT_FRONT_RIGHT_DIR);
+        addBlock(frontRight);
+        std::shared_ptr<MotorInterfaceBlock> backRight = std::make_shared<MotorInterfaceBlock>("BR", PIN_OUT_BACK_RIGHT_PWM, PIN_OUT_BACK_RIGHT_DIR);
+        addBlock(backRight);
+    }
+    virtual ~MotorBlockGroup() {}
+};
+class SG_MotorController : public ServoGroup
 {
 public:
     SG_MotorController()
-    : ServoGroup("SG_MotorController", SERVO_PERIOD)
+        : ServoGroup("SG_MotorController", SERVO_PERIOD)
     {
-        auto spgFL = std::make_shared<SignalGeneratorBlock>("FrontLeft_SPG", 6800);
+        addAndSetupSPG();
 
-        auto abFL = std::make_shared<ABDecoderBlock>("FrontLeft", PIN_IN_FRONT_RIGHT_A, PIN_IN_FRONT_RIGHT_B);
+        addAndSetupABDecoders();
 
-        auto abDiffFL = std::make_shared<DifferentiatorBlock>("FrontLeft AB", SERVO_FREQUENCY);
-        abDiffFL->setInput(abFL->getOutput().result);
+        addAndSetupPIDs();
 
-        auto abErrorFL = std::make_shared<ErrorDifferenceBlock>("FrontLeft_Error");
-        abErrorFL->setInput(ErrorDifferenceBlock::IN_ACTUAL,  abDiffFL->getOutput().result);
-        abErrorFL->setInput(ErrorDifferenceBlock::IN_DESIRED, spgFL->getOutput().result);
+        setInput("pids.BL.setpoint", getOutput("SPG.x").result);
+        setInput("pids.FL.setpoint", getOutput("SPG.y").result);
+        setInput("pids.FR.setpoint", getOutput("SPG.rz").result);
+        setInput("pids.BR.setpoint", getOutput("SPG.x").result);
 
-        auto pidFL = std::make_shared<PIDBlock>("FrontLeft_PID", SERVO_FREQUENCY);
-        pidFL->setInput(abErrorFL->getOutput().result);
-        pidFL->setKP(20.0);
+        setInput("pids.BL.actual", getOutput("decoders.BL.output").result);
+        setInput("pids.FL.actual", getOutput("decoders.FL.output").result);
+        setInput("pids.FR.actual", getOutput("decoders.FR.output").result);
+        setInput("pids.BR.actual", getOutput("decoders.BR.output").result);
 
-        auto sumFL = std::make_shared<SumBlock>("FrontLeft_Sum", 2);
-        sumFL->setInput("0", spgFL->getOutput().result);
-        sumFL->setInput("1", pidFL->getOutput().result);
-        sumFL->setFactor(0, 1.0/(2*6800.0));
-        sumFL->setFactor(1, 1.0/(2*6800.0));
+        addAndSetupMotors();
 
-        MotorInterfaceBlock* miFL = new MotorInterfaceBlock("FrontLeft_MI", PIN_OUT_FRONT_RIGHT_PWM, PIN_OUT_FRONT_RIGHT_DIR);
-        miFL->setInput(sumFL->getOutput().result);
-
-        blocks.push_back(spgFL);
-        blocks.push_back(abFL);
-        blocks.push_back(abDiffFL);
-        blocks.push_back(abErrorFL);
-        blocks.push_back(pidFL);
-        blocks.push_back(sumFL);
-        // sequence.push_back(miFL);
-
+        setInput("motors.BL.input", getOutput("pids.BL.output").result);
+        setInput("motors.FL.input", getOutput("pids.FL.output").result);
+        setInput("motors.FR.input", getOutput("pids.FR.output").result);
+        setInput("motors.BR.input", getOutput("pids.BR.output").result);
 
     }
     virtual ~SG_MotorController(){};
-private:
-};
 
+private:
+    std::shared_ptr<SPGBlock> spgBlock;
+    std::shared_ptr<DecoderBlockGroup> abDecoders;
+
+    void addAndSetupSPG()
+    {
+        spgBlock = std::make_shared<SPGBlock>("SPG", SERVO_FREQUENCY);
+        addBlock(spgBlock);
+
+        SPGBlock::MovementParameters mp;
+        mp.x.j = 10.0;
+        mp.x.a = 1.0;
+        mp.x.v = 0.1;
+
+        mp.y = mp.x;
+        mp.rz = mp.x;
+
+        spgBlock->setMovementParameters(mp);
+
+        SPGBlock::Position pos{0.0, 0.0, 0.0};
+        spgBlock->setPosition(pos);
+    }
+
+    void addAndSetupABDecoders()
+    {
+        auto abDecoderBlockGroup = std::make_shared<DecoderBlockGroup>("decoders");
+        addBlock(abDecoderBlockGroup);
+    }
+
+    void addAndSetupPIDs()
+    {
+        auto pidBlockGroup = std::make_shared<PIDBlockGroup>("pids", SERVO_FREQUENCY, true);
+        addBlock(pidBlockGroup);
+    }
+
+    void addAndSetupMotors()
+    {
+        // auto batteryBlock = std::make_shared<AnalogInBlock>("battery", BAT_VOLT_ADC_INPUT);
+
+        auto motorBlockGroup = std::make_shared<MotorBlockGroup>("motors");
+        addBlock(motorBlockGroup);
+    }
+};
 
 #endif

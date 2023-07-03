@@ -16,25 +16,63 @@
 class PIDBlock : public LeafBlock
 {
 public:
-	PIDBlock(const std::string &bn, double servoFrequency);
+	PIDBlock(const std::string &bn, double servoFrequency, bool avoidWindup);
 	virtual ~PIDBlock();
 	virtual void calculate();
-//	virtual double *getOutput(const Terminal &t = OUT_OUTPUT);
-//	virtual void setInput(const Terminal &t = IN_INPUT, double *src = nullptr);
-	void setKP(double p);
-	void setKI(double p);
-	void setKD(double p);
+
+	static const IDTerminal IN_ACTUAL;
+	static const IDTerminal IN_SETPOINT;
+
+
+	void setKFV(double f, double low, double high);
+	void setKP(double p, double low, double high);
+	void setKI(double i, double low, double high);
+	void setKD(double d, double low, double high);
+	void setOutLimits(double low, double high);
 
 private:
+	double clip(double value, double low, double high);
+	double ddt(double value, double *prev);
+	double idt(double value, double *sum);
+
 	double servoFrequency;
+	bool   avoidWindup;
+	double safeInput;
+
+	double *setpointInput;
+	double *actualInput;
+
+	double S_set;
+	double prev_S_set;
+	double S_act;
+	double delta_S;
+	double prev_delta_S;
+	double sum_delta_S;
+
+	double V_set;
+	double V_delta;
+
+	double setpointSpeedTerm;
+	double diffSpeedTerm;
+	double diffPosTerm;
+	double diffSumTerm;
 	double output;
-	double saveInput;
-	double *input;
-	double sumInput;
-	double prevInput;
+	double prevOutput;
+
+	double kFv;
+	double FvLow;
+	double FvHigh;
 	double kP;
+	double PLow;
+	double PHigh;
 	double kI;
+	double ILow;
+	double IHigh;
 	double kD;
+	double DLow;
+	double DHigh;
+	double OutLow;
+	double OutHigh;
 };
 
 #endif /* PID_H_ */

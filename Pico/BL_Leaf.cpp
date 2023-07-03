@@ -75,7 +75,7 @@ void LeafBlock::setInput(const Terminal &t, double *src)
 	}
 	else
 	{
-		Error("LeafBlock::getOutput, block does not have an output named: " + id);
+		Error("LeafBlock::setInput, block does not have an input named: " + id);
 	}
 }
 
