@@ -89,7 +89,7 @@ VoidSuccessT TraceBlockAbstract::clearTraceable(const std::string &name)
 	}
 	else
 	{
-		r = VoidSuccessT(false, "Unable to find traceable.");
+		r = VoidSuccessT("Unable to find traceable.");
 	}
 	unlockTraceData();
 	return r;

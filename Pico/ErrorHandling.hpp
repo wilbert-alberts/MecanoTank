@@ -17,13 +17,13 @@
 class VoidSuccessT
 {
 public:
-    VoidSuccessT(bool s, const std::string &msg) : success(s), errorMsg(std::make_shared<const std::string>(msg))
+    VoidSuccessT(const std::string &msg) : success(false), errorMsg(std::make_shared<const std::string>(msg))
     {
     }
-    VoidSuccessT(bool s, std::shared_ptr<const std::string> msg) : success(s), errorMsg(msg)
+    VoidSuccessT(std::shared_ptr<const std::string> msg) : success(false), errorMsg(msg)
     {
     }
-    VoidSuccessT() : success(true), errorMsg(std::make_shared<const std::string>())
+    VoidSuccessT() : success(true), errorMsg(std::make_shared<const std::string>("OK"))
     {
     }
     virtual ~VoidSuccessT() {}
@@ -36,10 +36,10 @@ template <typename T>
 class SuccessT: public VoidSuccessT
 {
 public:
-    SuccessT(T r, bool s, const std::string &msg) : VoidSuccessT(s, msg), result(r)
+    SuccessT(T r, const std::string &msg) : VoidSuccessT(msg), result(r)
     {
     }
-    SuccessT(T r, bool s, std::shared_ptr<const std::string> msg) : VoidSuccessT(s, msg), result(r)
+    SuccessT(T r, std::shared_ptr<const std::string> msg) : VoidSuccessT(msg), result(r)
     {
     }
     SuccessT(T r) : VoidSuccessT(), result(r)

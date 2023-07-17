@@ -34,11 +34,15 @@ public:
 	virtual SuccessT<double*> getOutput(const Terminal &t);
 	virtual void    setInput(const Terminal &t, double *src);
 
+	virtual SuccessT<double> getParameter(const Terminal &t);
+	virtual VoidSuccessT     setParameter(const Terminal &t, double src);
+
 	virtual SuccessT<double*> getOutput();
 	virtual void    setInput(double *src);
 
 
 	virtual std::vector<std::string> getOutputNames();
+	virtual std::vector<std::string> getParameterNames();
 
 	static const IDTerminal IN_INPUT;
 	static const IDTerminal OUT_OUTPUT ;

@@ -19,6 +19,7 @@
 #include "CLI_trace.hpp"
 #include "CLI_FreeRTOS.hpp"
 #include "CLI_move.hpp"
+#include "CLI_params.hpp"
 
 #include "SG.hpp"
 
@@ -62,6 +63,11 @@ void MecanumCLI::initializeCommands()
     commands.push_back(TaskStatsCommand::getInstance());
     commands.push_back(GetPositionCommand::getInstance());
     commands.push_back(StartMoveCommand::getInstance());
+    commands.push_back(SetParameterCommand::getInstance());
+    commands.push_back(GetParameterCommand::getInstance());
+    commands.push_back(GetParametersCommand::getInstance());
+    commands.push_back(GetParameterNamesCommand::getInstance());
+    
 }
 
 void MecanumCLI::setServoGroup(ServoGroup *sg)

@@ -41,6 +41,16 @@ public:
 	static const std::string separator;
 
 	virtual std::vector<std::string> getOutputNames();
+	virtual std::vector<std::string> getParameterNames();
+
+	virtual SuccessT<double> getParameter(const Terminal &t);
+	virtual VoidSuccessT setParameter(const Terminal &t, double src);
+
+	virtual SuccessT<double> getParameter(const CompositeTerminal &t);
+	virtual VoidSuccessT setParameter(const CompositeTerminal &t, double src);
+
+	virtual SuccessT<double> getParameter(const std::string &t);
+	virtual VoidSuccessT setParameter(const std::string &t, double src);
 
 	virtual bool hasSubBlocks() const;
 	virtual SuccessT<BlockPtr> getSubBlockByName(const std::string &blockname);

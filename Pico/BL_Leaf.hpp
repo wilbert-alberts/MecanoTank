@@ -30,14 +30,20 @@ public:
 	virtual void setInput(const std::string& tid, double *src = nullptr) ;
 	virtual void setInput(double *src = nullptr) ;
 
+	virtual VoidSuccessT setParameter(const Terminal &t, double value);
+	virtual SuccessT<double> getParameter(const Terminal &t);
+	virtual std::vector<std::string> getParameterNames();
 
 protected:
 
+	void addParameter(const IDTerminal& t, double* src);
 	void addDefaultOutput(double* src) ;
 	void addOutput(const IDTerminal& t, double* src);
 	void addDefaultInput(double** src);
 	void addInput(const IDTerminal& t, double** src);
+	
 
+	std::map<const std::string, double*> parameters;
 	std::map<const std::string, double*> outputTerminals;
 	std::map<const std::string, double**> inputTerminals;
 

@@ -30,7 +30,7 @@ CompositeBlock::~CompositeBlock()
 
 void CompositeBlock::addBlock(Block::BlockPtr blockPtr)
 {
-    blocks.push_back(blockPtr);
+	blocks.push_back(blockPtr);
 }
 void CompositeBlock::calculate()
 {
@@ -43,12 +43,12 @@ void CompositeBlock::calculate()
 SuccessT<double *> CompositeBlock::getOutput(const Terminal &t)
 {
 	if (!t.hasCompositeStructure())
-		return SuccessT<double *>(nullptr, false,
+		return SuccessT<double *>(nullptr,
 								  "CompositeBlock::getOutput(): Expected an CompositeTerminal but got something else");
 
 	const Terminal &head = t.getHead();
 	if (!head.hasID())
-		return SuccessT<double *>(nullptr, false,
+		return SuccessT<double *>(nullptr,
 								  "CompositeBlock::getOutput(): Expected the head of the composite input terminal to have an ID but id doesn't");
 
 	const std::string &headIDName = head.getID();
@@ -60,7 +60,7 @@ SuccessT<double *> CompositeBlock::getOutput(const Terminal &t)
 	}
 	else
 	{
-		return SuccessT<double *>(nullptr, false, block.errorMsg);
+		return SuccessT<double *>(nullptr, block.errorMsg);
 	}
 }
 
@@ -77,7 +77,7 @@ SuccessT<double *> CompositeBlock::getOutput(const CompositeTerminal &ct)
 	}
 	else
 	{
-		return nullptr;
+		return SuccessT<double *>(nullptr, block.errorMsg);
 	}
 }
 
@@ -95,9 +95,25 @@ SuccessT<double *> CompositeBlock::getOutput()
 std::vector<std::string> CompositeBlock::getOutputNames()
 {
 	auto result = std::vector<std::string>();
-	for(auto b: blocks) {
+	for (auto b : blocks)
+	{
 		auto blockOutputs = b->getOutputNames();
-		for (auto n: blockOutputs) {
+		for (auto n : blockOutputs)
+		{
+			result.push_back(blockName + separator + n);
+		}
+	}
+	return result;
+}
+
+std::vector<std::string> CompositeBlock::getParameterNames()
+{
+	auto result = std::vector<std::string>();
+	for (auto b : blocks)
+	{
+		auto blockOutputs = b->getParameterNames();
+		for (auto n : blockOutputs)
+		{
 			result.push_back(blockName + separator + n);
 		}
 	}
@@ -175,7 +191,7 @@ SuccessT<Block::BlockPtr> CompositeBlock::getSubBlockByName(const std::string &f
 
 		return r;
 	}
-	return SuccessT<Block::BlockPtr>(nullptr, false, "Unreacheable code");
+	return SuccessT<Block::BlockPtr>(nullptr, "Unreacheable code");
 }
 
 SuccessT<Block::BlockPtr> CompositeBlock::findBlockByNameOrError(const std::string &fqn,
@@ -187,5 +203,88 @@ SuccessT<Block::BlockPtr> CompositeBlock::findBlockByNameOrError(const std::stri
 	{
 		return SuccessT<Block::BlockPtr>(*iter);
 	}
-	return SuccessT<Block::BlockPtr>(nullptr, false, errorMsg);
+	return SuccessT<Block::BlockPtr>(nullptr, errorMsg);
+}
+
+VoidSuccessT CompositeBlock::setParameter(const Terminal &t, double src)
+{
+	if (!t.hasCompositeStructure())
+	{
+		Error(
+			"CompositeBlock::setParameter(): Expected an CompositeTerminal but got something else");
+	}
+	const Terminal &head = t.getHead();
+
+	const std::string &headIDName = head.getID();
+	auto block = findBlockByNameOrError(headIDName,
+										"CompositeBlock::setParameter(): Unable to find an block named " + headIDName);
+	if (block.success)
+		return block.result->setParameter(t.getTail(), src);
+	else
+		return VoidSuccessT("Error: unable to set parameter");
+}
+
+VoidSuccessT CompositeBlock::setParameter(const CompositeTerminal &ct, double src)
+{
+	const Terminal &head = ct.getHead();
+
+	const std::string headIDName = head.getID();
+	auto block = findBlockByNameOrError(headIDName,
+										"CompositeBlock::setParameter(): Unable to find an block named " + headIDName);
+	if (block.success)
+		return block.result->setParameter(ct.getTail(), src);
+	else
+		return VoidSuccessT("Error: unable to set parameter");}
+
+VoidSuccessT CompositeBlock::setParameter(const std::string &tid, double src)
+{
+	auto t = TerminalFactory::createFromString(tid);
+	return setParameter(*t, src);
+}
+
+SuccessT<double> CompositeBlock::getParameter(const Terminal &t)
+{
+	if (!t.hasCompositeStructure())
+		return SuccessT<double>(0.0,
+								  "CompositeBlock::getParameter(): Expected an CompositeTerminal but got something else");
+
+	const Terminal &head = t.getHead();
+	if (!head.hasID())
+		return SuccessT<double>(0.0,
+								  "CompositeBlock::getParameter(): Expected the head of the composite input terminal to have an ID but id doesn't");
+
+	const std::string &headIDName = head.getID();
+	auto block = findBlockByNameOrError(headIDName,
+										"CompositeBlock::getParameter(): Unable to find an block named " + headIDName);
+	if (block.success)
+	{
+		return block.result->getParameter(t.getTail());
+	}
+	else
+	{
+		return SuccessT<double>(0.0, block.errorMsg);
+	}
+}
+
+SuccessT<double> CompositeBlock::getParameter(const CompositeTerminal &ct)
+{
+	const Terminal &head = ct.getHead();
+
+	const std::string &headIDName = head.getID();
+	auto block = findBlockByNameOrError(headIDName,
+										"CompositeBlock::getParameter(): Unable to find an block named " + headIDName);
+	if (block.success)
+	{
+		return block.result->getParameter(ct.getTail());
+	}
+	else
+	{
+		return SuccessT<double>(0.0, block.errorMsg);
+	}
+}
+
+SuccessT<double> CompositeBlock::getParameter(const std::string &tid)
+{
+	auto t = TerminalFactory::createFromString(tid);
+	return getParameter(*t);
 }

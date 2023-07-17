@@ -19,7 +19,7 @@ LeafBlock::~LeafBlock()
 SuccessT<double *> LeafBlock::getOutput(const Terminal &t)
 {
 	if (!t.hasID())
-		return SuccessT<double *>(nullptr, false, "LeafBlock::getOutput, expected an IDTerminal but got something else.");
+		return SuccessT<double *>(nullptr, "LeafBlock::getOutput, expected an IDTerminal but got something else.");
 
 	const std::string &id = t.getID();
 	auto entry = std::find_if(outputTerminals.begin(), outputTerminals.end(),
@@ -31,7 +31,7 @@ SuccessT<double *> LeafBlock::getOutput(const Terminal &t)
 	{
 		return SuccessT<double *>(entry->second);
 	}
-	return SuccessT<double *>(nullptr, false, "LeafBlock::getOutput, block does not have an output named: " + id);
+	return SuccessT<double *>(nullptr, "LeafBlock::getOutput, block does not have an output named: " + id);
 }
 
 SuccessT<double *> LeafBlock::getOutput(const std::string &tid)
@@ -48,7 +48,8 @@ SuccessT<double *> LeafBlock::getOutput()
 std::vector<std::string> LeafBlock::getOutputNames()
 {
 	auto result = std::vector<std::string>();
-	for (const auto& [k,v]: outputTerminals) {
+	for (const auto &[k, v] : outputTerminals)
+	{
 		result.push_back(blockName + "." + k);
 	}
 	return result;
@@ -109,5 +110,52 @@ void LeafBlock::addDefaultInput(double **src)
 void LeafBlock::addInput(const IDTerminal &t, double **src)
 {
 	const std::string id = t.getID();
-	inputTerminals[id] = src;
+	if (parameters.count(id) == 0)
+		inputTerminals[id] = src;
+	else
+		Error("LeafBlock::addInput, block already has an input named: " + id);
+}
+
+void LeafBlock::addParameter(const IDTerminal &t, double *src)
+{
+	const std::string id = t.getID();
+	if (parameters.count(id) == 0)
+		parameters[id] = src;
+	else
+		Error("LeafBlock::addParameter, block already has a parameter named: " + id);
+}
+
+VoidSuccessT LeafBlock::setParameter(const Terminal &t, double value)
+{
+	const std::string id = t.getID();
+	if (parameters.count(id) == 1)
+	{
+		VoidSuccessT s;
+		*parameters[id] = value;
+		*parameters[id] = value;
+		return s;
+	}
+	else
+		return VoidSuccessT(std::string("LeafBlock::setParameter doesn't have a parameter named ") + id);
+}
+
+SuccessT<double> LeafBlock::getParameter(const Terminal &t)
+{
+	const std::string id = t.getID();
+	if (parameters.count(id) == 1)
+	{
+		return SuccessT<double>(*parameters[id]);
+	}
+	else
+		return SuccessT(0.0, std::string("LeafBlock::getParameter doesn't have a parameter named ") + id);
+}
+
+std::vector<std::string> LeafBlock::getParameterNames()
+{
+	auto result = std::vector<std::string>();
+	for (const auto &[k, v] : parameters)
+	{
+		result.push_back(blockName + "." + k);
+	}
+	return result;
 }

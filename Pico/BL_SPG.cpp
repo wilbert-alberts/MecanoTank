@@ -16,6 +16,19 @@ const IDTerminal SPGBlock::OUT_ACC_X("a_x");
 const IDTerminal SPGBlock::OUT_ACC_Y("a_y");
 const IDTerminal SPGBlock::OUT_ACC_RZ("a_rz");
 
+const IDTerminal X_MAXV("vmax_x");
+const IDTerminal X_MAXA("amax_x");
+const IDTerminal X_MAXJ("jmax_x");
+
+const IDTerminal Y_MAXV("vmax_y");
+const IDTerminal Y_MAXA("amax_y");
+const IDTerminal Y_MAXJ("jmax_y");
+
+const IDTerminal RZ_MAXV("vmax_rz");
+const IDTerminal RZ_MAXA("amax_rz");
+const IDTerminal RZ_MAXJ("jmax_rz");
+
+
 SPGBlock::SPGBlock(const std::string &bn, double _servoFrequency)
     : LeafBlock("SPG", bn), state(State::IDLE), ruckig(1.0 / _servoFrequency)
 {
@@ -33,6 +46,18 @@ SPGBlock::SPGBlock(const std::string &bn, double _servoFrequency)
     addOutput(OUT_POS_X, &input.current_position.at(0));
     addOutput(OUT_POS_Y, &input.current_position.at(1));
     addOutput(OUT_POS_RZ, &input.current_position.at(2));
+
+    addParameter(X_MAXV, &input.max_velocity.at(0));
+    addParameter(X_MAXA, &input.max_acceleration.at(0));
+    addParameter(X_MAXJ, &input.max_jerk.at(0));
+
+    addParameter(Y_MAXV, &input.max_velocity.at(0));
+    addParameter(Y_MAXA, &input.max_acceleration.at(0));
+    addParameter(Y_MAXJ, &input.max_jerk.at(0));
+
+    addParameter(RZ_MAXV, &input.max_velocity.at(0));
+    addParameter(RZ_MAXA, &input.max_acceleration.at(0));
+    addParameter(RZ_MAXJ, &input.max_jerk.at(0));
 
     addOutput(OUT_VEL_X, &input.current_velocity.at(0));
     addOutput(OUT_VEL_Y, &input.current_velocity.at(1));

@@ -124,8 +124,8 @@ private:
 
         SPGBlock::MovementParameters mp;
         mp.x.j = 10.0;
-        mp.x.a = 1.0;
-        mp.x.v = 0.1;
+        mp.x.a = 0.05;
+        mp.x.v = 1;
 
         mp.y = mp.x;
         mp.rz = mp.x;

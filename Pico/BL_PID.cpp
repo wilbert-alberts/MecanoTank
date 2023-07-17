@@ -13,6 +13,19 @@
 const IDTerminal PIDBlock::IN_ACTUAL("actual");
 const IDTerminal PIDBlock::IN_SETPOINT("setpoint");
 
+const IDTerminal KP_ID("kP");
+const IDTerminal KPH_ID("kP-high");
+const IDTerminal KPL_ID("kP-low");
+
+const IDTerminal KI_ID("kI");
+const IDTerminal KIH_ID("kI-high");
+const IDTerminal KIL_ID("kI-low");
+
+const IDTerminal KD_ID("kD");
+const IDTerminal KDH_ID("kD-high");
+const IDTerminal KDL_ID("kD-low");
+
+
 PIDBlock::PIDBlock(const std::string &bn, double _servoFrequency, bool _avoidWindup)
 	: LeafBlock("PID", bn), servoFrequency(_servoFrequency),
 	  avoidWindup(_avoidWindup),
@@ -42,6 +55,18 @@ PIDBlock::PIDBlock(const std::string &bn, double _servoFrequency, bool _avoidWin
 {
 	addInput(IN_ACTUAL, &actualInput);
 	addInput(IN_SETPOINT, &setpointInput);
+
+	addParameter(KP_ID, &kP);
+	addParameter(KPH_ID, &PHigh);
+	addParameter(KPL_ID, &PLow);
+
+	addParameter(KI_ID, &kI);
+	addParameter(KIH_ID, &IHigh);
+	addParameter(KIL_ID, &ILow);
+
+	addParameter(KD_ID, &kD);
+	addParameter(KDH_ID, &DHigh);
+	addParameter(KDL_ID, &DLow);
 
 	addDefaultOutput(&output);
 }
