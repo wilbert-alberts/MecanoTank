@@ -9,6 +9,8 @@
 
 std::vector<ABDecoderBlock *> ABDecoderBlock::decoders;
 
+const IDTerminal PAR_METERS_PER_INC("metersPerInc");
+
 void ABDecoderBlock::pinChangedStatic(uint gpio, uint32_t mask)
 {
     for (auto d : decoders)
@@ -29,6 +31,8 @@ ABDecoderBlock::ABDecoderBlock(const std::string &bn, uint8_t a, uint8_t b, doub
     gpio_set_irq_enabled_with_callback(pinA, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, ABDecoderBlock::pinChangedStatic);
     gpio_set_irq_enabled_with_callback(pinB, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, ABDecoderBlock::pinChangedStatic);
     decoders.push_back(this);
+
+    addParameter(PAR_METERS_PER_INC, &meterPerIncrement)
     addDefaultOutput(&positionDbl);
 }
 

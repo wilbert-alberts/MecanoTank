@@ -48,8 +48,8 @@ public:
     void setPosition(const Position &p);
     Position getPosition();
 
-    void setMovementParameters(const MovementParameters &pars);
-    MovementParameters getMovementParameters();
+//    void setMovementParameters(const MovementParameters &pars);
+//    MovementParameters getMovementParameters();
 
     void startMove(const Position &target);
 

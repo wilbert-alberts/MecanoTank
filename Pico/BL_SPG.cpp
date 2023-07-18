@@ -16,17 +16,17 @@ const IDTerminal SPGBlock::OUT_ACC_X("a_x");
 const IDTerminal SPGBlock::OUT_ACC_Y("a_y");
 const IDTerminal SPGBlock::OUT_ACC_RZ("a_rz");
 
-const IDTerminal X_MAXV("vmax_x");
-const IDTerminal X_MAXA("amax_x");
-const IDTerminal X_MAXJ("jmax_x");
+const IDTerminal X_MAXV("X_maxV");
+const IDTerminal X_MAXA("X_maxA");
+const IDTerminal X_MAXJ("X_maxJ");
 
-const IDTerminal Y_MAXV("vmax_y");
-const IDTerminal Y_MAXA("amax_y");
-const IDTerminal Y_MAXJ("jmax_y");
+const IDTerminal Y_MAXV("Y_maxV");
+const IDTerminal Y_MAXA("Y_maxA");
+const IDTerminal Y_MAXJ("Y_maxJ");
 
-const IDTerminal RZ_MAXV("vmax_rz");
-const IDTerminal RZ_MAXA("amax_rz");
-const IDTerminal RZ_MAXJ("jmax_rz");
+const IDTerminal RZ_MAXV("RZ_maxV");
+const IDTerminal RZ_MAXA("RZ_maxA");
+const IDTerminal RZ_MAXJ("RZ_maxJ");
 
 
 SPGBlock::SPGBlock(const std::string &bn, double _servoFrequency)
@@ -51,13 +51,13 @@ SPGBlock::SPGBlock(const std::string &bn, double _servoFrequency)
     addParameter(X_MAXA, &input.max_acceleration.at(0));
     addParameter(X_MAXJ, &input.max_jerk.at(0));
 
-    addParameter(Y_MAXV, &input.max_velocity.at(0));
-    addParameter(Y_MAXA, &input.max_acceleration.at(0));
-    addParameter(Y_MAXJ, &input.max_jerk.at(0));
+    addParameter(Y_MAXV, &input.max_velocity.at(1));
+    addParameter(Y_MAXA, &input.max_acceleration.at(1));
+    addParameter(Y_MAXJ, &input.max_jerk.at(1));
 
-    addParameter(RZ_MAXV, &input.max_velocity.at(0));
-    addParameter(RZ_MAXA, &input.max_acceleration.at(0));
-    addParameter(RZ_MAXJ, &input.max_jerk.at(0));
+    addParameter(RZ_MAXV, &input.max_velocity.at(2));
+    addParameter(RZ_MAXA, &input.max_acceleration.at(2));
+    addParameter(RZ_MAXJ, &input.max_jerk.at(2));
 
     addOutput(OUT_VEL_X, &input.current_velocity.at(0));
     addOutput(OUT_VEL_Y, &input.current_velocity.at(1));
@@ -102,39 +102,39 @@ SPGBlock::Position SPGBlock::getPosition()
     return result;
 }
 
-void SPGBlock::setMovementParameters(const SPGBlock::MovementParameters &pars)
-{
-    input.max_velocity = {
-        pars.x.v,
-        pars.y.v,
-        pars.rz.v};
-    input.max_acceleration = {
-        pars.x.a,
-        pars.y.a,
-        pars.rz.a};
-    input.max_jerk = {
-        pars.x.j,
-        pars.y.j,
-        pars.rz.j};
-}
-
-SPGBlock::MovementParameters SPGBlock::getMovementParameters()
-{
-    MovementParameters result;
-
-    result.x.v = input.max_velocity.at(0);
-    result.y.v = input.max_velocity.at(1);
-    result.rz.v = input.max_velocity.at(2);
-
-    result.x.a = input.max_acceleration.at(0);
-    result.y.a = input.max_acceleration.at(1);
-    result.rz.a = input.max_acceleration.at(2);
-
-    result.x.j = input.max_jerk.at(0);
-    result.y.j = input.max_jerk.at(1);
-    result.rz.j = input.max_jerk.at(2);
-    return result;
-}
+//void SPGBlock::setMovementParameters(const SPGBlock::MovementParameters &pars)
+//{
+//    input.max_velocity = {
+//        pars.x.v,
+//        pars.y.v,
+//        pars.rz.v};
+//    input.max_acceleration = {
+//        pars.x.a,
+//        pars.y.a,
+//        pars.rz.a};
+//    input.max_jerk = {
+//        pars.x.j,
+//        pars.y.j,
+//        pars.rz.j};
+//}
+//
+//SPGBlock::MovementParameters SPGBlock::getMovementParameters()
+//{
+//    MovementParameters result;
+//
+//    result.x.v = input.max_velocity.at(0);
+//    result.y.v = input.max_velocity.at(1);
+//    result.rz.v = input.max_velocity.at(2);
+//
+//    result.x.a = input.max_acceleration.at(0);
+//    result.y.a = input.max_acceleration.at(1);
+//    result.rz.a = input.max_acceleration.at(2);
+//
+//    result.x.j = input.max_jerk.at(0);
+//    result.y.j = input.max_jerk.at(1);
+//    result.rz.j = input.max_jerk.at(2);
+//    return result;
+//}
 
 void SPGBlock::startMove(const Position &target)
 {

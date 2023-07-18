@@ -129,9 +129,49 @@ GetParametersCommand::GetParametersCommand()
 BaseType_t GetParametersCommand::command(char *outputBuffer, size_t outputLen,
 										 const char *command)
 {
+	// Not reentrant!
+	static bool active = false;
+	static std::vector<std::pair<std::string, std::string>> paramNamesAndValues;
+	static int index;
+	std::string line = "";
+	BaseType_t result = pdTRUE;
+
+	if (!active) {
+		active = true;
+		paramNamesAndValues.clear();
+		getParamNamesAndValues(&paramNamesAndValues);
+		index = 0;
+	}
+
+	if (index<paramNamesAndValues.size()) {
+		auto element = paramNamesAndValues[index++];
+		line += element.first + ": " + element.second + "\n";
+	}
+
+	if (index == paramNamesAndValues.size()) {
+		paramNamesAndValues.clear();
+		line += "OK.\n";
+		result = pdFALSE;
+		active = false;
+	}
+
 	snprintf(outputBuffer, outputLen,
-			 "Error: not implemented yet\n");
-	return pdFALSE;
+			 "%s", line.c_str());
+	return result;
+}
+
+
+void getParamNamesAndValues(std::vector<std::pair<std::string, std::string>>* v ) {
+	auto names = instance->servoGroup->getParameterNames();
+	std::for_each (names.begin(), names.end(), [](auto n){
+		auto value = instance->servoGroup->getParameter(n);
+		if (value.success) {
+			v->push_back(std::pair<std::string, std::string>(n,value.result));
+		}
+		else {
+			v->push_back(std::pair<std::string, std::string>(n,"<null>"));
+		}
+	});
 }
 
 /*--------------------------------------------------*/
@@ -160,7 +200,33 @@ GetParameterNamesCommand::GetParameterNamesCommand()
 BaseType_t GetParameterNamesCommand::command(char *outputBuffer, size_t outputLen,
 											 const char *command)
 {
+	// Not reentrant!
+	static bool active = false;
+	static std::vector<std::string> paramNames;
+	static int index;
+	std::string line = "";
+	BaseType_t result = pdTRUE;
+
+	if (!active) {
+		active = true;
+		paramNames.clear();
+		paramNames = instance->servoGroup->getParameterNames();
+		index = 0;
+	}
+
+	if (index<paramNames.size()) {
+		auto element = paramNames[index++];
+		line += element + "\n";
+	}
+
+	if (index == paramNames.size()) {
+		paramNames.clear();
+		line += "OK.\n";
+		result = pdFALSE;
+		active = false;
+	}
+
 	snprintf(outputBuffer, outputLen,
-			 "Error: not implemented yet\n");
-	return pdFALSE;
+			 "%s", line.c_str());
+	return result;
 }
