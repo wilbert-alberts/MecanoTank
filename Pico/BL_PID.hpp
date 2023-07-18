@@ -60,17 +60,17 @@ private:
 	double prevOutput;
 
 	double kFv;
-	double FvLow;
-	double FvHigh;
+	double Fv_Low;
+	double Fv_High;
 	double kP;
-	double PLow;
-	double PHigh;
+	double P_Low;
+	double P_High;
 	double kI;
-	double ILow;
-	double IHigh;
+	double I_Low;
+	double I_High;
 	double kD;
-	double DLow;
-	double DHigh;
+	double D_Low;
+	double D_High;
 	double OutLow;
 	double OutHigh;
 };

@@ -22,8 +22,8 @@ const IDTerminal PIDBlock::IN_SETPOINT("setpoint");
 
 #define CREATE_PIDPARAMETER(P) \
 		CREATE_PARAMETER(k ## P) \
-		CREATE_PARAMETER(k ## P ## _High) \
-		CREATE_PARAMETER(k ## P ## _Low)
+		CREATE_PARAMETER(P ## _High) \
+		CREATE_PARAMETER(P ## _Low)
 
 
 PIDBlock::PIDBlock(const std::string &bn, double _servoFrequency, bool _avoidWindup)
@@ -46,10 +46,10 @@ PIDBlock::PIDBlock(const std::string &bn, double _servoFrequency, bool _avoidWin
 	  diffSumTerm(0.0),
 	  output(0.0),
 
-	  kFv(KFV), FvLow(FV_LOW), FvHigh(FV_HIGH),
-	  kP(KP), PLow(P_LOW), PHigh(P_HIGH),
-	  kI(KI), ILow(I_LOW), IHigh(I_HIGH),
-	  kD(KD), DLow(D_LOW), DHigh(D_HIGH),
+	  kFv(KFV), Fv_Low(FV_LOW), Fv_High(FV_HIGH),
+	  kP(KP), P_Low(P_LOW), P_High(P_HIGH),
+	  kI(KI), I_Low(I_LOW), I_High(I_HIGH),
+	  kD(KD), D_Low(D_LOW), D_High(D_HIGH),
 	  OutLow(PID_LOW), OutHigh(PID_HIGH)
 
 {
@@ -93,10 +93,10 @@ void PIDBlock::calculate()
 		}
 	}
 
-	double total = clip(setpointSpeedTerm, FvLow, FvHigh) +
-				   clip(diffSpeedTerm, DLow, DHigh) +
-				   clip(diffPosTerm, PLow, PHigh) +
-				   clip(diffSumTerm, ILow, IHigh);
+	double total = clip(setpointSpeedTerm, Fv_Low, Fv_High) +
+				   clip(diffSpeedTerm, D_Low, D_High) +
+				   clip(diffPosTerm, P_Low, P_High) +
+				   clip(diffSumTerm, I_Low, I_High);
 
 	output = clip(total, OutLow, OutHigh);
 
@@ -128,20 +128,20 @@ double PIDBlock::idt(double value, double *sum)
 void PIDBlock::setKP(double p, double low, double high)
 {
 	kP = p;
-	PLow = low;
-	PHigh = high;
+	P_Low = low;
+	P_High = high;
 }
 void PIDBlock::setKI(double p, double low, double high)
 {
 	kI = p;
-	ILow = low;
-	IHigh = high;
+	I_Low = low;
+	I_High = high;
 }
 void PIDBlock::setKD(double p, double low, double high)
 {
 	kD = p;
-	DLow = low;
-	DHigh = high;
+	D_Low = low;
+	D_High = high;
 }
 void PIDBlock::setOutLimits(double low, double high)
 {

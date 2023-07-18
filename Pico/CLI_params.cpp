@@ -1,5 +1,6 @@
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include "CLI_params.hpp"
 
@@ -139,7 +140,7 @@ BaseType_t GetParametersCommand::command(char *outputBuffer, size_t outputLen,
 	if (!active) {
 		active = true;
 		paramNamesAndValues.clear();
-		getParamNamesAndValues(&paramNamesAndValues);
+		instance->getParamNamesAndValues(&paramNamesAndValues);
 		index = 0;
 	}
 
@@ -161,12 +162,13 @@ BaseType_t GetParametersCommand::command(char *outputBuffer, size_t outputLen,
 }
 
 
-void getParamNamesAndValues(std::vector<std::pair<std::string, std::string>>* v ) {
-	auto names = instance->servoGroup->getParameterNames();
-	std::for_each (names.begin(), names.end(), [](auto n){
-		auto value = instance->servoGroup->getParameter(n);
+void GetParametersCommand::getParamNamesAndValues(std::vector<std::pair<std::string, std::string>>* v ) {
+	auto names = servoGroup->getParameterNames();
+	std::for_each (names.begin(), names.end(), [&](std::string n){
+		SuccessT<double> value = instance->servoGroup->getParameter(n);
 		if (value.success) {
-			v->push_back(std::pair<std::string, std::string>(n,value.result));
+			std::string valueString = std::to_string(value.result);
+			v->push_back(std::pair<std::string, std::string>(n,valueString));
 		}
 		else {
 			v->push_back(std::pair<std::string, std::string>(n,"<null>"));

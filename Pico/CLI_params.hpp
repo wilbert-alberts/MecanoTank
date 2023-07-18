@@ -16,7 +16,7 @@ protected:
     static SetParameterCommand *instance;
 };
 
-class GetParameterCommand: public AbstractCommand
+class GetParameterCommand : public AbstractCommand
 {
 public:
     static GetParameterCommand *getInstance();
@@ -29,7 +29,7 @@ protected:
     static GetParameterCommand *instance;
 };
 
-class GetParametersCommand: public AbstractCommand
+class GetParametersCommand : public AbstractCommand
 {
 public:
     static GetParametersCommand *getInstance();
@@ -38,11 +38,12 @@ public:
 protected:
     GetParametersCommand();
     static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
+    void getParamNamesAndValues(std::vector<std::pair<std::string, std::string>> *v);
 
     static GetParametersCommand *instance;
 };
 
-class GetParameterNamesCommand: public AbstractCommand
+class GetParameterNamesCommand : public AbstractCommand
 {
 public:
     static GetParameterNamesCommand *getInstance();
@@ -54,6 +55,5 @@ protected:
 
     static GetParameterNamesCommand *instance;
 };
-
 
 #endif
