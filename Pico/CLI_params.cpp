@@ -44,7 +44,7 @@ BaseType_t SetParameterCommand::command(char *outputBuffer, size_t outputLen,
 
 	if (!output.success)
 	{
-		snprintf(outputBuffer, outputLen, "Error: unable to set parameter: %s\n ",
+		snprintf(outputBuffer, outputLen, "Error: unable to set parameter: %s\n",
 				 paramNameString.c_str());
 		// std::cerr << "Error: unable to find output " << traceableNameString << std::endl;
 	}
@@ -91,7 +91,7 @@ BaseType_t GetParameterCommand::command(char *outputBuffer, size_t outputLen,
 
 	if (!output.success)
 	{
-		snprintf(outputBuffer, outputLen, "Error: unable to get parameter: %s\n ",
+		snprintf(outputBuffer, outputLen, "Error: unable to get parameter: %s\n",
 				 paramNameString.c_str());
 		// std::cerr << "Error: unable to find output " << traceableNameString << std::endl;
 	}
@@ -137,19 +137,23 @@ BaseType_t GetParametersCommand::command(char *outputBuffer, size_t outputLen,
 	std::string line = "";
 	BaseType_t result = pdTRUE;
 
-	if (!active) {
+	if (!active)
+	{
 		active = true;
 		paramNamesAndValues.clear();
 		instance->getParamNamesAndValues(&paramNamesAndValues);
+		line += "Parameters:\n";
 		index = 0;
 	}
 
-	if (index<paramNamesAndValues.size()) {
+	if (index < paramNamesAndValues.size())
+	{
 		auto element = paramNamesAndValues[index++];
-		line += element.first + ": " + element.second + "\n";
+		line += "\t" + element.first + ": " + element.second + "\n";
 	}
 
-	if (index == paramNamesAndValues.size()) {
+	if (index == paramNamesAndValues.size())
+	{
 		paramNamesAndValues.clear();
 		line += "OK.\n";
 		result = pdFALSE;
@@ -161,10 +165,11 @@ BaseType_t GetParametersCommand::command(char *outputBuffer, size_t outputLen,
 	return result;
 }
 
-
-void GetParametersCommand::getParamNamesAndValues(std::vector<std::pair<std::string, std::string>>* v ) {
+void GetParametersCommand::getParamNamesAndValues(std::vector<std::pair<std::string, std::string>> *v)
+{
 	auto names = servoGroup->getParameterNames();
-	std::for_each (names.begin(), names.end(), [&](std::string n){
+	std::for_each(names.begin(), names.end(), [&](std::string n)
+				  {
 		SuccessT<double> value = instance->servoGroup->getParameter(n);
 		if (value.success) {
 			std::string valueString = std::to_string(value.result);
@@ -172,8 +177,7 @@ void GetParametersCommand::getParamNamesAndValues(std::vector<std::pair<std::str
 		}
 		else {
 			v->push_back(std::pair<std::string, std::string>(n,"<null>"));
-		}
-	});
+		} });
 }
 
 /*--------------------------------------------------*/
@@ -209,19 +213,22 @@ BaseType_t GetParameterNamesCommand::command(char *outputBuffer, size_t outputLe
 	std::string line = "";
 	BaseType_t result = pdTRUE;
 
-	if (!active) {
+	if (!active)
+	{
 		active = true;
 		paramNames.clear();
 		paramNames = instance->servoGroup->getParameterNames();
 		index = 0;
 	}
 
-	if (index<paramNames.size()) {
+	if (index < paramNames.size())
+	{
 		auto element = paramNames[index++];
 		line += element + "\n";
 	}
 
-	if (index == paramNames.size()) {
+	if (index == paramNames.size())
+	{
 		paramNames.clear();
 		line += "OK.\n";
 		result = pdFALSE;

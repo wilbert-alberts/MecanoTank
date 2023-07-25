@@ -35,6 +35,25 @@ std::vector<std::string> ServoGroup::getOutputNames()
 	}
 	return result;
 }
+
+std::vector<std::string> ServoGroup::getParameterNames()
+{
+    // Differs from the composite block by the fact that 
+    // the name of the ServoGroup itsels does not need to be
+    // prefixed.
+	auto result = std::vector<std::string>();
+	for (auto b : blocks)
+	{
+		auto blockOutputs = b->getParameterNames();
+		for (auto n : blockOutputs)
+		{
+			result.push_back(n);
+		}
+	}
+	return result;
+}
+
+
 double ServoGroup::getPeriod()
 {
     // Serial.println("ServoGroup::getPeriod()");

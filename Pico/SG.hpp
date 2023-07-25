@@ -24,6 +24,7 @@ public:
     int64_t getCounter();
 
 	virtual std::vector<std::string> getOutputNames();
+    virtual std::vector<std::string> getParameterNames();
 
 protected:
     std::shared_ptr<TraceBlock> traceBlock;
