@@ -28,6 +28,11 @@ add_executable(mecanumtank
         main.cpp
         ErrorHandling.cpp
 
+        Polar.cpp
+        Cartesian.cpp
+        XYAVect.cpp
+        Transformer.cpp
+
         BL.cpp
         BL_ABDecoder.cpp
         BL_Composite.cpp
@@ -41,6 +46,8 @@ add_executable(mecanumtank
         BL_Analog.cpp
         BL_SPG.cpp
         BL_Trace.cpp
+        BL_WorldToCart.cpp
+        BL_CartToWheels.cpp
 
         PeriodicTask.cpp
         ServoGroupExecutor.cpp

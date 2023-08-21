@@ -12,12 +12,8 @@
 #include "BL_ABDecoder.hpp"
 #include "BL_PID.hpp"
 #include "BL_MotorInterface.hpp"
-
-// #include "BL_Debug.hpp"
-// #include "BL_SignalGenerator.hpp"
-// #include "BL_Differentiator.hpp"
-// #include "BL_ErrorDifference.hpp"
-// #include "BL_Sum.hpp"
+#include "BL_WorldToCart.hpp"
+#include "BL_CartToWheels.hpp"
 
 class DecoderBlockGroup : public CompositeBlock
 {
@@ -89,14 +85,24 @@ public:
     {
         addAndSetupSPG();
 
+        addAndSetupTransformers();
+
         addAndSetupABDecoders();
 
         addAndSetupPIDs();
 
-        setInput("pids.BL.setpoint", getOutput("SPG.x").result);
-        setInput("pids.FL.setpoint", getOutput("SPG.y").result);
-        setInput("pids.FR.setpoint", getOutput("SPG.rz").result);
-        setInput("pids.BR.setpoint", getOutput("SPG.x").result);
+        setInput("worldToCart.worldX", getOutput("SPG.x").result);
+        setInput("worldToCart.worldY", getOutput("SPG.y").result);
+        setInput("worldToCart.worldRZ", getOutput("SPG.rz").result);
+
+        setInput("cartToWheels.cartX", getOutput("worldToCart.cartX").result);
+        setInput("cartToWheels.cartY", getOutput("worldToCart.cartY").result);
+        setInput("cartToWheels.cartRZ", getOutput("worldToCart.cartRZ").result);
+
+        setInput("pids.BL.setpoint", getOutput("cartToWheels.wheelBL").result);
+        setInput("pids.FL.setpoint", getOutput("cartToWheels.wheelFL").result);
+        setInput("pids.FR.setpoint", getOutput("cartToWheels.wheelFR").result);
+        setInput("pids.BR.setpoint", getOutput("cartToWheels.wheelBR").result);
 
         setInput("pids.BL.actual", getOutput("decoders.BL.output").result);
         setInput("pids.FL.actual", getOutput("decoders.FL.output").result);
@@ -134,6 +140,14 @@ private:
 
         SPGBlock::Position pos{0.0, 0.0, 0.0};
         spgBlock->setPosition(pos);
+    }
+
+    void addAndSetupTransformers() {
+        auto worldToCartBlock = std::make_shared<WorldToCartBlock>("worldToCart");
+        addBlock(worldToCartBlock);
+
+        auto cartToWheelsBlock = std::make_shared<CartToWheelsBlock>("cartToWheels");
+        addBlock(cartToWheelsBlock);
     }
 
     void addAndSetupABDecoders()
