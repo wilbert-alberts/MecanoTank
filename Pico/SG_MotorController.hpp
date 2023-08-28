@@ -128,15 +128,18 @@ private:
         spgBlock = std::make_shared<SPGBlock>("SPG", SERVO_FREQUENCY);
         addBlock(spgBlock);
 
-        // SPGBlock::MovementParameters mp;
-        // mp.x.j = 10.0;
-        // mp.x.a = 0.05;
-        // mp.x.v = 1;
+        spgBlock->setParameter(SPGBlock::X_MAXV, 0.5);
+        spgBlock->setParameter(SPGBlock::X_MAXA, 0.25);
+        spgBlock->setParameter(SPGBlock::X_MAXJ, 1);
 
-        // mp.y = mp.x;
-        // mp.rz = mp.x;
+        spgBlock->setParameter(SPGBlock::Y_MAXV, 0.5);
+        spgBlock->setParameter(SPGBlock::Y_MAXA, 0.25);
+        spgBlock->setParameter(SPGBlock::Y_MAXJ, 1);
 
-        // spgBlock->setMovementParameters(mp);
+        spgBlock->setParameter(SPGBlock::RZ_MAXV, 0.5);
+        spgBlock->setParameter(SPGBlock::RZ_MAXA, 0.25);
+        spgBlock->setParameter(SPGBlock::RZ_MAXJ, 1);
+
 
         SPGBlock::Position pos{0.0, 0.0, 0.0};
         spgBlock->setPosition(pos);

@@ -51,6 +51,18 @@ public:
 //    void setMovementParameters(const MovementParameters &pars);
 //    MovementParameters getMovementParameters();
 
+    static const IDTerminal X_MAXV;
+    static const IDTerminal X_MAXA;
+    static const IDTerminal X_MAXJ;
+
+    static const IDTerminal Y_MAXV;
+    static const IDTerminal Y_MAXA;
+    static const IDTerminal Y_MAXJ;
+
+    static const IDTerminal RZ_MAXV;
+    static const IDTerminal RZ_MAXA;
+    static const IDTerminal RZ_MAXJ;
+
     void startMove(const Position &target);
 
     static const IDTerminal OUT_POS_X;
@@ -71,5 +83,6 @@ private:
     ruckig::InputParameter<3> input;
     ruckig::OutputParameter<3> output;
 };
+
 
 #endif

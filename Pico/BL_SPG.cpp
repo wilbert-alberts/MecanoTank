@@ -4,6 +4,7 @@
 
 #include "T_Factory.hpp"
 
+
 const IDTerminal SPGBlock::OUT_POS_X("x");
 const IDTerminal SPGBlock::OUT_POS_Y("y");
 const IDTerminal SPGBlock::OUT_POS_RZ("rz");
@@ -16,18 +17,17 @@ const IDTerminal SPGBlock::OUT_ACC_X("a_x");
 const IDTerminal SPGBlock::OUT_ACC_Y("a_y");
 const IDTerminal SPGBlock::OUT_ACC_RZ("a_rz");
 
-const IDTerminal X_MAXV("X_maxV");
-const IDTerminal X_MAXA("X_maxA");
-const IDTerminal X_MAXJ("X_maxJ");
+const IDTerminal SPGBlock::X_MAXV("X_maxV");
+const IDTerminal SPGBlock::X_MAXA("X_maxA");
+const IDTerminal SPGBlock::X_MAXJ("X_maxJ");
 
-const IDTerminal Y_MAXV("Y_maxV");
-const IDTerminal Y_MAXA("Y_maxA");
-const IDTerminal Y_MAXJ("Y_maxJ");
+const IDTerminal SPGBlock::Y_MAXV("Y_maxV");
+const IDTerminal SPGBlock::Y_MAXA("Y_maxA");
+const IDTerminal SPGBlock::Y_MAXJ("Y_maxJ");
 
-const IDTerminal RZ_MAXV("RZ_maxV");
-const IDTerminal RZ_MAXA("RZ_maxA");
-const IDTerminal RZ_MAXJ("RZ_maxJ");
-
+const IDTerminal SPGBlock::RZ_MAXV("RZ_maxV");
+const IDTerminal SPGBlock::RZ_MAXA("RZ_maxA");
+const IDTerminal SPGBlock::RZ_MAXJ("RZ_maxJ");
 
 SPGBlock::SPGBlock(const std::string &bn, double _servoFrequency)
     : LeafBlock("SPG", bn), state(State::IDLE), ruckig(1.0 / _servoFrequency)
@@ -178,7 +178,7 @@ void SPGBlock::calculate()
         auto r = ruckig.update(input, output);
         output.pass_to_input(input);
         std::cout << "Moving. x: " << output.new_position.at(0)
-                  << ", y: " << output.new_position.at(0)
+                  << ", y: " << output.new_position.at(1)
                   << ", rz: " << output.new_position.at(2) << std::endl;
         switch (r)
         {

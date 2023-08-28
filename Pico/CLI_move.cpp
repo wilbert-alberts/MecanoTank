@@ -95,3 +95,49 @@ StartMoveCommand::StartMoveCommand() : AbstractCommand(
     3)
 {
 }
+
+
+WaitUntilIdleCommand *WaitUntilIdleCommand::instance(nullptr);
+
+WaitUntilIdleCommand::~WaitUntilIdleCommand() {}
+
+WaitUntilIdleCommand *WaitUntilIdleCommand::getInstance()
+{
+    // std::cerr << "TimeCommand::getInstance" << std::endl;
+    if (instance == nullptr)
+        instance = new WaitUntilIdleCommand();
+    return instance;
+}
+
+BaseType_t WaitUntilIdleCommand::command(char *outputBuffer, size_t outputLen, const char *command)
+{
+     std::string result;
+
+    auto spgBlockSuccess = instance->servoGroup->getSubBlockByName("SPG");
+    if (spgBlockSuccess.success) {
+        SPGBlock* spgBlock = (SPGBlock*)(spgBlockSuccess.result.get());
+
+        while(spgBlock->getState() == SPGBlock::MOVING);
+
+        auto state = spgBlock->getState();
+        if (state == SPGBlock::State::IDLE) {
+            result += "OK.\n";
+        }
+        else {
+            result += "wui failed, state not IDLE.\n";
+        }
+    }
+    else {
+        result = "Unable to find block named: SPG; therefore unable to move nor wait until idle.";
+    }
+    snprintf(outputBuffer, outputLen, result.c_str());
+    return pdFALSE;
+}
+
+WaitUntilIdleCommand::WaitUntilIdleCommand() : AbstractCommand(
+    "wui",
+    "wui:\n Wait until SPG is idle.\n",
+    WaitUntilIdleCommand::command,
+    0)
+{
+}

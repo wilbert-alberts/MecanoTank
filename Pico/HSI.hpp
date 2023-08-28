@@ -4,7 +4,7 @@
 // --------------- WHEELS ----------------
 
 // #define SERVO_FREQUENCY (2.0)
-#define SERVO_FREQUENCY (10.0)
+#define SERVO_FREQUENCY (50.0)
 #define SERVO_PERIOD    (1.0/SERVO_FREQUENCY)
 
 #define INCREMENTS_PER_METER    (13560.0)

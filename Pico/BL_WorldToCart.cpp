@@ -23,6 +23,13 @@ WorldToCartBlock::WorldToCartBlock(const std::string &bn)
 , yWorld(&safeDbl)
 , rzWorld(&safeDbl)
 {
+	addInput(IN_X, &xWorld);
+	addInput(IN_Y, &yWorld);
+	addInput(IN_RZ, &rzWorld);
+	
+	addOutput(OUT_X, &xCart);
+	addOutput(OUT_Y, &yCart);
+	addOutput(OUT_RZ, &rzCart);
 }
 
 WorldToCartBlock::~WorldToCartBlock()

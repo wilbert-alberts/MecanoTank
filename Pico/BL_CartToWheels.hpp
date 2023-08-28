@@ -17,10 +17,10 @@ public:
     static const IDTerminal IN_Y;
     static const IDTerminal IN_RZ;
 
-    static const IDTerminal OUT_LB;
-    static const IDTerminal OUT_LF;
-    static const IDTerminal OUT_RF;
-    static const IDTerminal OUT_RB;
+    static const IDTerminal OUT_BL;
+    static const IDTerminal OUT_FL;
+    static const IDTerminal OUT_FR;
+    static const IDTerminal OUT_BR;
 
 private:
     double safeDbl;

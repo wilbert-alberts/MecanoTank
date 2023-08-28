@@ -6,7 +6,7 @@
 
 #define DEFAULT_RADIUS (0.225 / 2.0) // meter radius of wheels to center of cart
 
-double Transformer::radius(0.0);
+double Transformer::radius(DEFAULT_RADIUS);
 
 void Transformer::worldToCart(const XYAVect world, XYAVect &cart)
 {

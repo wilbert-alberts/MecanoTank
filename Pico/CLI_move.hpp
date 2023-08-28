@@ -22,6 +22,22 @@ protected:
 
 };
 
+class WaitUntilIdleCommand: public AbstractCommand
+{
+public:
+    static WaitUntilIdleCommand *getInstance();
+
+    virtual ~WaitUntilIdleCommand();
+
+
+protected:
+    WaitUntilIdleCommand();
+    static BaseType_t command(char *outputBuffer, size_t outputLen, const char *command);
+
+    static WaitUntilIdleCommand *instance;
+
+};
+
 class GetPositionCommand: public AbstractCommand
 {
 public:

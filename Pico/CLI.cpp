@@ -67,6 +67,7 @@ void MecanumCLI::initializeCommands()
     commands.push_back(GetParameterCommand::getInstance());
     commands.push_back(GetParametersCommand::getInstance());
     commands.push_back(GetParameterNamesCommand::getInstance());
+    commands.push_back(WaitUntilIdleCommand::getInstance());
     
 }
 
